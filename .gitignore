@@ -3,3 +3,5 @@
 .bloop/
 **/.DS_Store
 target/
+.bsp/
+.idea
