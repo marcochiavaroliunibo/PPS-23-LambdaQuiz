@@ -3,7 +3,7 @@ package it.unibo.pps.view
 import it.unibo.pps.view.components.BasePanel
 import scalafx.application.JFXApp3
 import scalafx.application.JFXApp3.PrimaryStage
-import scalafx.scene.Scene
+import scalafx.scene.{Parent, Scene}
 
 object View extends JFXApp3:
   override def start(): Unit =
@@ -12,7 +12,7 @@ object View extends JFXApp3:
       width = 650
       height = 450
       scene = new Scene {
-        root = BasePanel
+        root = BasePanel.getComponent.asInstanceOf[Parent]
       }
     }
 end View
