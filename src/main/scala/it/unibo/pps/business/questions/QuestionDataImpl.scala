@@ -1,4 +1,8 @@
+package it.unibo.pps.business.questions
+
+import it.unibo.pps.business.ConnectionMongoDB
 import org.mongodb.scala.Document
+
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import org.mongodb.scala.model.Filters.equal

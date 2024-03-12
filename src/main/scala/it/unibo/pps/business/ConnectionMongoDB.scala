@@ -1,3 +1,5 @@
+package it.unibo.pps.business
+
 /* Questa classe si occupa di fornire i servizi di connessione
 al database MongoDB */
 import org.mongodb.scala._

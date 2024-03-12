@@ -1,8 +1,12 @@
+package it.unibo.pps.business.games
+
+import it.unibo.pps.business.ConnectionMongoDB
 import org.mongodb.scala.Document
+
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
-import org.mongodb.scala.model.Filters._
-import org.mongodb.scala.model.Sorts._
+import org.mongodb.scala.model.Filters.*
+import org.mongodb.scala.model.Sorts.*
 import model.User
 
 class GameDataImpl extends GameData {

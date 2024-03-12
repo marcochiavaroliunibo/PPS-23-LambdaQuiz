@@ -1,4 +1,4 @@
-package model
+package it.unibo.pps.model
 
 class Question (id: String, text: String, answer1: String, answer2: String, 
     answer3: String, answer4: String, correctAnswer: Int, category: Category) {

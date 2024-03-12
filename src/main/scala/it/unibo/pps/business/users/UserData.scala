@@ -1,3 +1,5 @@
+package it.unibo.pps.business.users
+
 import org.mongodb.scala._
 
 trait UserData {

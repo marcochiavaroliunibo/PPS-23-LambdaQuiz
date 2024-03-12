@@ -1,4 +1,4 @@
-package model
+package it.unibo.pps.model
 
 class Round (id: String, game: Game, pointUser1: Int, pointUser2: Int, numberRound: Int) {
 

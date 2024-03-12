@@ -1,6 +1,10 @@
-import org.mongodb.scala._
-import scala.concurrent._
-import scala.concurrent.duration._
+package it.unibo.pps.business.users
+
+import it.unibo.pps.business.ConnectionMongoDB
+import org.mongodb.scala.*
+
+import scala.concurrent.*
+import scala.concurrent.duration.*
 import org.mongodb.scala.model.Filters.equal
 
 class UserDataImpl extends UserData {

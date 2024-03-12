@@ -1,4 +1,4 @@
-package model
+package it.unibo.pps.model
 
 class User (id: String, nickname: String, password: String) {
   

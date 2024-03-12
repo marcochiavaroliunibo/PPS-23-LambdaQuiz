@@ -1,3 +1,5 @@
+package it.unibo.pps.business.questions
+
 import org.mongodb.scala.Document
 import model.Category
 

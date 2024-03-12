@@ -1,3 +1,5 @@
+package it.unibo.pps.business.games
+
 import org.mongodb.scala.Document
 import model.User
 

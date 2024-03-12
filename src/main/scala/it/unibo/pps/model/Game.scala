@@ -1,4 +1,4 @@
-package model
+package it.unibo.pps.model
 
 import java.time.LocalDateTime
 

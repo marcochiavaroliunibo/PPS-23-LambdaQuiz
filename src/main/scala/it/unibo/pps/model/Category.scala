@@ -1,4 +1,4 @@
-package model
+package it.unibo.pps.model
 
 class Category (id: String, name: String) {
 
