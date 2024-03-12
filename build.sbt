@@ -38,7 +38,12 @@ val javafxBinaries = {
 }
 
 libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "2.3.0"
-libraryDependencies ++= Seq("org.scalafx" %% "scalafx" % "21.0.0-R32") ++ javafxBinaries
+libraryDependencies ++= Seq(
+  "org.scalafx" %% "scalafx" % "21.0.0-R32",
+  //"org.mongodb.scala" %% "mongo-scala-driver" % "4.4.2", -> Non funziona con Scala 3
+  //"ch.qos.logback" % "logback-classic" % "1.5.3"
+  "org.reactivemongo" %% "reactivemongo" % "1.1.0-RC12" % "provided"
+) ++ javafxBinaries
 
 // Here, `libraryDependencies` is a set of dependencies, and by using `+=`,
 // we're adding the scala-parser-combinators dependency to the set of dependencies
