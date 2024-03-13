@@ -2,6 +2,7 @@
 .vscode/
 .bloop/
 **/.DS_Store
+**/metals.sbt
 target/
 .bsp/
 .idea
