@@ -1,7 +1,6 @@
 package it.unibo.pps.business
 
-import reactivemongo.api.{AsyncDriver, Cursor, DB, MongoConnection}
-import reactivemongo.api.bson.{BSONDocumentReader, BSONDocumentWriter, Macros, document}
+import reactivemongo.api.{AsyncDriver, DB, MongoConnection}
 
 import scala.concurrent.Future
 
@@ -25,7 +24,7 @@ object ConnectionMongoDB {
 
     database.onComplete {
         case resolution => println(s"Successfully connected to $databaseName database")
-        case _ => println(s"Error while connecting to $databaseName database")
+        case null => println(s"Error while connecting to $databaseName database")
     }
 
     def getDatabase: Future[DB] = database
