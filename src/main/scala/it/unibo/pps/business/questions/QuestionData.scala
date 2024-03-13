@@ -1,10 +1,11 @@
 package it.unibo.pps.business.questions
 
-import org.mongodb.scala.Document
-import model.Category
+import it.unibo.pps.business.{ConnectionMongoDB, Repository}
+import it.unibo.pps.model.{Category, Question}
 
-trait QuestionData {
-  
-    def getQuestionsByCategory(category: Category) : Option[Document]
+import scala.concurrent.ExecutionContext.Implicits.global
+
+trait QuestionData extends Repository[Question] {
+    def getQuestionsByCategory(category: Category) : Option[?]
 
 }

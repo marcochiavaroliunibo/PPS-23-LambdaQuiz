@@ -1,10 +1,11 @@
 package it.unibo.pps.business.rounds
 
-import org.mongodb.scala.Document
-import model.Game
+import it.unibo.pps.business.{ConnectionMongoDB, Repository}
+import it.unibo.pps.model.{Game, Round}
 
-trait RoundData {
-  
-    def getAllRoundsByGame(game: Game) : Option[Document]
+import scala.concurrent.ExecutionContext.Implicits.global
+
+trait RoundData extends Repository[Round] {
+    def getAllRoundsByGame(game: Game) : Option[?]
 
 }

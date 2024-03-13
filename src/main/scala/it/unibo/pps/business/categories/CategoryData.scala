@@ -1,10 +1,11 @@
 package it.unibo.pps.business.categories
 
-import org.mongodb.scala._
+import it.unibo.pps.business.{ConnectionMongoDB, Repository}
+import it.unibo.pps.model.Category
 
-trait CategoryData {
-  
-    def getAllCategories() : Option[Document]
-    def getCategoryByName (name: String) : Option[Document]
+import scala.concurrent.ExecutionContext.Implicits.global
 
+trait CategoryData extends Repository[Category] {
+    def getAllCategories: Option[?]
+    def getCategoryByName (name: String) : Option[?]
 }

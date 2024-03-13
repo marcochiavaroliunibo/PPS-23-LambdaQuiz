@@ -1,23 +1,20 @@
 package it.unibo.pps.business.questions
 
 import it.unibo.pps.business.ConnectionMongoDB
-import org.mongodb.scala.Document
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
-import org.mongodb.scala.model.Filters.equal
-import model.Category
+import it.unibo.pps.model.Category
+import scala.concurrent.ExecutionContext.Implicits.global
 
-class QuestionDataImpl extends QuestionData {
+abstract class QuestionDataImpl extends QuestionData {
 
-    val collection = ConnectionMongoDB.getDatabase().getCollection("questions")
-
-    override def getQuestionsByCategory(category: Category): Option[Document] = {
-        val result = collection.find(equal("idCategory", category.getID())).headOption()
-        // Attende il risultato e restituisce l'utente trovato, se presente
-        Await.result(result, Duration.Inf)
-        // todo: convertire de ottenere la stringa
-        // ...
-    }
+//    override def getQuestionsByCategory(category: Category): Option[Document] = {
+//        val result = collection.find(equal("idCategory", category.getID())).headOption()
+//        // Attende il risultato e restituisce l'utente trovato, se presente
+//        Await.result(result, Duration.Inf)
+//        // todo: convertire de ottenere la stringa
+//        // ...
+//    }
 
 }

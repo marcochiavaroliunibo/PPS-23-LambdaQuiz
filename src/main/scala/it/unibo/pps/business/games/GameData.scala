@@ -1,11 +1,11 @@
 package it.unibo.pps.business.games
 
-import org.mongodb.scala.Document
-import model.User
+import it.unibo.pps.business.{ConnectionMongoDB, Repository}
+import it.unibo.pps.model.{Game, User}
 
-trait GameData {
-  
-    def getGameInProgressByUser(user: User) : Option[Document]
-    def getLastGameCompletedByUser(user: User): Option[Document]
+import scala.concurrent.ExecutionContext.Implicits.global
 
+trait GameData extends Repository[Game] {
+    def getGameInProgressByUser(user: User) : Option[?]
+    def getLastGameCompletedByUser(user: User): Option[?]
 }
