@@ -6,6 +6,6 @@ import it.unibo.pps.model.{Game, Round}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 trait RoundData extends Repository[Round] {
-    def getAllRoundsByGame(game: Game) : Option[?]
+  def getAllRoundsByGame(game: Game): Option[?]
 
 }

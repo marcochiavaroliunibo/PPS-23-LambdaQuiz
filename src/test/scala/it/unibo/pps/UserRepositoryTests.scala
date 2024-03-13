@@ -14,15 +14,15 @@ class UserRepositoryTests extends AsyncFlatSpec with should.Matchers:
   val user = new User("albisyx", "Password!")
   "A user" should "eventually be inserted in the database" in {
     val userRepository = new UserRepository
-    userRepository.create(user)
-      .map(_ shouldBe a [Unit])
+    userRepository
+      .create(user)
+      .map(_ shouldBe a[Unit])
   }
 
   it should "be read from the database" in {
     val userRepository = new UserRepository
     val futureUser = userRepository.read(user.getID)
     futureUser
-      .map(_.exists(_.getName == "albisyx") should be (true))
+      .map(_.exists(_.getName == "albisyx") should be(true))
   }
 end UserRepositoryTests
-

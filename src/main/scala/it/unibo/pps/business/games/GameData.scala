@@ -6,6 +6,6 @@ import it.unibo.pps.model.{Game, User}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 trait GameData extends Repository[Game] {
-    def getGameInProgressByUser(user: User) : Option[?]
-    def getLastGameCompletedByUser(user: User): Option[?]
+  def getGameInProgressByUser(user: User): Option[?]
+  def getLastGameCompletedByUser(user: User): Option[?]
 }

@@ -13,9 +13,7 @@ object GameTitle extends UIComponent:
     alignmentInParent = Pos.Center
     margin = Insets(40, 0, 0, 0)
   end GameTitle
-  
+
   private val gameTitle = new GameTitle
   override def getComponent: Node = gameTitle
 end GameTitle
-
-

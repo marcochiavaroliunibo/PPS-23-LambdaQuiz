@@ -6,8 +6,7 @@ import scalafx.scene.paint.Paint
 
 object UIUtils:
 
-  def craftBackground(paint: Paint): Background = 
+  def craftBackground(paint: Paint): Background =
     new Background(Array(new BackgroundFill(paint, CornerRadii.Empty, Insets(4))))
 
 end UIUtils
-

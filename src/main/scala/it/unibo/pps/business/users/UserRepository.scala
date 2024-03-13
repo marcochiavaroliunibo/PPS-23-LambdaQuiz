@@ -17,19 +17,22 @@ class UserRepository extends Repository[User]:
       .map(_.insert.one(user))
       .map(_.onComplete {
         case Success(wr) => println("wr.code.get " + wr)
-        case Failure(f) => f.printStackTrace()
+        case Failure(f)  => f.printStackTrace()
       })
 
   override def read(id: String): Future[Option[User]] =
     this.collection
-      .map(_.find(BSONDocument(
-        "_id" -> id
-      )).one[User])
+      .map(
+        _.find(
+          BSONDocument(
+            "_id" -> id
+          )
+        ).one[User]
+      )
       .flatMap(_.andThen {
-        case Failure(e) => e.printStackTrace()
+        case Failure(e)       => e.printStackTrace()
         case Success(Some(u)) => Some(u)
-        case Success(None) => None
+        case Success(None)    => None
       })
 
 end UserRepository
-

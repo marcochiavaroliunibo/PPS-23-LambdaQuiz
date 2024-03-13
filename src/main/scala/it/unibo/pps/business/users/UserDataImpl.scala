@@ -1,15 +1,15 @@
 package it.unibo.pps.business.users
 
-import scala.util.{Failure, Success}
 import it.unibo.pps.business.ConnectionMongoDB
 import reactivemongo.api.bson.BSONDocument
 
 import scala.concurrent.*
-import scala.concurrent.duration.*
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.*
+import scala.util.{Failure, Success}
 
 abstract class UserDataImpl extends UserData {
-    
+
 //    override def createUser(nickname: String, password: String): Unit = {
 //        val newDocument: Document = Document(
 //            "nickname" -> nickname,

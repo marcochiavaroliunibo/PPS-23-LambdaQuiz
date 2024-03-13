@@ -9,4 +9,3 @@ trait DialogComponent extends UIComponent {
 
   override def getComponent: Node = getDialog.dialogPane()
 }
-

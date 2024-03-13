@@ -2,10 +2,10 @@ val scala3Version = "3.4.0"
 
 // Determine OS version for JavaFX binaries
 lazy val osName = System.getProperty("os.name") match {
-  case n if n.startsWith("Linux") => "linux"
-  case n if n.startsWith("Mac") => "mac"
+  case n if n.startsWith("Linux")   => "linux"
+  case n if n.startsWith("Mac")     => "mac"
   case n if n.startsWith("Windows") => "win"
-  case _ => throw new Exception("Unknown platform!")
+  case _                            => throw new Exception("Unknown platform!")
 }
 
 val javafxBinaries = {
@@ -16,7 +16,7 @@ val javafxBinaries = {
 val reactiveMongoNativePartial: String => String = os => s"1.1.0-RC6-$os-x86-64"
 val reactiveMongoNativeVersion = osName match {
   case "linux" => reactiveMongoNativePartial(osName)
-  case "mac" => reactiveMongoNativePartial("osx")
+  case "mac"   => reactiveMongoNativePartial("osx")
 }
 
 lazy val root = project
@@ -24,9 +24,7 @@ lazy val root = project
   .settings(
     name := "PPS-23-LambdaQuiz",
     version := "0.1",
-
     scalaVersion := scala3Version,
-
     libraryDependencies ++= Seq(
       "org.scalafx" %% "scalafx" % "21.0.0-R32",
       "ch.qos.logback" % "logback-classic" % "1.5.3",

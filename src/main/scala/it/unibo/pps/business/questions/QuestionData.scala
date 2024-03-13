@@ -6,6 +6,6 @@ import it.unibo.pps.model.{Category, Question}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 trait QuestionData extends Repository[Question] {
-    def getQuestionsByCategory(category: Category) : Option[?]
+  def getQuestionsByCategory(category: Category): Option[?]
 
 }

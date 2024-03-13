@@ -16,5 +16,3 @@ object View extends JFXApp3:
       }
     }
 end View
-
-

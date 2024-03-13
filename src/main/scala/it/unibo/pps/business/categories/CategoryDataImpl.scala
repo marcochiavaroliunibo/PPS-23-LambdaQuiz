@@ -1,6 +1,7 @@
 package it.unibo.pps.business.categories
 
 import it.unibo.pps.business.ConnectionMongoDB
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 abstract class CategoryDataImpl extends CategoryData {

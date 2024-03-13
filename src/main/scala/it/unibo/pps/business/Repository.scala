@@ -1,7 +1,8 @@
 package it.unibo.pps.business
 
-import scala.concurrent.Future
 import reactivemongo.api.bson.collection.BSONCollection
+
+import scala.concurrent.Future
 
 trait Repository[T]:
   protected val collection: Future[BSONCollection]
@@ -9,4 +10,3 @@ trait Repository[T]:
   def create(t: T): Future[Unit]
   def read(id: String): Future[Option[T]]
 end Repository
-

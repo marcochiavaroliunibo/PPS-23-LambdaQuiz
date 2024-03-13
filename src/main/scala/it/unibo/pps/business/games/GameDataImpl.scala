@@ -1,11 +1,11 @@
 package it.unibo.pps.business.games
 
 import it.unibo.pps.business.ConnectionMongoDB
+import it.unibo.pps.model.User
 
 import scala.concurrent.Await
-import scala.concurrent.duration.Duration
-import it.unibo.pps.model.User
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
 
 abstract class GameDataImpl extends GameData {
 

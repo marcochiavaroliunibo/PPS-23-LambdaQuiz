@@ -1,11 +1,11 @@
 package it.unibo.pps.business.questions
 
 import it.unibo.pps.business.ConnectionMongoDB
+import it.unibo.pps.model.Category
 
 import scala.concurrent.Await
-import scala.concurrent.duration.Duration
-import it.unibo.pps.model.Category
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
 
 abstract class QuestionDataImpl extends QuestionData {
 
