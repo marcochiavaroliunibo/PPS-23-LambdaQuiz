@@ -3,8 +3,8 @@ val scala3Version = "3.4.0"
 import scala.sys.process.*
 
 val isArch = "uname -m".!!.trim match {
-  case "arm64" => "aarc"
-  case _ => "x86-64"
+  case "arm64" => "aarch"
+  case _ => "x86"
 }
 
 // Determine OS version for JavaFX binaries
@@ -20,7 +20,7 @@ val javafxBinaries = {
     .map(m => "org.openjfx" % s"javafx-$m" % "21" classifier osName)
 }
 
-val reactiveMongoNativePartial: String => String = os => s"1.1.0-RC6-$os-$isArch"
+val reactiveMongoNativePartial: String => String = os => s"1.1.0-RC6-$os-$isArch-64"
 val reactiveMongoNativeVersion = osName match {
   case "linux" => reactiveMongoNativePartial(osName)
   case "mac"   => reactiveMongoNativePartial("osx")
