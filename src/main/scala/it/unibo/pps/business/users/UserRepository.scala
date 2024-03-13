@@ -15,10 +15,6 @@ class UserRepository extends Repository[User]:
   override def create(user: User): Future[Unit] =
     this.collection
       .map(_.insert.one(user))
-      .map(_.onComplete {
-        case Success(wr) => println("wr.code.get " + wr)
-        case Failure(f)  => f.printStackTrace()
-      })
 
   override def read(id: String): Future[Option[User]] =
     this.collection
