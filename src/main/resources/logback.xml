@@ -1,0 +1,15 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level [%thread] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="it.unibo.pps" level="INFO" />
+    <logger name="reactivemongo" level="INFO" />
+    <logger name="ch.qos.logback" level="WARN" />
+
+    <root level="WARN">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
