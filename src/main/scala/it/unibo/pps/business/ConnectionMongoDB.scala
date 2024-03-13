@@ -1,18 +1,34 @@
 package it.unibo.pps.business
 
-/* Questa classe si occupa di fornire i servizi di connessione
-al database MongoDB */
-import org.mongodb.scala._
+import reactivemongo.api.{AsyncDriver, Cursor, DB, MongoConnection}
+import reactivemongo.api.bson.{BSONDocumentReader, BSONDocumentWriter, Macros, document}
 
+import scala.concurrent.Future
+
+/**
+ * Questo object si occupa di fornire i servizi di connessione
+ * al database MongoDB
+ */
 object ConnectionMongoDB {
-  
+    println("Connecting to the database...")
+    import scala.concurrent.ExecutionContext.Implicits.global
     // Variabili per la connessione
-    val stringConnection = "mongodb+srv://user-login:marco1234@cluster0.9jwsjr8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-    val mongoClient: MongoClient = MongoClient(stringConnection)
-    val database: MongoDatabase = mongoClient.getDatabase("LambdaQuiz")
+    private val connectionString = "mongodb+srv://user-login:marco1234@cluster0.9jwsjr8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    private val databaseName = "LambdaQuiz"
+    private val mongoDriver = new AsyncDriver
 
-    def getDatabase() : MongoDatabase = database
+    private val database = for
+        mongoUri <- MongoConnection.fromString(connectionString)
+        connection <- mongoDriver.connect(mongoUri)
+        db <- connection.database(databaseName)
+    yield db
 
-    def closeConnection(): Unit = mongoClient.close()
+    database.onComplete {
+        case resolution => println(s"Successfully connected to $databaseName database")
+        case _ => println(s"Error while connecting to $databaseName database")
+    }
 
+    def getDatabase: Future[DB] = database
+
+    def closeConnection(): Unit = mongoDriver.close()
 }
