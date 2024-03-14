@@ -1,7 +1,6 @@
 package it.unibo.pps
 
-import it.unibo.pps.business.ConnectionMongoDB
-import it.unibo.pps.business.users.UserRepository
+import it.unibo.pps.business.{ConnectionMongoDB, UserRepository}
 import it.unibo.pps.model.User
 import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.*
