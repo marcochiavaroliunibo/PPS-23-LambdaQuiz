@@ -1,4 +1,4 @@
-package it.unibo.pps.business.users
+package it.unibo.pps.business
 
 import it.unibo.pps.business.{ConnectionMongoDB, Repository}
 import it.unibo.pps.model.User
