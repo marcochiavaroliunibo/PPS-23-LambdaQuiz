@@ -1,62 +1,70 @@
 package it.unibo.pps.view.components
 
+import it.unibo.pps.model.User
 import scalafx.Includes.*
 import scalafx.application.Platform
-import scalafx.geometry.Insets
+import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.control.*
 import scalafx.scene.control.ButtonBar.ButtonData
 import scalafx.scene.layout.GridPane
+import scalafx.scene.text.Font
 
 object LoginComponent extends DialogComponent:
   // TODO da cambiare con User
   case class LoginResult(username: String, password: String)
-  private class LoginComponent extends Dialog[LoginResult]:
-    title = "Login Dialog"
-    headerText = "Look, a Custom Login Dialog"
+  private class LoginComponent extends Dialog[List[User]]:
+    title = "Finestra di login"
+    headerText = "Inserire il nome utente e la password dei due giocatori"
 
     // Set the button types.
     private val loginButtonType = new ButtonType("Login", ButtonData.OKDone)
     dialogPane().buttonTypes = Seq(loginButtonType, ButtonType.Cancel)
 
     // Create the username and password labels and fields.
-    private val username = new TextField() { promptText = "Username" }
-    private val password = new PasswordField() { promptText = "Password" }
+    private val usernameOfPlayer1 = new TextField() { promptText = "Username" }
+    private val passwordOfPlayer1 = new PasswordField() { promptText = "Password" }
+    private val usernameOfPlayer2 = new TextField() { promptText = "Username" }
+    private val passwordOfPlayer2 = new PasswordField() { promptText = "Password" }
 
     private val grid = new GridPane() {
       hgap = 10
       vgap = 10
-      padding = Insets(20, 100, 10, 10)
+      padding = Insets(20, 50, 10, 10)
 
-      add(new Label("Username:"), 0, 0)
-      add(username, 1, 0)
-      add(new Label("Password:"), 0, 1)
-      add(password, 1, 1)
+      val players: Seq[Label] = Seq("Giocatore 1", "Giocatore 2").map(new Label(_) {
+        font = new Font("Arial Bold", 15)
+        alignmentInParent = Pos.Center
+      })
+
+      add(players.head, 1, 0)
+      add(new Label("Username:"), 0, 1)
+      add(usernameOfPlayer1, 1, 1)
+      add(new Label("Password:"), 0, 2)
+      add(passwordOfPlayer1, 1, 2)
+
+      add(players.last, 1, 3)
+      add(new Label("Username:"), 0, 4)
+      add(usernameOfPlayer2, 1, 4)
+      add(new Label("Password:"), 0, 5)
+      add(passwordOfPlayer2, 1, 5)
     }
-
-    // Enable/Disable login button depending on whether a username was
-    // entered.
-    private val loginButton = dialogPane().lookupButton(loginButtonType)
-    loginButton.setDisable(true)
-
-    // Do some validation (disable when username is empty).
-    username.text.onChange { (_, _, newValue) =>
-      loginButton.setDisable(newValue.trim().isEmpty)
-    }
-
     dialogPane().setContent(grid)
 
     // Request focus on the username field by default.
-    Platform.runLater(username.requestFocus())
+    Platform.runLater(usernameOfPlayer1.requestFocus())
 
     // When the login button is clicked, convert the result to
     // a username-password-pair.
     resultConverter = {
       case buttonPressedType if buttonPressedType == loginButtonType =>
-        LoginResult(username.text(), password.text())
+        List(
+          User(usernameOfPlayer1.text(), passwordOfPlayer1.text()),
+          User(usernameOfPlayer2.text(), passwordOfPlayer2.text())
+        )
       case _ => null
     }
   end LoginComponent
 
   private val loginComponent: LoginComponent = new LoginComponent
-  override def getDialog: Dialog[LoginResult] = loginComponent
+  override def getDialog: Dialog[List[User]] = loginComponent
 end LoginComponent
