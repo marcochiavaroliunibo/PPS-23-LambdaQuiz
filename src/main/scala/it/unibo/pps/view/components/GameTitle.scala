@@ -13,7 +13,7 @@ private class GameTitle extends Text("LambdaQuiz"):
   margin = Insets(40, 0, 0, 0)
 end GameTitle
 
-object GameTitle extends UIComponent:
+object GameTitle extends UIComponent[Text]:
   private val gameTitle = new GameTitle
-  override def getComponent: Node = gameTitle
+  override def getComponent: Text = gameTitle
 end GameTitle

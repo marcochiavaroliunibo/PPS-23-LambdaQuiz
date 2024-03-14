@@ -62,8 +62,7 @@ private class LoginComponent extends Dialog[List[User]]:
   }
 end LoginComponent
 
-object LoginComponent extends DialogComponent:
-
+object LoginComponent extends UIComponent[Dialog[List[User]]]:
   private val loginComponent: LoginComponent = new LoginComponent
-  override def getDialog: Dialog[List[User]] = loginComponent
+  override def getComponent: Dialog[List[User]] = loginComponent
 end LoginComponent

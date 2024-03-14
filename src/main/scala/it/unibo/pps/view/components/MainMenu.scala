@@ -37,7 +37,7 @@ private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):
   }
 
   menuButtons.filter(_.text.value == "PLAY").head.onAction = _ => {
-    LoginComponent.getDialog.showAndWait() match
+    LoginComponent.getComponent.showAndWait() match
       case Some(users: List[User]) =>
         users.foreach(user => println(s"${user.getName} logged in with password ${user.getPassword}"))
         changeScene(scene.get(), new DashboardScene)
@@ -48,7 +48,7 @@ private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):
   children = menuButtons
 end MainMenu
 
-object MainMenu extends UIComponent:
+object MainMenu extends UIComponent[FlowPane]:
   private val mainMenu = new MainMenu
-  override def getComponent: Node = mainMenu
+  override def getComponent: FlowPane = mainMenu
 end MainMenu
