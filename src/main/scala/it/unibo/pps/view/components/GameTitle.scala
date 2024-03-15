@@ -1,7 +1,6 @@
 package it.unibo.pps.view.components
 
 import scalafx.geometry.{Insets, Pos}
-import scalafx.scene.Node
 import scalafx.scene.paint.Color.{DarkOrange, Orange}
 import scalafx.scene.paint.{LinearGradient, Stops}
 import scalafx.scene.text.{Font, Text}
