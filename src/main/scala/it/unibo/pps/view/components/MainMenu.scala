@@ -1,5 +1,6 @@
 package it.unibo.pps.view.components
 
+import it.unibo.pps.controller.UserController
 import it.unibo.pps.model.User
 import it.unibo.pps.view.scenes.DashboardScene
 import scalafx.Includes.*
@@ -15,8 +16,8 @@ import scalafx.scene.text.Font
 import scala.concurrent.{ExecutionContext, Future, Promise}
 
 /** Questa classe rappresenta il menu principale, che viene mostrato all'avvio dell'applicazipne Contiene il titolo del
-  * gioco ed i pulsanti per giocare e per chiudere il programma
-  */
+ * gioco ed i pulsanti per giocare e per chiudere il programma
+ */
 private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):
   import it.unibo.pps.view.UIUtils.*
   private def craftButton(displayName: String): Button = new Button {
@@ -42,6 +43,9 @@ private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):
       case Some(users: List[User]) =>
         users.foreach(user => println(s"${user.getUsername} logged in with password ${user.getPassword}"))
         // changeScene(scene.get(), new DashboardScene(future))
+          val error =
+            Alert(AlertType.Error, "Login errato", ButtonType.Close)
+              .showAndWait()
       case Some(_) | None => println("Dialog returned: None")
   }
 

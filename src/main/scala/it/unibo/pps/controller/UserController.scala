@@ -2,7 +2,6 @@ package it.unibo.pps.controller
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-import it.unibo.pps.Main.category
 import it.unibo.pps.business.UserRepository
 import it.unibo.pps.model.User
 
