@@ -24,10 +24,10 @@ object Round {
 
     protected val gameRepository = new GameRepository
     protected var game: Game = null
-    
-    def readDocument(doc: BSONDocument): Try[Round] =
-      gameRepository.read(doc.getAsTry[String]("game").toString).foreach(value => game = value.get)
 
+    def readDocument(doc: BSONDocument): Try[Round] =
+      gameRepository.read(doc.getAsTry[String]("game").get).foreach(value => game = value.get)
+      println(game)
       for
         id <- doc.getAsTry[String]("_id")
         pointUser1 <- doc.getAsTry[Int]("pointUser1")

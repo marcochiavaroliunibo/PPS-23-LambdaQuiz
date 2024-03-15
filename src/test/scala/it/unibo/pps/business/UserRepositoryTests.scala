@@ -1,4 +1,4 @@
-package it.unibo.pps
+package it.unibo.pps.business
 
 import it.unibo.pps.business.{ConnectionMongoDB, UserRepository}
 import it.unibo.pps.model.User
@@ -22,6 +22,6 @@ class UserRepositoryTests extends AsyncFlatSpec with should.Matchers:
     val userRepository = new UserRepository
     val futureUser = userRepository.read(user.getID)
     futureUser
-      .map(_.exists(_.getName == user.getName) should be(true))
+      .map(_.exists(_.getUsername == user.getUsername) should be(true))
   }
 end UserRepositoryTests

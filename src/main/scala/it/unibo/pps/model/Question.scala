@@ -2,11 +2,9 @@ package it.unibo.pps.model
 
 import it.unibo.pps.business.{CategoryRepository, Repository}
 import reactivemongo.api.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
-import scala.concurrent.ExecutionContext.Implicits.global
 
-import java.time.LocalDateTime
+import scala.concurrent.ExecutionContext.Implicits.global
 import java.util.UUID
-import scala.concurrent.Future
 import scala.util.Try
 
 case class Question(
@@ -39,8 +37,8 @@ object Question {
     protected var category: Category = null
 
     def readDocument(doc: BSONDocument): Try[Question] =
-      categoryRepository.read(doc.getAsTry[String]("category").toString).foreach(value => category = value.get)
-
+      categoryRepository.read(doc.getAsTry[String]("category").get).map(value => category = value.get)
+      
       for
         id <- doc.getAsTry[String]("_id")
         text <- doc.getAsTry[String]("text")

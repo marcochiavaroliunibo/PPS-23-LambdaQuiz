@@ -27,8 +27,8 @@ object Game {
     protected var user2: User = null
 
     def readDocument(doc: BSONDocument): Try[Game] =
-      userRepository.read(doc.getAsTry[String]("user1").toString).foreach(value => user1 = value.get)
-      userRepository.read(doc.getAsTry[String]("user2").toString).foreach(value => user2 = value.get)
+      userRepository.read(doc.getAsTry[String]("user1").get).foreach(value => user1 = value.get)
+      userRepository.read(doc.getAsTry[String]("user2").get).foreach(value => user2 = value.get)
 
       for
         id <- doc.getAsTry[String]("_id")
