@@ -40,7 +40,7 @@ private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):
   menuButtons.filter(_.text.value == "PLAY").head.onAction = _ => {
     LoginComponent.getComponent.showAndWait() match
       case Some(users: List[User]) =>
-        users.foreach(user => println(s"${user.getName} logged in with password ${user.getPassword}"))
+        users.foreach(user => println(s"${user.getUsername} logged in with password ${user.getPassword}"))
         // changeScene(scene.get(), new DashboardScene(future))
       case Some(_) | None => println("Dialog returned: None")
   }
