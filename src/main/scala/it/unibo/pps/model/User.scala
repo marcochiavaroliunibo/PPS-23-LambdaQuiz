@@ -5,11 +5,11 @@ import reactivemongo.api.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWri
 import java.util.UUID
 import scala.util.Try
 
-case class User(nickname: String, password: String, id: Option[UUID] = None) {
+case class User(username: String, password: String, id: Option[UUID] = None) {
   private val _id: UUID = id.getOrElse(UUID.randomUUID())
 
   def getID: String = _id.toString
-  def getName: String = nickname
+  def getUsername: String = username
   def getPassword: String = password
 }
 
@@ -24,7 +24,7 @@ object User {
   implicit object UserWriter extends BSONDocumentWriter[User]:
     override def writeTry(user: User): Try[BSONDocument] = for
       id <- Try(user.getID)
-      username <- Try(user.getName)
+      username <- Try(user.getUsername)
       password <- Try(user.getPassword)
     yield BSONDocument("_id" -> id, "username" -> username, "password" -> password)
 }

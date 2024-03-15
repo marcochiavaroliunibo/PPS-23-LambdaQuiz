@@ -2,8 +2,9 @@ package it.unibo.pps.business
 
 import it.unibo.pps.business.{ConnectionMongoDB, Repository}
 import it.unibo.pps.model.User
-import reactivemongo.api.bson.BSONDocument
+import reactivemongo.api.bson.{BSONArray, BSONDocument}
 import reactivemongo.api.bson.collection.BSONCollection
+import sun.security.util.Password
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -29,6 +30,24 @@ class UserRepository extends Repository[User]:
         case Failure(e)       => e.printStackTrace()
         case Success(Some(u)) => Some(u)
         case Success(None)    => None
+      })
+
+  def getUserByLogin(user: User): Future[Option[User]] =
+    this.collection
+      .map(
+        _.find(
+          BSONDocument(
+            "$and" -> BSONArray(
+              "username" -> user.getUsername,
+              "password" -> user.getPassword,
+              )
+            )
+        ).one[User]
+      )
+      .flatMap(_.andThen {
+        case Failure(e) => e.printStackTrace()
+        case Success(Some(u)) => Some(u)
+        case Success(None) => None
       })
 
 end UserRepository
