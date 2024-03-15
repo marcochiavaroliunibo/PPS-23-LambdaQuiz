@@ -1,6 +1,8 @@
 package it.unibo.pps.model
 
+import it.unibo.pps.business.UserRepository
 import reactivemongo.api.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import java.time.LocalDateTime
 import java.util.UUID
@@ -19,13 +21,20 @@ case class Game(user1: User, user2: User, completed: Boolean, lastUpdate: LocalD
 
 object Game {
   implicit object GameReader extends BSONDocumentReader[Game]:
-    def readDocument(doc: BSONDocument): Try[Game] = for
-      id <- doc.getAsTry[String]("_id")
-      user1 <- doc.getAsTry[User]("user1")
-      user2 <- doc.getAsTry[User]("user2")
-      completed <- doc.getAsTry[Boolean]("completed")
-      lastUpdate <- doc.getAsTry[LocalDateTime]("lastUpdate")
-    yield Game(user1, user2, completed, lastUpdate, Some(UUID.fromString(id)))
+
+    protected val userRepository = new UserRepository
+    protected var user1: User = null
+    protected var user2: User = null
+
+    def readDocument(doc: BSONDocument): Try[Game] =
+      userRepository.read(doc.getAsTry[String]("user1").toString).foreach(value => user1 = value.get)
+      userRepository.read(doc.getAsTry[String]("user2").toString).foreach(value => user2 = value.get)
+
+      for
+        id <- doc.getAsTry[String]("_id")
+        completed <- doc.getAsTry[Boolean]("completed")
+        lastUpdate <- doc.getAsTry[LocalDateTime]("lastUpdate")
+      yield Game(user1, user2, completed, lastUpdate, Some(UUID.fromString(id)))
 
   implicit object GameWriter extends BSONDocumentWriter[Game]:
     override def writeTry(game: Game): Try[BSONDocument] = for

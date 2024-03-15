@@ -2,6 +2,7 @@ package it.unibo.pps.model
 
 import it.unibo.pps.business.{CategoryRepository, Repository}
 import reactivemongo.api.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import java.time.LocalDateTime
 import java.util.UUID
@@ -40,16 +41,21 @@ case class Question(
 object Question {
   implicit object QuestionReader extends BSONDocumentReader[Question]:
 
-    def readDocument(doc: BSONDocument): Try[Question] = for
-      id <- doc.getAsTry[String]("_id")
-      text <- doc.getAsTry[String]("text")
-      answer1 <- doc.getAsTry[String]("answer1")
-      answer2 <- doc.getAsTry[String]("answer2")
-      answer3 <- doc.getAsTry[String]("answer3")
-      answer4 <- doc.getAsTry[String]("answer4")
-      correctAnswer <- doc.getAsTry[Int]("correctAnswer")
-      category <- doc.getAsTry[Category]("category")
-    yield Question(text, answer1, answer2, answer3, answer4, correctAnswer, category, Some(UUID.fromString(id)))
+    protected val categoryRepository = new CategoryRepository
+    protected var category: Category = null
+    
+    def readDocument(doc: BSONDocument): Try[Question] =
+      categoryRepository.read(doc.getAsTry[String]("category").toString).foreach(value => category = value.get)
+      
+      for
+        id <- doc.getAsTry[String]("_id")
+        text <- doc.getAsTry[String]("text")
+        answer1 <- doc.getAsTry[String]("answer1")
+        answer2 <- doc.getAsTry[String]("answer2")
+        answer3 <- doc.getAsTry[String]("answer3")
+        answer4 <- doc.getAsTry[String]("answer4")
+        correctAnswer <- doc.getAsTry[Int]("correctAnswer")
+      yield Question(text, answer1, answer2, answer3, answer4, correctAnswer, category, Some(UUID.fromString(id)))
 
   implicit object QuestionWriter extends BSONDocumentWriter[Question]:
     override def writeTry(question: Question): Try[BSONDocument] = for

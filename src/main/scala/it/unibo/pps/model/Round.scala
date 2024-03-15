@@ -1,7 +1,9 @@
 package it.unibo.pps.model
 
+import it.unibo.pps.business.GameRepository
 import reactivemongo.api.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import java.util.UUID
 import scala.util.Try
 
@@ -19,13 +21,19 @@ case class Round(game: Game, pointUser1: Int, pointUser2: Int, numberRound: Int,
 
 object Round {
   implicit object RoundReader extends BSONDocumentReader[Round]:
-    def readDocument(doc: BSONDocument): Try[Round] = for
-      id <- doc.getAsTry[String]("_id")
-      game <- doc.getAsTry[Game]("game")
-      pointUser1 <- doc.getAsTry[Int]("pointUser1")
-      pointUser2 <- doc.getAsTry[Int]("pointUser2")
-      numberRound <- doc.getAsTry[Int]("numberRound")
-    yield Round(game, pointUser1, pointUser2, numberRound, Some(UUID.fromString(id)))
+
+    protected val gameRepository = new GameRepository
+    protected var game: Game = null
+    
+    def readDocument(doc: BSONDocument): Try[Round] =
+      gameRepository.read(doc.getAsTry[String]("game").toString).foreach(value => game = value.get)
+
+      for
+        id <- doc.getAsTry[String]("_id")
+        pointUser1 <- doc.getAsTry[Int]("pointUser1")
+        pointUser2 <- doc.getAsTry[Int]("pointUser2")
+        numberRound <- doc.getAsTry[Int]("numberRound")
+      yield Round(game, pointUser1, pointUser2, numberRound, Some(UUID.fromString(id)))
 
   implicit object RoundWriter extends BSONDocumentWriter[Round]:
     override def writeTry(round: Round): Try[BSONDocument] = for
