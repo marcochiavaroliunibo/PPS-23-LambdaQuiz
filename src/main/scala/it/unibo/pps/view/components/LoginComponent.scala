@@ -5,6 +5,7 @@ import scalafx.Includes.*
 import scalafx.application.Platform
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.control.*
+import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.ButtonBar.ButtonData
 import scalafx.scene.layout.GridPane
 import scalafx.scene.text.Font
@@ -53,11 +54,23 @@ private class LoginComponent extends Dialog[List[User]]:
   // When the login button is clicked, convert the result to
   // a username-password-pair.
   resultConverter = {
-    case buttonPressedType if buttonPressedType == loginButtonType =>
-      List(
-        User(usernameOfPlayer1.text(), passwordOfPlayer1.text()),
-        User(usernameOfPlayer2.text(), passwordOfPlayer2.text())
-      )
+    case buttonPressedType if buttonPressedType == loginButtonType => {
+      if usernameOfPlayer1.text().isBlank || passwordOfPlayer1.text().isEmpty
+        || usernameOfPlayer2.text().isBlank || passwordOfPlayer2.text().isEmpty then
+        Alert(AlertType.Error, "Compilare tutti i campi per effettuare il login", ButtonType.Close)
+          .showAndWait()
+        null
+      else
+        if usernameOfPlayer1.text.isEqualTo(usernameOfPlayer2.text).get() then
+          Alert(AlertType.Error, "Inserire due username differenti ed eseguire il login", ButtonType.Close)
+            .showAndWait()
+          null
+        else
+          List(
+            User(usernameOfPlayer1.text(), passwordOfPlayer1.text()),
+            User(usernameOfPlayer2.text(), passwordOfPlayer2.text())
+          )
+    }
     case _ => null
   }
 end LoginComponent
