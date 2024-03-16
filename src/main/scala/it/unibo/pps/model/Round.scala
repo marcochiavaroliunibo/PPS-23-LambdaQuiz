@@ -5,6 +5,8 @@ import reactivemongo.api.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWri
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import java.util.UUID
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 import scala.util.Try
 
 case class Round(game: Game, pointUser1: Int, pointUser2: Int, numberRound: Int,  id: Option[UUID] = None) {
@@ -23,11 +25,12 @@ object Round {
   implicit object RoundReader extends BSONDocumentReader[Round]:
 
     protected val gameRepository = new GameRepository
-    protected var game: Game = null
 
     def readDocument(doc: BSONDocument): Try[Round] =
-      gameRepository.read(doc.getAsTry[String]("game").get).foreach(value => game = value.get)
-      println(game)
+      var game: Game = null
+      val gameFuture = Await.result(gameRepository.read(doc.getAsTry[String]("game").get), Duration.Inf)
+      if gameFuture.isDefined then game = gameFuture.get
+
       for
         id <- doc.getAsTry[String]("_id")
         pointUser1 <- doc.getAsTry[Int]("pointUser1")

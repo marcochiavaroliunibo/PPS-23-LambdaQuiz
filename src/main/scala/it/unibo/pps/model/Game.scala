@@ -2,10 +2,12 @@ package it.unibo.pps.model
 
 import it.unibo.pps.business.UserRepository
 import reactivemongo.api.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
-import scala.concurrent.ExecutionContext.Implicits.global
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import java.time.LocalDateTime
 import java.util.UUID
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 import scala.util.Try
 
 case class Game(user1: User, user2: User, completed: Boolean, lastUpdate: LocalDateTime, id: Option[UUID] = None) {
@@ -23,13 +25,14 @@ object Game {
   implicit object GameReader extends BSONDocumentReader[Game]:
 
     protected val userRepository = new UserRepository
-    protected var user1: User = null
-    protected var user2: User = null
 
     def readDocument(doc: BSONDocument): Try[Game] =
-      userRepository.read(doc.getAsTry[String]("user1").get).foreach(value => user1 = value.get)
-      userRepository.read(doc.getAsTry[String]("user2").get).foreach(value => user2 = value.get)
-
+      var user1, user2: User = null
+      val futureUser1 = Await.result(userRepository.read(doc.getAsTry[String]("user1").get), Duration.Inf)
+      val futureUser2 = Await.result(userRepository.read(doc.getAsTry[String]("user2").get), Duration.Inf)
+      if futureUser1.isDefined then user1 = futureUser1.get
+      if futureUser2.isDefined then user2 = futureUser2.get
+      
       for
         id <- doc.getAsTry[String]("_id")
         completed <- doc.getAsTry[Boolean]("completed")

@@ -5,6 +5,8 @@ import reactivemongo.api.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWri
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import java.util.UUID
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 import scala.util.Try
 
 case class Question(
@@ -34,10 +36,11 @@ object Question {
   implicit object QuestionReader extends BSONDocumentReader[Question]:
 
     protected val categoryRepository = new CategoryRepository
-    protected var category: Category = null
 
     def readDocument(doc: BSONDocument): Try[Question] =
-      categoryRepository.read(doc.getAsTry[String]("category").get).map(value => category = value.get)
+      var category: Category = null
+      val categoryFuture = Await.result(categoryRepository.read(doc.getAsTry[String]("category").get), Duration.Inf)
+      if categoryFuture.isDefined then category = categoryFuture.get
       
       for
         id <- doc.getAsTry[String]("_id")
