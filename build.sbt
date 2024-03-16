@@ -8,7 +8,7 @@ lazy val osName = System.getProperty("os.name") match {
   case _                            => throw new Exception("Unknown platform!")
 }
 
-val javaFXVersion = "21.0.2"
+val javaFXVersion = "21.0.1"
 val javafxBinaries = {
   Seq("base", "controls", "fxml", "graphics", "media", "swing", "web")
     .map(m => "org.openjfx" % s"javafx-$m" % javaFXVersion classifier osName)
@@ -34,7 +34,7 @@ lazy val root = project
     libraryDependencies ++= Seq(
       "org.scalafx" %% "scalafx" % "21.0.0-R32",
       "ch.qos.logback" % "logback-classic" % "1.5.3",
-      "org.reactivemongo" %% "reactivemongo" % "1.1.0-RC12" % "provided",
+      "org.reactivemongo" %% "reactivemongo" % "1.1.0-RC12",
       "org.reactivemongo" % "reactivemongo-shaded-native" % reactiveMongoNativeVersion,
       "org.scalactic" %% "scalactic" % "3.2.18",
       "org.scalatest" %% "scalatest" % "3.2.18" % "test"
