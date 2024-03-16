@@ -38,8 +38,8 @@ class UserRepository extends Repository[User]:
         _.find(
           BSONDocument(
             "$and" -> BSONArray(
-              "username" -> user.getUsername,
-              "password" -> user.getPassword,
+                BSONDocument("username" -> user.getUsername),
+                BSONDocument("password" -> user.getPassword),
               )
             )
         ).one[User]

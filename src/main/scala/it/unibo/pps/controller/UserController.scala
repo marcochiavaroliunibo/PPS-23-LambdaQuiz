@@ -8,8 +8,12 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
 class UserController:
-  
+
   private val userRepository = new UserRepository
+
+  def createUser (user: User) : Unit = {
+    userRepository.create(user)
+  }
   
   def checkLogin (users: List[User]) : Boolean = {
     var statusLogin: Boolean = true
@@ -19,5 +23,5 @@ class UserController:
     })
     statusLogin
   }
-  
+
 end UserController

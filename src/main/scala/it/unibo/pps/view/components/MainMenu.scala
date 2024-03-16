@@ -38,11 +38,14 @@ private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):
     confirm.filter(_ == ButtonType.Yes).foreach(_ => Platform.exit())
   }
 
+  private val userController = new UserController
   menuButtons.filter(_.text.value == "PLAY").head.onAction = _ => {
     LoginComponent.getComponent.showAndWait() match
       case Some(users: List[User]) =>
-        users.foreach(user => println(s"${user.getUsername} logged in with password ${user.getPassword}"))
-        // changeScene(scene.get(), new DashboardScene(future))
+        if userController.checkLogin(users) then
+          println("Login OK - caricare Dashboard") // todo: caricare dashboard
+          //changeScene(scene.get(), new DashboardScene(future))
+        else
           val error =
             Alert(AlertType.Error, "Login errato", ButtonType.Close)
               .showAndWait()
