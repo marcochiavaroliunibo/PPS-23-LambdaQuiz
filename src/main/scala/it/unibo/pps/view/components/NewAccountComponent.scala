@@ -1,6 +1,7 @@
 package it.unibo.pps.view.components
 
 import it.unibo.pps.model.User
+import it.unibo.pps.utility.Utility
 import scalafx.Includes.*
 import scalafx.application.Platform
 import scalafx.geometry.{Insets, Pos}
@@ -51,29 +52,10 @@ private class NewAccountComponent extends Dialog[User]:
 
   resultConverter = {
     case buttonPressedType if buttonPressedType == accountButtonType => {
-      checkInputRegistration()
+      val utility = new Utility()
+      utility.checkInputRegistration(username.getText, password.getText, confirmPassword.getText)
     }
     case _ => null
-  }
-  
-  private def checkInputRegistration(): User = {
-    if username.getText.isEmpty || password.getText.isEmpty || confirmPassword.getText.isEmpty then
-      Alert(AlertType.Error, "Compilare tutti i campi richiesti", ButtonType.Close)
-        .showAndWait()
-      null
-    else if !password.getText.equals(confirmPassword.getText) then
-      Alert(AlertType.Error, "Le due password non corrispondono", ButtonType.Close)
-        .showAndWait()
-      null
-    else if username.getText.length < 6 then
-      Alert(AlertType.Error, "Lo username deve essere lungo almeno 6 caratteri", ButtonType.Close)
-        .showAndWait()
-      null
-    else if password.getText.length < 6 then
-      Alert(AlertType.Error, "La password deve essere lunga almeno 6 caratteri", ButtonType.Close)
-        .showAndWait()
-      null
-    else new User(username.getText, password.getText)
   }
   
 end NewAccountComponent

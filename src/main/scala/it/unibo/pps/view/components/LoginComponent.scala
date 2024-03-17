@@ -1,6 +1,7 @@
 package it.unibo.pps.view.components
 
 import it.unibo.pps.model.User
+import it.unibo.pps.utility.Utility
 import scalafx.Includes.*
 import scalafx.application.Platform
 import scalafx.geometry.{Insets, Pos}
@@ -55,27 +56,14 @@ private class LoginComponent extends Dialog[List[User]]:
   // a username-password-pair.
   resultConverter = {
     case buttonPressedType if buttonPressedType == loginButtonType => {
-      checkInputLogin()
+      val utility = new Utility()
+      utility.checkInputLogin(usernameOfPlayer1.getText, passwordOfPlayer1.getText,
+        usernameOfPlayer2.getText, passwordOfPlayer2.getText)
     }
     case _ => null
   }
   
-  private def checkInputLogin(): List[User] = {
-    if usernameOfPlayer1.getText.isEmpty || passwordOfPlayer1.getText.isEmpty
-      || usernameOfPlayer2.getText.isEmpty || passwordOfPlayer2.getText.isEmpty then
-      Alert(AlertType.Error, "Compilare tutti i campi per effettuare il login", ButtonType.Close)
-        .showAndWait()
-      null
-    else if usernameOfPlayer1.getText.equals(usernameOfPlayer2.getText) then
-      Alert(AlertType.Error, "Inserire due username differenti ed eseguire il login", ButtonType.Close)
-        .showAndWait()
-      null
-    else
-      List(
-        User(usernameOfPlayer1.getText, passwordOfPlayer1.getText),
-        User(usernameOfPlayer2.getText, passwordOfPlayer2.getText)
-      )
-  }
+  
   
 end LoginComponent
 
