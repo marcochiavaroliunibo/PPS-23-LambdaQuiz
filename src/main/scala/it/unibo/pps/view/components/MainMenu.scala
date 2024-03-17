@@ -23,14 +23,14 @@ private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):
   private def craftButton(displayName: String): Button = new Button {
     text = displayName
     font = new Font("Comic Sans MS", 24)
-    prefWidth = 150
+    prefWidth = 250
     prefHeight = 40
     val buttonGradient = new LinearGradient(endX = 0, stops = Stops(Gold, Goldenrod))
     background = craftBackground(buttonGradient, 4)
     border = new Border(new BorderStroke(Black, BorderStrokeStyle.Solid, new CornerRadii(8), new BorderWidths(4)))
   }
 
-  private val menuButtons = Seq("PLAY", "QUIT").map(craftButton)
+  private val menuButtons = Seq("PLAY", "QUIT", "REGISTRATI").map(craftButton)
   menuButtons.filter(_.text.value == "QUIT").head.onAction = _ => {
     val confirm =
       Alert(AlertType.Confirmation, "Are yoy sure you want to exit the game?", ButtonType.No, ButtonType.Yes)
@@ -40,7 +40,6 @@ private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):
 
   private val userController = new UserController
   menuButtons.filter(_.text.value == "PLAY").head.onAction = _ => {
-
     LoginComponent.getComponent.showAndWait() match
       case Some(users: List[User]) =>
         if userController.checkLogin(users) then
@@ -51,6 +50,24 @@ private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):
         else
             Alert(AlertType.Error, "Login errato", ButtonType.Close)
               .showAndWait()
+      case Some(_) | None => println("Dialog returned: None")
+  }
+
+  menuButtons.filter(_.text.value == "REGISTRATI").head.onAction = _ => {
+    NewAccountComponent.getComponent.showAndWait() match
+      case Some(user: User) =>
+        if userController.checkUsername(user.getUsername) then
+          Alert(AlertType.Error, "Username già esistente", ButtonType.Close)
+            .showAndWait()
+        else {
+          try {
+            userController.createUser(user)
+            Alert(AlertType.Confirmation, "Registrazione eseguita!", ButtonType.Close)
+              .showAndWait()
+          } catch case e: Exception =>
+            Alert(AlertType.Error, "Errore di connessione, riprova tra poco", ButtonType.Close)
+            .showAndWait()
+        }
       case Some(_) | None => println("Dialog returned: None")
   }
 

@@ -55,24 +55,28 @@ private class LoginComponent extends Dialog[List[User]]:
   // a username-password-pair.
   resultConverter = {
     case buttonPressedType if buttonPressedType == loginButtonType => {
-      if usernameOfPlayer1.text().isBlank || passwordOfPlayer1.text().isEmpty
-        || usernameOfPlayer2.text().isBlank || passwordOfPlayer2.text().isEmpty then
-        Alert(AlertType.Error, "Compilare tutti i campi per effettuare il login", ButtonType.Close)
-          .showAndWait()
-        null
-      else
-        if usernameOfPlayer1.text.isEqualTo(usernameOfPlayer2.text).get() then
-          Alert(AlertType.Error, "Inserire due username differenti ed eseguire il login", ButtonType.Close)
-            .showAndWait()
-          null
-        else
-          List(
-            User(usernameOfPlayer1.text(), passwordOfPlayer1.text()),
-            User(usernameOfPlayer2.text(), passwordOfPlayer2.text())
-          )
+      checkInputLogin()
     }
     case _ => null
   }
+  
+  private def checkInputLogin(): List[User] = {
+    if usernameOfPlayer1.getText.isEmpty || passwordOfPlayer1.getText.isEmpty
+      || usernameOfPlayer2.getText.isEmpty || passwordOfPlayer2.getText.isEmpty then
+      Alert(AlertType.Error, "Compilare tutti i campi per effettuare il login", ButtonType.Close)
+        .showAndWait()
+      null
+    else if usernameOfPlayer1.getText.equals(usernameOfPlayer2.getText) then
+      Alert(AlertType.Error, "Inserire due username differenti ed eseguire il login", ButtonType.Close)
+        .showAndWait()
+      null
+    else
+      List(
+        User(usernameOfPlayer1.getText, passwordOfPlayer1.getText),
+        User(usernameOfPlayer2.getText, passwordOfPlayer2.getText)
+      )
+  }
+  
 end LoginComponent
 
 object LoginComponent extends UIComponent[Dialog[List[User]]]:

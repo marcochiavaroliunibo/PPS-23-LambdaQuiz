@@ -38,10 +38,25 @@ class UserRepository extends Repository[User]:
         _.find(
           BSONDocument(
             "$and" -> BSONArray(
-                BSONDocument("username" -> user.getUsername),
-                BSONDocument("password" -> user.getPassword),
-              )
+              BSONDocument("username" -> user.getUsername),
+              BSONDocument("password" -> user.getPassword),
             )
+          )
+        ).one[User]
+      )
+      .flatMap(_.andThen {
+        case Failure(e) => e.printStackTrace()
+        case Success(Some(u)) => Some(u)
+        case Success(None) => None
+      })
+
+  def getUserByUsername(username: String): Future[Option[User]] =
+    this.collection
+      .map(
+        _.find(
+          BSONDocument(
+              "username" -> username
+          )
         ).one[User]
       )
       .flatMap(_.andThen {

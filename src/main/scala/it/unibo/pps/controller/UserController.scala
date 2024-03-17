@@ -23,5 +23,10 @@ class UserController:
     })
     statusLogin
   }
+  
+  def checkUsername (username: String) : Boolean = {
+    val userResult = Await.result(userRepository.getUserByUsername(username), Duration.Inf)
+    if userResult.isDefined then true else false
+  }
 
 end UserController
