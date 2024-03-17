@@ -24,4 +24,12 @@ class UserRepositoryTests extends AsyncFlatSpec with should.Matchers:
     futureUser
       .map(_.exists(_.getUsername == user.getUsername) should be(true))
   }
+
+  it should "be read from the database by nickname and password" in {
+    val userRepository = new UserRepository
+    val futureUser = userRepository.getUserByLogin(user)
+    futureUser
+      .map(_.exists(_.getUsername == user.getUsername) should be(true))
+  }
+
 end UserRepositoryTests
