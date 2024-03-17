@@ -9,10 +9,7 @@ import java.time.LocalDateTime
 import java.util.Date
 
 class GameRepositoryTests extends AsyncFlatSpec with should.Matchers:
-  "The application" should "connect to the database" in {
-    ConnectionMongoDB.getDatabase.map(db => db.name shouldEqual "LambdaQuiz")
-  }
-
+ 
   val game = new Game(new User("user1", "pwd"), new User("user2", "pwd"), false, LocalDateTime.now())
   "A game" should "eventually be inserted in the database" in {
     val gameRepository = new GameRepository

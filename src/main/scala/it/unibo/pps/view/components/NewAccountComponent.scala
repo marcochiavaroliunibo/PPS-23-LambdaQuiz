@@ -52,8 +52,7 @@ private class NewAccountComponent extends Dialog[User]:
 
   resultConverter = {
     case buttonPressedType if buttonPressedType == accountButtonType => {
-      val utility = new Utility()
-      utility.checkInputRegistration(username.getText, password.getText, confirmPassword.getText)
+      Utility.checkInputRegistration(username.getText, password.getText, confirmPassword.getText)
     }
     case _ => null
   }

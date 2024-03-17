@@ -56,14 +56,11 @@ private class LoginComponent extends Dialog[List[User]]:
   // a username-password-pair.
   resultConverter = {
     case buttonPressedType if buttonPressedType == loginButtonType => {
-      val utility = new Utility()
-      utility.checkInputLogin(usernameOfPlayer1.getText, passwordOfPlayer1.getText,
+      Utility.checkInputLogin(usernameOfPlayer1.getText, passwordOfPlayer1.getText,
         usernameOfPlayer2.getText, passwordOfPlayer2.getText)
     }
     case _ => null
   }
-  
-  
   
 end LoginComponent
 

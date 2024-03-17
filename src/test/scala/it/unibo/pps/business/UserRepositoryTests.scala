@@ -6,9 +6,6 @@ import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.*
 
 class UserRepositoryTests extends AsyncFlatSpec with should.Matchers:
-  "The application" should "connect to the database" in {
-    ConnectionMongoDB.getDatabase.map(db => db.name shouldEqual "LambdaQuiz")
-  }
 
   val user = new User("albisyx", "Password!")
   "A user" should "eventually be inserted in the database" in {

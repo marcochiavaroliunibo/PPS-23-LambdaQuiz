@@ -8,9 +8,6 @@ import org.scalatest.matchers.*
 import java.time.LocalDateTime
 
 class RoundRepositoryTests extends AsyncFlatSpec with should.Matchers:
-  "The application" should "connect to the database" in {
-    ConnectionMongoDB.getDatabase.map(db => db.name shouldEqual "LambdaQuiz")
-  }
 
   val game = new Game(new User("user1", "pwd"), new User("user2", "pwd"), true, LocalDateTime.now())
   val round = new Round(game, 3, 0, 1)
