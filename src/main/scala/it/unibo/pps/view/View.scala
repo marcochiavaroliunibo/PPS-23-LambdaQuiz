@@ -1,5 +1,6 @@
 package it.unibo.pps.view
 
+import it.unibo.pps.business.ConnectionMongoDB
 import it.unibo.pps.view.scenes.MenuScene
 import scalafx.application.JFXApp3
 import scalafx.application.JFXApp3.PrimaryStage
@@ -12,4 +13,6 @@ object View extends JFXApp3:
       height = 450
       scene = new MenuScene
     }
+  
+  override def stopApp(): Unit = ConnectionMongoDB.closeConnection()
 end View

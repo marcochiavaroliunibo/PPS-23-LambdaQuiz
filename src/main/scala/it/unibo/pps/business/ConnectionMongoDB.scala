@@ -13,7 +13,7 @@ object ConnectionMongoDB {
   private val connectionString =
     "mongodb+srv://user-login:marco1234@cluster0.9jwsjr8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
   private val databaseName = "LambdaQuiz"
-  private val mongoDriver = new AsyncDriver
+  private val mongoDriver = AsyncDriver()
 
   import scala.concurrent.ExecutionContext.Implicits.global
 

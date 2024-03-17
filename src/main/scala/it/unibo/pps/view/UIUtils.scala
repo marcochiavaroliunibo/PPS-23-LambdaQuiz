@@ -6,6 +6,7 @@ import scalafx.Includes.*
 import scalafx.geometry.Insets
 import scalafx.scene.layout.{Background, BackgroundFill, CornerRadii}
 import scalafx.scene.paint.Paint
+import scalafx.scene.text.Font
 
 object UIUtils:
 
@@ -14,5 +15,8 @@ object UIUtils:
 
   def changeScene(currentScene: Scene, newScene: => Scene): Unit =
     currentScene.window.value.asInstanceOf[Stage].scene = newScene
+    
+  def getSceneTitleFont: Font =
+    new Font("Verdana", 24)
 
 end UIUtils
