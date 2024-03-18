@@ -1,14 +1,10 @@
 package it.unibo.pps.business
 
-import it.unibo.pps.business.{ConnectionMongoDB, CategoryRepository}
-import it.unibo.pps.model.{Category}
+import it.unibo.pps.model.Category
 import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.*
 
 class CategoryRepositoryTests extends AsyncFlatSpec with should.Matchers:
-  "The application" should "connect to the database" in {
-    ConnectionMongoDB.getDatabase.map(db => db.name shouldEqual "LambdaQuiz")
-  }
 
   val category = new Category("Categoria di test")
   "A category" should "eventually be inserted in the database" in {

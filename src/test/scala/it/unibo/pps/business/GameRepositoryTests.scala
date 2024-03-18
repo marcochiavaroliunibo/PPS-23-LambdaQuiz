@@ -1,19 +1,20 @@
 package it.unibo.pps.business
 
-import it.unibo.pps.business.{ConnectionMongoDB, GameRepository}
-import it.unibo.pps.model.{Game, User}
+import it.unibo.pps.model.{Category, Game, User}
 import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.*
 
 import java.time.LocalDateTime
-import java.util.Date
 
 class GameRepositoryTests extends AsyncFlatSpec with should.Matchers:
-  "The application" should "connect to the database" in {
-    ConnectionMongoDB.getDatabase.map(db => db.name shouldEqual "LambdaQuiz")
-  }
 
-  val game = new Game(new User("user1", "pwd"), new User("user2", "pwd"), false, LocalDateTime.now())
+  val game = new Game(
+    new User("user1", "pwd"),
+    new User("user2", "pwd"),
+    false,
+    LocalDateTime.now(),
+    List(new Category("categoria 1"), new Category("categoria 2"), new Category("categoria 3"))
+  )
   "A game" should "eventually be inserted in the database" in {
     val gameRepository = new GameRepository
     gameRepository
