@@ -8,7 +8,7 @@ lazy val osName = System.getProperty("os.name") match {
   case _                            => throw new Exception("Unknown platform!")
 }
 
-val javaFXVersion = "21.0.1"
+val javaFXVersion = "21.0.2"
 val javafxBinaries = {
   Seq("base", "controls", "fxml", "graphics", "media", "swing", "web")
     .map(m => "org.openjfx" % s"javafx-$m" % javaFXVersion classifier osName)
