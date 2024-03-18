@@ -5,7 +5,7 @@ import scalafx.scene.control.{Alert, ButtonType}
 import scalafx.scene.control.Alert.AlertType
 import sun.security.util.Password
 
-class Utility {
+object Utility {
 
   def checkInputLogin(usernameOfPlayer1: String, passwordOfPlayer1: String,
     usernameOfPlayer2: String, passwordOfPlayer2: String): List[User] = {
