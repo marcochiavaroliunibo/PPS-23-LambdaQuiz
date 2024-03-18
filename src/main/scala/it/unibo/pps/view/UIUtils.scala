@@ -1,11 +1,11 @@
 package it.unibo.pps.view
 
 import javafx.stage.Stage
-import scalafx.scene.Scene
 import scalafx.Includes.*
-import scalafx.beans.property.StringProperty
 import scalafx.geometry.Insets
-import scalafx.scene.control.{PasswordField, TextField}
+import scalafx.scene.Scene
+import scalafx.scene.control.Alert.AlertType
+import scalafx.scene.control.{Alert, ButtonType, PasswordField, TextField}
 import scalafx.scene.layout.{Background, BackgroundFill, CornerRadii}
 import scalafx.scene.paint.Paint
 import scalafx.scene.text.Font
@@ -17,12 +17,17 @@ object UIUtils:
 
   def changeScene(currentScene: Scene, newScene: => Scene): Unit =
     currentScene.window.value.asInstanceOf[Stage].scene = newScene
-    
+
   def getSceneTitleFont: Font =
     new Font("Verdana", 24)
-    
+
   def getTextFieldWithPromptedText(t: String): TextField = new TextField() { promptText = t }
-  
-  def getPasswordField: PasswordField = new PasswordField() {promptText = "Password"}
+
+  def getPasswordField: PasswordField = new PasswordField() { promptText = "Password" }
+
+  def showSimpleAlert(at: AlertType, m: String): Unit = Alert(at, m, ButtonType.Close).showAndWait()
+
+  def showAlertWithButtons(at: AlertType, m: String, bt: ButtonType*): Option[ButtonType] =
+    Alert(at, m, bt*).showAndWait()
 
 end UIUtils

@@ -2,6 +2,7 @@ package it.unibo.pps.view.components
 
 import it.unibo.pps.controller.UserController
 import it.unibo.pps.model.User
+import it.unibo.pps.view.UIUtils
 import it.unibo.pps.view.scenes.DashboardScene
 import scalafx.Includes.*
 import scalafx.application.Platform
@@ -13,11 +14,9 @@ import scalafx.scene.paint.Color.{Black, Gold, Goldenrod}
 import scalafx.scene.paint.{LinearGradient, Stops}
 import scalafx.scene.text.Font
 
-import scala.concurrent.{ExecutionContext, Future, Promise}
-
 /** Questa classe rappresenta il menu principale, che viene mostrato all'avvio dell'applicazipne Contiene il titolo del
- * gioco ed i pulsanti per giocare e per chiudere il programma
- */
+  * gioco ed i pulsanti per giocare e per chiudere il programma
+  */
 private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):
   import it.unibo.pps.view.UIUtils.*
   private def craftButton(displayName: String): Button = new Button {
@@ -32,43 +31,37 @@ private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):
 
   private val menuButtons = Seq("PLAY", "QUIT", "REGISTRATI").map(craftButton)
   menuButtons.filter(_.text.value == "QUIT").head.onAction = _ => {
-    val confirm =
-      Alert(AlertType.Confirmation, "Are yoy sure you want to exit the game?", ButtonType.No, ButtonType.Yes)
-        .showAndWait()
-    confirm.filter(_ == ButtonType.Yes).foreach(_ => Platform.exit())
+    UIUtils
+      .showAlertWithButtons(
+        AlertType.Confirmation,
+        "Sei sicuro di voler uscire dal gioco?",
+        ButtonType.No,
+        ButtonType.Yes
+      )
+      .filter(_ == ButtonType.Yes)
+      .foreach(_ => Platform.exit())
   }
 
-  private val userController = new UserController
   menuButtons.filter(_.text.value == "PLAY").head.onAction = _ => {
     LoginComponent.getComponent.showAndWait() match
-      case Some(users: List[User]) =>
-        if userController.checkLogin(users) then
-          // todo: caricare dashboard
-          //changeScene(scene.get(), new DashboardScene(future))
-          Alert(AlertType.Confirmation, "LOGIN OK!!", ButtonType.Close)
-            .showAndWait()
-        else
-            Alert(AlertType.Error, "Login errato", ButtonType.Close)
-              .showAndWait()
-      case Some(_) | None => println("Dialog returned: None")
+      case Some(List(u1: User, u2: User)) if UserController.checkLogin(List(u1, u2)) =>
+        changeScene(scene.get(), new DashboardScene)
+      case Some(_) =>
+        Alert(AlertType.Error, "Login errato", ButtonType.Close)
+          .showAndWait()
+      case None =>
   }
 
   menuButtons.filter(_.text.value == "REGISTRATI").head.onAction = _ => {
     NewAccountComponent.getComponent.showAndWait() match
+      case Some(user: User) if UserController.checkUsername(user.getUsername) =>
+        UIUtils.showSimpleAlert(AlertType.Error, "Username già esistente")
       case Some(user: User) =>
-        if userController.checkUsername(user.getUsername) then
-          Alert(AlertType.Error, "Username già esistente", ButtonType.Close)
-            .showAndWait()
-        else {
-          try {
-            userController.createUser(user)
-            Alert(AlertType.Confirmation, "Registrazione eseguita!", ButtonType.Close)
-              .showAndWait()
-          } catch case e: Exception =>
-            Alert(AlertType.Error, "Errore di connessione, riprova tra poco", ButtonType.Close)
-            .showAndWait()
-        }
-      case Some(_) | None => println("Dialog returned: None")
+        try
+          UserController.createUser(user)
+          UIUtils.showSimpleAlert(AlertType.Confirmation, "Registrazione eseguita!")
+        catch case e: Exception => UIUtils.showSimpleAlert(AlertType.Error, "Errore di connessione, riprova tra poco")
+      case Some(_) | None =>
   }
 
   alignment = Pos.Center

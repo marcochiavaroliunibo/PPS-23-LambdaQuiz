@@ -2,11 +2,11 @@ package it.unibo.pps.view.components
 
 import it.unibo.pps.model.User
 import it.unibo.pps.utility.Utility
+import it.unibo.pps.view.UIUtils
 import scalafx.Includes.*
 import scalafx.application.Platform
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.control.*
-import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.ButtonBar.ButtonData
 import scalafx.scene.layout.GridPane
 import scalafx.scene.text.Font
@@ -20,10 +20,10 @@ private class LoginComponent extends Dialog[List[User]]:
   dialogPane().buttonTypes = Seq(loginButtonType, ButtonType.Cancel)
 
   // Create the username and password labels and fields.
-  private val usernameOfPlayer1 = new TextField() { promptText = "Username" }
-  private val passwordOfPlayer1 = new PasswordField() { promptText = "Password" }
-  private val usernameOfPlayer2 = new TextField() { promptText = "Username" }
-  private val passwordOfPlayer2 = new PasswordField() { promptText = "Password" }
+  private val usernameOfPlayer1 = UIUtils.getTextFieldWithPromptedText("Username")
+  private val passwordOfPlayer1 = UIUtils.getPasswordField
+  private val usernameOfPlayer2 = UIUtils.getTextFieldWithPromptedText("Username")
+  private val passwordOfPlayer2 = UIUtils.getPasswordField
 
   private val grid: GridPane = new GridPane() {
     hgap = 10
@@ -55,16 +55,16 @@ private class LoginComponent extends Dialog[List[User]]:
   // When the login button is clicked, convert the result to
   // a username-password-pair.
   resultConverter = {
-    case buttonPressedType if buttonPressedType == loginButtonType => {
-      val utility = new Utility()
-      utility.checkInputLogin(usernameOfPlayer1.getText, passwordOfPlayer1.getText,
-        usernameOfPlayer2.getText, passwordOfPlayer2.getText)
-    }
+    case buttonPressedType if buttonPressedType == loginButtonType =>
+      Utility.checkInputLogin(
+        usernameOfPlayer1.getText,
+        passwordOfPlayer1.getText,
+        usernameOfPlayer2.getText,
+        passwordOfPlayer2.getText
+      )
     case _ => null
   }
-  
-  
-  
+
 end LoginComponent
 
 object LoginComponent extends UIComponent[Dialog[List[User]]]:

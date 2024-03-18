@@ -6,7 +6,6 @@ import scalafx.Includes.*
 import scalafx.application.Platform
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.control.*
-import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.ButtonBar.ButtonData
 import scalafx.scene.layout.GridPane
 import scalafx.scene.text.Font
@@ -49,15 +48,12 @@ private class NewAccountComponent extends Dialog[User]:
 
   // When the login button is clicked, convert the result to
   // a username-password-pair.
-
   resultConverter = {
-    case buttonPressedType if buttonPressedType == accountButtonType => {
-      val utility = new Utility()
-      utility.checkInputRegistration(username.getText, password.getText, confirmPassword.getText)
-    }
+    case buttonPressedType if buttonPressedType == accountButtonType =>
+      Utility.checkInputRegistration(username.getText, password.getText, confirmPassword.getText)
     case _ => null
   }
-  
+
 end NewAccountComponent
 
 object NewAccountComponent extends UIComponent[Dialog[User]]:
