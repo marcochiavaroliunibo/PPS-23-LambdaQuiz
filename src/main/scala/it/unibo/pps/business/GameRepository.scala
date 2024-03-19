@@ -1,9 +1,8 @@
 package it.unibo.pps.business
 
-import it.unibo.pps.business.{ConnectionMongoDB, Repository}
 import it.unibo.pps.model.{Game, User}
-import reactivemongo.api.bson.{BSONArray, BSONDocument}
 import reactivemongo.api.bson.collection.BSONCollection
+import reactivemongo.api.bson.{BSONArray, BSONDocument}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -26,9 +25,9 @@ class GameRepository extends Repository[Game]:
         ).one[Game]
       )
       .flatMap(_.andThen {
-        case Failure(e) => e.printStackTrace()
+        case Failure(e)       => e.printStackTrace()
         case Success(Some(u)) => Some(u)
-        case Success(None) => None
+        case Success(None)    => None
       })
 
   def getGameInProgressByUser(user: User): Future[List[Game]] =
@@ -41,7 +40,7 @@ class GameRepository extends Repository[Game]:
               BSONDocument(
                 "$or" -> BSONArray(
                   BSONDocument("user1" -> user.getID),
-                  BSONDocument("user2" -> user.getID) 
+                  BSONDocument("user2" -> user.getID)
                 )
               )
             )
@@ -49,7 +48,7 @@ class GameRepository extends Repository[Game]:
         ).cursor[Game]().collect[List]()
       )
       .flatMap(_.andThen {
-        case Failure(e) => e.printStackTrace()
+        case Failure(e)    => e.printStackTrace()
         case Success(List) => List
       })
 
@@ -71,8 +70,32 @@ class GameRepository extends Repository[Game]:
         ).sort(BSONDocument("lastUpdate" -> -1)).cursor[Game]().collect[List]()
       )
       .flatMap(_.andThen {
-        case Failure(e) => e.printStackTrace()
+        case Failure(e)    => e.printStackTrace()
         case Success(List) => List
+      })
+
+  def getCurrentGameFromPlayers(players: List[User]): Future[Option[Game]] =
+    this.collection
+      .map(
+        _.find(
+          BSONDocument(
+            "$and" -> BSONArray(
+              "completed" -> false,
+              BSONDocument(
+                "$and" -> BSONArray(
+                  players.zipWithIndex.map { case (user: User, index) =>
+                    BSONDocument(s"user$index" -> user.getID)
+                  }
+                )
+              )
+            )
+          )
+        ).one[Game]
+      )
+      .flatMap(_.andThen {
+        case Failure(e)             => e.printStackTrace()
+        case Success(Some(g: Game)) => Some(g)
+        case Success(None)          => None
       })
 
 end GameRepository
