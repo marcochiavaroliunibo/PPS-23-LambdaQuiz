@@ -8,8 +8,8 @@ import scala.util.Try
 
 case class Round(
     private val _relatedGameID: String,
-    pointUser1: Int,
-    pointUser2: Int,
+    var pointUser1: Int,
+    var pointUser2: Int,
     numberRound: Int,
     id: Option[UUID] = None
 ) {
@@ -22,6 +22,10 @@ case class Round(
   def getPoint2: Int = pointUser2
   def getNumberRound: Int = numberRound
 
+  def setPoint(numberPlayer: Int, newPoint: Int): Unit =
+    if numberPlayer == 1 then pointUser1 = newPoint
+    else pointUser2 = newPoint
+  
 }
 
 object Round {

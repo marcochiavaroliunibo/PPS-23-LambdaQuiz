@@ -1,7 +1,7 @@
 package it.unibo.pps.controller
 
 import it.unibo.pps.business.{GameRepository, RoundRepository}
-import it.unibo.pps.model.{Game, User}
+import it.unibo.pps.model.{Game, Round, User}
 
 import scala.concurrent.Await
 import scala.concurrent.duration.*
@@ -12,10 +12,10 @@ object GameController:
   private val gameRepository = new GameRepository
   private val roundRepository = new RoundRepository
 
-//  def getLastRoundByGame: Round = {
-//    val roundResult = Await.result(roundRepository.getLastRoundByGame(game), 5.seconds)
-//    if roundResult.isDefined then roundResult.get else null
-//  }
+  def getLastRoundByGame: Round = {
+    val roundResult = Await.result(roundRepository.getLastRoundByGame(gameOfLoggedUsers.get), 5.seconds)
+    if roundResult.isDefined then roundResult.get else null
+  }
 
   def gameOfLoggedUsers: Option[Game] = _gameOfLoggedUsers
   private def gameOfLoggedUsers_=(g: Game): Unit = _gameOfLoggedUsers = Some(g)

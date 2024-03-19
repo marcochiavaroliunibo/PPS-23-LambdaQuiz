@@ -30,6 +30,27 @@ class RoundRepository extends Repository[Round]:
         case Success(Some(u)) => Some(u)
         case Success(None) => None
       })
+    
+  def update(round: Round) : Future[Unit] =
+    this.collection
+      .map(_.findAndUpdate(BSONDocument(
+        "_id" -> round.getID
+      ), round))
+
+  def getLastRoundByGame(game: Game): Future[Option[Round]] =
+    this.collection
+      .map(
+        _.find(
+          BSONDocument(
+            "game" -> game.getID
+          )
+        ).sort(BSONDocument("numberRound" -> -1)).one[Round]
+      )
+      .flatMap(_.andThen {
+        case Failure(e) => e.printStackTrace()
+        case Success(Some(u)) => Some(u)
+        case Success(None) => None
+      })
 
   def getAllRoundsByGame(game: Game): Future[List[Round]] =
     this.collection
