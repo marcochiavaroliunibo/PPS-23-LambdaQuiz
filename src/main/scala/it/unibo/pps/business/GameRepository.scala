@@ -79,16 +79,9 @@ class GameRepository extends Repository[Game]:
       .map(
         _.find(
           BSONDocument(
-            "$and" -> BSONArray(
-              "completed" -> false,
-              BSONDocument(
-                "$and" -> BSONArray(
-                  players.zipWithIndex.map { case (user: User, index) =>
-                    BSONDocument(s"user$index" -> user.getID)
-                  }
-                )
-              )
-            )
+            "completed" -> false,
+            "user1" -> players.head.getID,
+            "user2" -> players.last.getID
           )
         ).one[Game]
       )
