@@ -15,7 +15,7 @@ class RoundRepositoryTests extends AsyncFlatSpec with should.Matchers:
     LocalDateTime.now(),
     List(new Category("categoria 1"), new Category("categoria 2"), new Category("categoria 3"))
   )
-  val round = new Round(game, 3, 0, 1)
+  val round = new Round(game.getID, 3, 0, 1)
   "A round" should "eventually be inserted in the database" in {
     val roundRepository = new RoundRepository
     roundRepository
@@ -27,6 +27,6 @@ class RoundRepositoryTests extends AsyncFlatSpec with should.Matchers:
     val roundRepository = new RoundRepository
     val futureRound = roundRepository.read(round.getID)
     futureRound
-      .map(_.exists(_.getNumberRound == round.getNumberRound) should be(true))
+      .map(_.get.relatedGameID should be (game.getID))
   }
 end RoundRepositoryTests
