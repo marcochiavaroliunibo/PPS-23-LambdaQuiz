@@ -20,13 +20,17 @@ object GameController:
   def gameOfLoggedUsers: Option[Game] = _gameOfLoggedUsers
   private def gameOfLoggedUsers_=(g: Game): Unit = _gameOfLoggedUsers = Some(g)
 
-  def getCurrentGameFromPlayers(users: List[User]): Game =
-    gameOfLoggedUsers.getOrElse {
-      gameOfLoggedUsers = Await.result(gameRepository.getCurrentGameFromPlayers(users), 5.seconds).get
-      gameOfLoggedUsers.get
-    }
+  def getCurrentGameFromPlayers(users: List[User]): Option[Game] =
+    gameOfLoggedUsers match
+      case Some(g: Game) => Some(g)
+      case None =>
+        Await.result(gameRepository.getCurrentGameFromPlayers(users), 5.seconds) match
+          case Some(g) =>
+            gameOfLoggedUsers = g
+            Some(g)
+          case None => None
 
-//  def computePartialPointsOfUser(u: User): Int = 
+  //  def computePartialPointsOfUser(u: User): Int =
 //    Await.result(roundRepository.getAllRoundsByGame(gameOfLoggedUsers.get), 5.seconds).
 
 end GameController
