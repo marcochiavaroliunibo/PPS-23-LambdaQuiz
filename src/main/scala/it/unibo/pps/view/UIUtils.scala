@@ -7,7 +7,8 @@ import scalafx.scene.Scene
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.{Alert, ButtonType, PasswordField, TextField}
 import scalafx.scene.layout.{Background, BackgroundFill, CornerRadii}
-import scalafx.scene.paint.Paint
+import scalafx.scene.paint.Color.{DeepSkyBlue, DodgerBlue}
+import scalafx.scene.paint.{LinearGradient, Paint, Stops}
 import scalafx.scene.text.Font
 
 object UIUtils:
@@ -29,5 +30,8 @@ object UIUtils:
 
   def showAlertWithButtons(at: AlertType, m: String, bt: ButtonType*): Option[ButtonType] =
     Alert(at, m, bt*).showAndWait()
+
+  def defaultBackground: Background =
+    this.craftBackground(new LinearGradient(endX = 0, stops = Stops(DodgerBlue, DeepSkyBlue)))
 
 end UIUtils

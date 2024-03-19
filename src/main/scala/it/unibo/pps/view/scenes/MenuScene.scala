@@ -11,7 +11,7 @@ class MenuScene extends Scene:
   root = new BorderPane {
     top = GameTitle.getComponent
     center = MainMenu.getComponent
-    background = UIUtils.craftBackground(new LinearGradient(endX = 0, stops = Stops(DodgerBlue, DeepSkyBlue)))
+    background = UIUtils.defaultBackground
   }
 end MenuScene
 
