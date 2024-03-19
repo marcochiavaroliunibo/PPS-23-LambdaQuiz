@@ -13,8 +13,8 @@ import scalafx.scene.text.Font
 
 object UIUtils:
 
-  def craftBackground(paint: Paint, insets: Int = 0): Background =
-    new Background(Array(new BackgroundFill(paint, CornerRadii.Empty, Insets(insets))))
+  def craftBackground(paint: Paint, round: Int = 0): Background =
+    new Background(Array(new BackgroundFill(paint, CornerRadii(round), Insets.Empty)))
 
   def changeScene(currentScene: Scene, newScene: => Scene): Unit =
     currentScene.window.value.asInstanceOf[Stage].scene = newScene
