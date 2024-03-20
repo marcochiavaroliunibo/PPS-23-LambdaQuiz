@@ -6,10 +6,14 @@ import org.scalatest.matchers.*
 
 class UserControllerTests extends AsyncFlatSpec with should.Matchers:
 
-  "UserController" should "create and login by Controller" in {
-    val user = new User("Marco", "PWD!!")
-    UserController.createUser(user)
-    UserController.checkLogin(List(user)) should be(true)
+  private val users: List[User] = (1 to 2).map(i => new User(s"UserTest$i", s"password$i")).toList
+
+  "UserController" should "be able to register some users" in {
+    users.map(UserController.registerUser) shouldBe a[List[Unit]]
+  }
+
+  it should "be able to log in users" in {
+    UserController.checkLogin(users) should be(true)
   }
 
 end UserControllerTests

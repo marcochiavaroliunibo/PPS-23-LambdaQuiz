@@ -3,24 +3,25 @@ package it.unibo.pps.business
 import it.unibo.pps.model.{Category, EnumCategory}
 import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.*
+import reactivemongo.api.bson.BSONDocument
 
 class CategoryRepositoryTests extends AsyncFlatSpec with should.Matchers:
 
-  val category = new Category("Categoria di test")
+  private val category = new Category("Categoria di test")
+  private val categoryRepository = new CategoryRepository
+
   "A category" should "eventually be inserted in the database" in {
-    val categoryRepository = new CategoryRepository
     categoryRepository
       .create(category)
       .map(_ shouldBe a[Unit])
   }
 
   it should "be read from the database" in {
-    val categoryRepository = new CategoryRepository
-    val futureCategory = categoryRepository.read(category.getID)
-    futureCategory
-      .map(_.exists(_.getName == category.getName) should be(true))
+    val idQuery = BSONDocument("_id" -> category.getID)
+    categoryRepository.readOne(idQuery).map(_.exists(_.getName == category.getName) should be(true))
   }
 
+  // Test delle categorie con Enum
   val r = new EnumCategoryRepository
   "Enum category" should "be inserted in the database" in {
     r.insertCategory(EnumCategory.Storia).map(_ shouldBe a[Unit])
@@ -30,4 +31,5 @@ class CategoryRepositoryTests extends AsyncFlatSpec with should.Matchers:
     r.getCategoryFromName("Storia")
       .map(_.exists(_ == EnumCategory.Storia) should be(true))
   }
+
 end CategoryRepositoryTests
