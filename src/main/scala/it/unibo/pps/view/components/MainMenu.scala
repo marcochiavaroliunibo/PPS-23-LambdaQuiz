@@ -58,7 +58,7 @@ private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):
         UIUtils.showSimpleAlert(AlertType.Error, "Username già esistente")
       case Some(user: User) =>
         try
-          UserController.createUser(user)
+          UserController.registerUser(user)
           UIUtils.showSimpleAlert(AlertType.Confirmation, "Registrazione eseguita!")
         catch case e: Exception => UIUtils.showSimpleAlert(AlertType.Error, "Errore di connessione, riprova tra poco")
       case Some(_) | None =>

@@ -10,7 +10,6 @@ import java.time.LocalDateTime
 class RoundRepositoryTests extends AsyncFlatSpec with should.Matchers:
 
   private val roundRepository = new RoundRepository
-  private val round = new Round(game.getID, 3, 0, 1)
   private val game = new Game(
     new User("user1", "pwd"),
     new User("user2", "pwd"),
@@ -18,6 +17,7 @@ class RoundRepositoryTests extends AsyncFlatSpec with should.Matchers:
     LocalDateTime.now(),
     List(new Category("categoria 1"), new Category("categoria 2"), new Category("categoria 3"))
   )
+  private val round = new Round(game.getID, 3, 0, 1)
 
   "A round" should "eventually be inserted in the database" in {
     roundRepository
