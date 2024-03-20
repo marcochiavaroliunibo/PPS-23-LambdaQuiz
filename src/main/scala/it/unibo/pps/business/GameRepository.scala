@@ -91,4 +91,7 @@ class GameRepository extends Repository[Game]:
         case Success(None)          => None
       })
 
+  override def readOne(query: BSONDocument): Future[Option[Game]] = ???
+
+  override def readMany(query: BSONDocument): Future[Option[List[Game]]] = ???
 end GameRepository

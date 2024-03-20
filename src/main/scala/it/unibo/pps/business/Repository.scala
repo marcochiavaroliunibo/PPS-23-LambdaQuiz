@@ -10,6 +10,6 @@ trait Repository[T]:
 
   def create(t: T): Future[Unit]
   def read(id: String): Future[Option[T]]
-  // def readOne(query: BSONDocument): Future[Option[T]]
-  // def readMany(query: BSONDocument): Future[Option[List[T]]]
+  def readOne(query: BSONDocument): Future[Option[T]]
+  def readMany(query: BSONDocument): Future[Option[List[T]]]
 end Repository

@@ -66,4 +66,7 @@ class RoundRepository extends Repository[Round]:
         case Success(List) => List
       })
 
+  override def readOne(query: BSONDocument): Future[Option[Round]] = ???
+
+  override def readMany(query: BSONDocument): Future[Option[List[Round]]] = ???
 end RoundRepository

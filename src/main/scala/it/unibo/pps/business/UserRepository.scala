@@ -65,4 +65,7 @@ class UserRepository extends Repository[User]:
         case Success(None) => None
       })
 
+  override def readOne(query: BSONDocument): Future[Option[User]] = ???
+
+  override def readMany(query: BSONDocument): Future[Option[List[User]]] = ???
 end UserRepository

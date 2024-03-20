@@ -31,4 +31,7 @@ class CategoryRepository extends Repository[Category]:
         case Success(None) => None
       })
 
+  override def readOne(query: BSONDocument): Future[Option[Category]] = ???
+
+  override def readMany(query: BSONDocument): Future[Option[List[Category]]] = ???
 end CategoryRepository

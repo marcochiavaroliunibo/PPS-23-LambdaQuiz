@@ -45,4 +45,7 @@ class QuestionRepository extends Repository[Question]:
         case Success(List) => List
       })
 
+  override def readOne(query: BSONDocument): Future[Option[Question]] = ???
+
+  override def readMany(query: BSONDocument): Future[Option[List[Question]]] = ???
 end QuestionRepository
