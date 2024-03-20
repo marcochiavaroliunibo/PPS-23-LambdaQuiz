@@ -7,27 +7,21 @@ import scalafx.scene.paint.Color.{DarkOrange, Orange}
 import scalafx.scene.paint.{LinearGradient, Stops}
 import scalafx.scene.text.{Font, Text}
 
+/**
+ * Questa classe rappresenta la pagina di gioco, in cui i giocatori visualizzano la domanda del turno
+ */
 private class QuestionSpace extends Text():
-  
-  val question: Question = QuestionController.prepareQuestion()
-
   font = new Font("Verdana Bold", 75)
   fill = new LinearGradient(endX = 0, stops = Stops(Orange, DarkOrange))
   alignmentInParent = Pos.Center
   margin = Insets(40, 0, 0, 0)
-  text = question.getText
+  text = QuestionController.getQuestion.getText
 end QuestionSpace
 
-/*
-Per recuperare la domanda da fare:
-1) recuperare l'ultimo round
-2a) se non c'è, si inizia da [round 1 - user 1]
-2b) se c'è, vedere se è in corso o completato
-  3a) se è in corso, [round x - user 2]
-  3b) se è completato, [round x + 1 - user 1]
- */
-
 object QuestionSpace extends UIComponent[Text]:
-  private val questionSpace = new QuestionSpace
-  override def getComponent: Text = questionSpace
+  // private val questionSpace = new QuestionSpace
+  /** nel caso dei componenti della domanda ho bisogno di passare ogni volta una 
+   * nuova istanza, in modo da poter cambiare sempre il quiz mostrato
+  */
+  override def getComponent: Text = new QuestionSpace
 end QuestionSpace

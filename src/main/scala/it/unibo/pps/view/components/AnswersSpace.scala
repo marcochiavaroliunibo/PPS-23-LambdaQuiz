@@ -2,6 +2,7 @@ package it.unibo.pps.view.components
 
 import it.unibo.pps.controller.{QuestionController, RoundController}
 import it.unibo.pps.model.Question
+import it.unibo.pps.view.scenes.{DashboardScene, QuizScene}
 import scalafx.application.Platform
 import scalafx.geometry.{Orientation, Pos}
 import scalafx.scene.control.Alert.AlertType
@@ -10,6 +11,7 @@ import scalafx.scene.layout.*
 import scalafx.scene.paint.Color.{Black, Gold, Goldenrod}
 import scalafx.scene.paint.{LinearGradient, Stops}
 import scalafx.scene.text.Font
+import scalafx.Includes.*
 
 /**
  Questa classe rappresenta la pagina di gioco, in cui i giocatori rispondono alle domande del turno
@@ -31,16 +33,29 @@ private class AnswersSpace extends FlowPane(Orientation.Vertical, 0, 10):
 
   private val menuButtons = Seq(question.getAnswers.head, question.getAnswers(1), question.getAnswers(2), question.getAnswers(3)).map(craftButton)
 
-  menuButtons.filter(_.text.value == question.getAnswers.head).head.onAction = _ => RoundController.playRound(1)
-  menuButtons.filter(_.text.value == question.getAnswers(1)).head.onAction = _ => RoundController.playRound(2)
-  menuButtons.filter(_.text.value == question.getAnswers(2)).head.onAction = _ => RoundController.playRound(3)
-  menuButtons.filter(_.text.value == question.getAnswers(3)).head.onAction = _ => RoundController.playRound(4)
+  menuButtons.filter(_.text.value == question.getAnswers.head).head.onAction = _ => callResponse(1)
+  menuButtons.filter(_.text.value == question.getAnswers(1)).head.onAction = _ => callResponse(2)
+  menuButtons.filter(_.text.value == question.getAnswers(2)).head.onAction = _ => callResponse(3)
+  menuButtons.filter(_.text.value == question.getAnswers(3)).head.onAction = _ => callResponse(4)
+
+  /** aggiorno il round in base la risposta dell'utente
+   * quando l'utente clicca avaanti, mostro la domanda successiva o torno in dashboard */
+  private def callResponse(answer: Int): Unit = {
+    RoundController.playRound(answer)
+    if (QuestionController.nextQuestion) then
+      changeScene(scene.get(), new QuizScene)
+    else
+      changeScene(scene.get(), new DashboardScene)
+  }
 
   alignment = Pos.Center
   children = menuButtons
 end AnswersSpace
 
 object AnswersSpace extends UIComponent[FlowPane]:
-  private val answersSpace = new AnswersSpace
-  override def getComponent: FlowPane = answersSpace
+  //private val answersSpace = new AnswersSpace
+  /** nel caso dei componenti della domanda ho bisogno di passare ogni volta una 
+   * nuova istanza, in modo da poter cambiare sempre il quiz mostrato
+   */
+  override def getComponent: FlowPane = new AnswersSpace
 end AnswersSpace

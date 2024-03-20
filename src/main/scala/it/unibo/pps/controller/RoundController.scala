@@ -20,12 +20,9 @@ object RoundController:
 
   def createRound(round: Round): Unit = roundRepository.create(round)
 
+  /** controlla se la risposta è corretta: mostra il risutato all'utente e poi aggiorna i punti */
   def playRound(answer: Int): Boolean = {
-    // todo: devo effettuare il check sulla risposta e aggiorna a DB:
     val numberPlayer: Int = getNumberPlayer
-    var correct: Int = 0
-    if QuestionController.getQuestion.getCorrectAnswerNumber == 1 then
-      correct = 1
     if answer == QuestionController.getQuestion.getCorrectAnswerNumber then
       updatePoints(numberPlayer, true)
       Alert(AlertType.Confirmation, "Risposta corretta!", ButtonType.Close)
@@ -38,13 +35,14 @@ object RoundController:
       false
   }
 
+  /** ottiene se sta giocando utente 1 o utente 2 */
   private def getNumberPlayer: Int =
     if player.getUsername == GameController.gameOfLoggedUsers.get.getUser1.getUsername then 1
     else 2
 
+  /** aggiorna il punteggio (dell'utente che ha risposto) per il round in corso */
   private def updatePoints(numberPlayer: Int, correct: Boolean): Unit =
-    val point = if correct then 1 else 0
-    round.setPoint(numberPlayer, point)
+    round.setPoint(numberPlayer, correct)
     roundRepository.update(round)
   
 end RoundController
