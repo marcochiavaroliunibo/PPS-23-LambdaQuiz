@@ -24,7 +24,7 @@ class RoundRepository extends Repository[Round]:
       .map(
         _.find(
           BSONDocument(
-            "game" -> game.getID
+            "gameID" -> game.getID
           )
         ).sort(BSONDocument("numberRound" -> -1)).one[Round]
       )
