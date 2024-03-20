@@ -4,32 +4,26 @@ import it.unibo.pps.business.UserRepository
 import it.unibo.pps.model.User
 
 import scala.concurrent.Await
-import scala.concurrent.duration.Duration
+import scala.concurrent.duration.*
 
 object UserController:
-
+  
   private val userRepository = new UserRepository
-  private var loggedUsers: List[User] = List.empty
+  private var _loggedUsers: Option[List[User]] = None
 
-  def createUser(user: User): Unit = {
-    userRepository.create(user)
-  }
+  def loggedUsers: Option[List[User]] = _loggedUsers
 
-  def checkLogin(users: List[User]): Boolean = {
-    var statusLogin: Boolean = true
-    users.foreach(user => {
-      val userResult = Await.result(userRepository.getUserByLogin(user), Duration.Inf)
-      if userResult.isEmpty then statusLogin = false
-    })
-    loggedUsers = users
-    statusLogin
-  }
+  def registerUser(user: User): Unit =
+    Await.result(userRepository.create(user), 5.seconds)
 
-  def checkUsername(username: String): Boolean = {
-    val userResult = Await.result(userRepository.getUserByUsername(username), Duration.Inf)
-    if userResult.isDefined then true else false
-  }
+  def checkLogin(users: List[User]): Boolean =
+    val foundUsers = users.filter(u => Await.result(userRepository.getUserByLogin(u), 5.seconds).isDefined)
+    _loggedUsers = foundUsers match
+      case l if l.size == 2 => Some(l)
+      case _                => None
+    _loggedUsers.nonEmpty
 
-  def getLoggedUsers: Option[List[User]] = Option(loggedUsers)
+  def checkUsername(username: String): Boolean =
+    Await.result(userRepository.getUserByUsername(username), 5.seconds).isDefined
 
 end UserController
