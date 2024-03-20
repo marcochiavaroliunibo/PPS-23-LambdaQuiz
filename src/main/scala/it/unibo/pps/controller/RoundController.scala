@@ -15,6 +15,8 @@ object RoundController:
   private val roundRepository = new RoundRepository
 
   def setRound(newRound: Round): Unit = round = newRound
+  
+  def getRound: Round = round
 
   def setPlayer(newPlayer: User): Unit = player = newPlayer
 

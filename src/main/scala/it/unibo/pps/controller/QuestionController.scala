@@ -17,7 +17,6 @@ object QuestionController:
   def getRandomQuestionByCategory(category: Category): Question =
     val questionResult = Await.result(questionRepository.getQuestionsByCategory(category), Duration.Inf).get
     val randomQuestion = Random.nextInt(questionResult.length)
-    println(randomQuestion)
     questionResult(randomQuestion)
 
   def setQuestion(newQuestion: Question): Unit = question = newQuestion
@@ -30,18 +29,35 @@ object QuestionController:
     if (counterQuestionRound == QUESTION_FOR_ROUND) then false else true
   }
 
-  /** funzione che si occupa di caricare la domanda da visualizzare all'utente */
-  /**
-  Per recuperare la domanda da fare:
-  1) recuperare l'ultimo round
-  2a) se non c'è, si inizia da [round 1 - user 1]
-  2b) se c'è, vedere se è in corso o completato
-    3a) se è in corso, [round x - user 2]
-    3b) se è completato, [round x + 1 - user 1]
-  */
+  /** estraggo la domanda da mostrare */
   def prepareQuestion() : Question = {
 
-    var lastRound: Round = GameController.getLastRoundByGame
+    var lastRound: Round = null
+    if counterQuestionRound == 0 then
+      lastRound = setVariableQuestion()
+    else
+      lastRound = RoundController.getRound
+
+    RoundController.setRound(lastRound)
+
+    val questionCategory: Category = GameController.gameOfLoggedUsers.get.getCategories(lastRound.getNumberRound - 1)
+    val newQuestion: Question = QuestionController.getRandomQuestionByCategory(questionCategory)
+
+    setQuestion(newQuestion)
+    newQuestion
+  }
+
+  /** funzione che si occupa di caricare la domanda da visualizzare all'utente */
+  /**
+   Per recuperare la domanda da fare:
+   1) recuperare l'ultimo round
+   2a) se non c'è, si inizia da [round 1 - user 1]
+   2b) se c'è, vedere se è in corso o completato
+     3a) se è in corso, [round x - user 2]
+     3b) se è completato, [round x + 1 - user 1]
+   */
+  private def setVariableQuestion(): Round = {
+    var lastRound = GameController.getLastRoundByGame
     var userPlayer: User = null
 
     if lastRound == null then
@@ -58,16 +74,8 @@ object QuestionController:
       lastRound = new Round(GameController.gameOfLoggedUsers.get.getID, -1, -1, lastRound.getNumberRound + 1)
       RoundController.createRound(lastRound)
 
-    // A questo punto ho il round di gioco e l'utente che deve rispondere alle domande
-    // Estraggo la categoria del round
-    val questionCategory: Category = GameController.gameOfLoggedUsers.get.getCategories(lastRound.getNumberRound - 1)
-    val newQuestion: Question = QuestionController.getRandomQuestionByCategory(questionCategory)
-    RoundController.setRound(lastRound)
     RoundController.setPlayer(userPlayer)
-    setQuestion(newQuestion)
-
-    newQuestion
-    
+    lastRound
   }
   
 end QuestionController
