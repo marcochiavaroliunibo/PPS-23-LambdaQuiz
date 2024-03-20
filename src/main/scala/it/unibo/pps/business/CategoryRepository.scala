@@ -12,10 +12,6 @@ import scala.util.{Failure, Success}
 class CategoryRepository extends Repository[Category]:
   protected val collection: Future[BSONCollection] = ConnectionMongoDB.getDatabase.map(_.collection("categories"))
 
-  override def create(category: Category): Future[Unit] =
-    this.collection
-      .map(_.insert.one(category))
-
   override def read(id: String): Future[Option[Category]] =
     this.collection
       .map(
@@ -31,7 +27,4 @@ class CategoryRepository extends Repository[Category]:
         case Success(None) => None
       })
 
-  override def readOne(query: BSONDocument): Future[Option[Category]] = ???
-
-  override def readMany(query: BSONDocument): Future[Option[List[Category]]] = ???
 end CategoryRepository

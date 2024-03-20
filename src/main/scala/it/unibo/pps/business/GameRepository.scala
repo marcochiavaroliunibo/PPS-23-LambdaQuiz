@@ -9,27 +9,20 @@ import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
 class GameRepository extends Repository[Game]:
-  protected val collection: Future[BSONCollection] = ConnectionMongoDB.getDatabase.map(_.collection("games"))
+  override val collection: Future[BSONCollection] = ConnectionMongoDB.getDatabase.map(_.collection("games"))
 
-  override def create(game: Game): Future[Unit] =
-    this.collection
-      .map(_.insert.one(game))
+  override def read(id: String): Future[Option[Game]] = ???
 
-  override def read(id: String): Future[Option[Game]] =
-    this.collection
-      .map(
-        _.find(
-          BSONDocument(
-            "_id" -> id
-          )
-        ).one[Game]
+  def getCurrentGameFromPlayers(players: List[User]): Future[Option[Game]] =
+    readOne(
+      BSONDocument(
+        "completed" -> false,
+        "user1" -> players.head.getID,
+        "user2" -> players.last.getID
       )
-      .flatMap(_.andThen {
-        case Failure(e)       => e.printStackTrace()
-        case Success(Some(u)) => Some(u)
-        case Success(None)    => None
-      })
+    )
 
+  // mi sa che non ci serve questo metodo
   def getGameInProgressByUser(user: User): Future[List[Game]] =
     this.collection
       .map(
@@ -74,24 +67,4 @@ class GameRepository extends Repository[Game]:
         case Success(List) => List
       })
 
-  def getCurrentGameFromPlayers(players: List[User]): Future[Option[Game]] =
-    this.collection
-      .map(
-        _.find(
-          BSONDocument(
-            "completed" -> false,
-            "user1" -> players.head.getID,
-            "user2" -> players.last.getID
-          )
-        ).one[Game]
-      )
-      .flatMap(_.andThen {
-        case Failure(e)             => e.printStackTrace()
-        case Success(Some(g: Game)) => Some(g)
-        case Success(None)          => None
-      })
-
-  override def readOne(query: BSONDocument): Future[Option[Game]] = ???
-
-  override def readMany(query: BSONDocument): Future[Option[List[Game]]] = ???
 end GameRepository

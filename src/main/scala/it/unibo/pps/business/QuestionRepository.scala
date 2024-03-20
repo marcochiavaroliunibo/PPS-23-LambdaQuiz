@@ -12,10 +12,6 @@ import scala.util.{Failure, Success}
 class QuestionRepository extends Repository[Question]:
   protected val collection: Future[BSONCollection] = ConnectionMongoDB.getDatabase.map(_.collection("questions"))
 
-  override def create(question: Question): Future[Unit] =
-    this.collection
-      .map(_.insert.one(question))
-
   override def read(id: String): Future[Option[Question]] =
     this.collection
       .map(
@@ -45,7 +41,4 @@ class QuestionRepository extends Repository[Question]:
         case Success(List) => List
       })
 
-  override def readOne(query: BSONDocument): Future[Option[Question]] = ???
-
-  override def readMany(query: BSONDocument): Future[Option[List[Question]]] = ???
 end QuestionRepository

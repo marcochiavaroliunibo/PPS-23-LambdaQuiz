@@ -12,10 +12,6 @@ import scala.util.{Failure, Success}
 class RoundRepository extends Repository[Round]:
   protected val collection: Future[BSONCollection] = ConnectionMongoDB.getDatabase.map(_.collection("rounds"))
 
-  override def create(round: Round): Future[Unit] =
-    this.collection
-      .map(_.insert.one(round))
-
   override def read(id: String): Future[Option[Round]] =
     this.collection
       .map(
@@ -66,7 +62,4 @@ class RoundRepository extends Repository[Round]:
         case Success(List) => List
       })
 
-  override def readOne(query: BSONDocument): Future[Option[Round]] = ???
-
-  override def readMany(query: BSONDocument): Future[Option[List[Round]]] = ???
 end RoundRepository
