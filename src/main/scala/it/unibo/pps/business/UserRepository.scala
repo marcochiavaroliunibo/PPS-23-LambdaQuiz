@@ -9,9 +9,7 @@ import scala.concurrent.Future
 
 class UserRepository extends Repository[User]:
   override val collection: Future[BSONCollection] = ConnectionMongoDB.getDatabase.map(_.collection("users"))
-
-  override def read(id: String): Future[Option[User]] = ???
-
+  
   def getUserByLogin(user: User): Future[Option[User]] =
     readOne(
       BSONDocument(

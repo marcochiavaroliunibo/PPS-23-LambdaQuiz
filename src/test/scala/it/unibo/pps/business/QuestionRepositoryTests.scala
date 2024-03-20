@@ -22,8 +22,7 @@ class QuestionRepositoryTests extends AsyncFlatSpec with should.Matchers:
   }
 
   it should "be read from the database" in {
-    val idQuery = BSONDocument("_id" -> question.getID)
-    questionRepository.read(question.getID).map(_.exists(_.getText == question.getText) should be(true))
+    questionRepository.readById(question.getID).map(_.exists(_.getText == question.getText) should be(true))
   }
 
 end QuestionRepositoryTests

@@ -26,8 +26,7 @@ class RoundRepositoryTests extends AsyncFlatSpec with should.Matchers:
   }
 
   it should "be read from the database" in {
-    val idQuery = BSONDocument("_id" -> round.getID)
-    roundRepository.read(round.getID).map(_.get.relatedGameID should be(game.getID))
+    roundRepository.readById(round.getID).map(_.get.relatedGameID should be(game.getID))
   }
 
 end RoundRepositoryTests

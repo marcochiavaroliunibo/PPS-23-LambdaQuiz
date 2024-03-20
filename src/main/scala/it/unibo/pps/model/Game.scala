@@ -38,15 +38,15 @@ object Game {
     def readDocument(doc: BSONDocument): Try[Game] =
       // read users
       var user1, user2: User = null
-      val futureUser1 = Await.result(userRepository.read(doc.getAsTry[String]("user1").get), Duration.Inf)
-      val futureUser2 = Await.result(userRepository.read(doc.getAsTry[String]("user2").get), Duration.Inf)
+      val futureUser1 = Await.result(userRepository.readById(doc.getAsTry[String]("user1").get), Duration.Inf)
+      val futureUser2 = Await.result(userRepository.readById(doc.getAsTry[String]("user2").get), Duration.Inf)
       if futureUser1.isDefined then user1 = futureUser1.get
       if futureUser2.isDefined then user2 = futureUser2.get
       // read categories
       var category1, category2, category3: Category = null
-      val futureCategory1 = Await.result(categoryRepository.read(doc.getAsTry[String]("category1").get), Duration.Inf)
-      val futureCategory2 = Await.result(categoryRepository.read(doc.getAsTry[String]("category2").get), Duration.Inf)
-      val futureCategory3 = Await.result(categoryRepository.read(doc.getAsTry[String]("category3").get), Duration.Inf)
+      val futureCategory1 = Await.result(categoryRepository.readById(doc.getAsTry[String]("category1").get), Duration.Inf)
+      val futureCategory2 = Await.result(categoryRepository.readById(doc.getAsTry[String]("category2").get), Duration.Inf)
+      val futureCategory3 = Await.result(categoryRepository.readById(doc.getAsTry[String]("category3").get), Duration.Inf)
       if futureCategory1.isDefined then category1 = futureCategory1.get
       if futureCategory2.isDefined then category2 = futureCategory2.get
       if futureCategory3.isDefined then category3 = futureCategory3.get

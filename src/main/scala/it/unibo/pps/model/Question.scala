@@ -39,7 +39,7 @@ object Question {
 
     def readDocument(doc: BSONDocument): Try[Question] =
       var category: Category = null
-      val categoryFuture = Await.result(categoryRepository.read(doc.getAsTry[String]("category").get), Duration.Inf)
+      val categoryFuture = Await.result(categoryRepository.readById(doc.getAsTry[String]("category").get), Duration.Inf)
       if categoryFuture.isDefined then category = categoryFuture.get
       
       for

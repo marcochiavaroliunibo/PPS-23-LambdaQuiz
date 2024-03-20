@@ -8,13 +8,14 @@ import scala.concurrent.Future
 
 trait Repository[T]:
   protected def collection: Future[BSONCollection]
-
+  
+  def readById(id: String)(implicit reader: BSONDocumentReader[T]): Future[Option[T]] =
+    readOne(BSONDocument("_id" -> id))
+    
   def create(t: T)(implicit writer: BSONDocumentWriter[T]): Future[Unit] =
     collection
       .map(_.insert.one(t))
-
-  def read(id: String): Future[Option[T]]
-
+  
   def readOne(query: BSONDocument)(implicit reader: BSONDocumentReader[T]): Future[Option[T]] =
     collection
       .flatMap(_.find(query).one[T])

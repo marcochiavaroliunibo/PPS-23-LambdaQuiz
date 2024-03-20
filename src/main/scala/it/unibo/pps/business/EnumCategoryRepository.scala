@@ -10,8 +10,6 @@ import scala.concurrent.Future
 class EnumCategoryRepository extends Repository[EnumCategory]:
   override val collection: Future[BSONCollection] = ConnectionMongoDB.getDatabase.map(_.collection("enums"))
   
-  override def read(id: String): Future[Option[EnumCategory]] = ???
-  
   def insertCategory(c: EnumCategory): Future[Unit] =
     create(c)
     

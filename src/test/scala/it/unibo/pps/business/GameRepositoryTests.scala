@@ -25,9 +25,8 @@ class GameRepositoryTests extends AsyncFlatSpec with should.Matchers:
   }
 
   it should "be read from the database" in {
-    val idQuery = BSONDocument("_id" -> game.getID)
     gameRepository
-      .readOne(idQuery)
+      .readById(game.getID)
       .map(_.exists(_.getID == game.getID) should be(true))
   }
 

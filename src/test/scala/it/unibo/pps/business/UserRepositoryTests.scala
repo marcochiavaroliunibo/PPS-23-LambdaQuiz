@@ -16,9 +16,8 @@ class UserRepositoryTests extends AsyncFlatSpec with should.Matchers:
   }
 
   it should "be read from the database by id" in {
-    val idQuery = BSONDocument("_id" -> user.getID)
     userRepository
-      .readOne(idQuery)
+      .readById(user.getID)
       .map(_.exists(_.getUsername == user.getUsername) should be(true))
   }
 

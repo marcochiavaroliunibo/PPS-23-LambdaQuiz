@@ -12,27 +12,13 @@ import scala.util.{Failure, Success}
 class RoundRepository extends Repository[Round]:
   protected val collection: Future[BSONCollection] = ConnectionMongoDB.getDatabase.map(_.collection("rounds"))
 
-  override def read(id: String): Future[Option[Round]] =
-    this.collection
-      .map(
-        _.find(
-          BSONDocument(
-            "_id" -> id
-          )
-        ).one[Round]
-      )
-      .flatMap(_.andThen {
-        case Failure(e) => e.printStackTrace()
-        case Success(Some(u)) => Some(u)
-        case Success(None) => None
-      })
-    
   def update(round: Round) : Future[Unit] =
     this.collection
       .map(_.findAndUpdate(BSONDocument(
         "_id" -> round.getID
       ), round))
 
+  // todo: caso da capire: come gestire ordinamento
   def getLastRoundByGame(game: Game): Future[Option[Round]] =
     this.collection
       .map(
@@ -47,19 +33,11 @@ class RoundRepository extends Repository[Round]:
         case Success(Some(u)) => Some(u)
         case Success(None) => None
       })
-
-  def getAllRoundsByGame(game: Game): Future[List[Round]] =
-    this.collection
-      .map(
-        _.find(
-          BSONDocument(
-            "game" -> game.getID
-          )
-        ).cursor[Round]().collect[List]()
-      )
-      .flatMap(_.andThen {
-        case Failure(e) => e.printStackTrace()
-        case Success(List) => List
-      })
+  
+  def getAllRoundsByGame(game: Game): Future[Option[List[Round]]] =
+    readMany(BSONDocument(
+      "game" -> game.getID
+    ))
+    
 
 end RoundRepository

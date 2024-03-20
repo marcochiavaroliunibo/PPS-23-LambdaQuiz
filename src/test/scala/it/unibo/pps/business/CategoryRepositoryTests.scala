@@ -17,8 +17,7 @@ class CategoryRepositoryTests extends AsyncFlatSpec with should.Matchers:
   }
 
   it should "be read from the database" in {
-    val idQuery = BSONDocument("_id" -> category.getID)
-    categoryRepository.readOne(idQuery).map(_.exists(_.getName == category.getName) should be(true))
+    categoryRepository.readById(category.getID).map(_.exists(_.getName == category.getName) should be(true))
   }
 
   // Test delle categorie con Enum

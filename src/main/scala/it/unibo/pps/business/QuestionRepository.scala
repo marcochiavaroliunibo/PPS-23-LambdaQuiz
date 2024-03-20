@@ -11,34 +11,9 @@ import scala.util.{Failure, Success}
 
 class QuestionRepository extends Repository[Question]:
   protected val collection: Future[BSONCollection] = ConnectionMongoDB.getDatabase.map(_.collection("questions"))
-
-  override def read(id: String): Future[Option[Question]] =
-    this.collection
-      .map(
-        _.find(
-          BSONDocument(
-            "_id" -> id
-          )
-        ).one[Question]
-      )
-      .flatMap(_.andThen {
-        case Failure(e) => e.printStackTrace()
-        case Success(Some(u)) => Some(u)
-        case Success(None) => None
-      })
-    
-  def getQuestionsByCategory(category: Category): Future[List[Question]] =
-    this.collection
-      .map(
-        _.find(
-          BSONDocument(
-            "category" -> category.getID
-          )
-        ).cursor[Question]().collect[List]()
-      )
-      .flatMap(_.andThen {
-        case Failure(e) => e.printStackTrace()
-        case Success(List) => List
-      })
+  def getQuestionsByCategory(category: Category): Future[Option[List[Question]]] =
+    readMany( BSONDocument(
+      "category" -> category.getID
+    ))
 
 end QuestionRepository

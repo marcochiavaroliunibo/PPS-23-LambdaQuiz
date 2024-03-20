@@ -22,10 +22,17 @@ case class Round(
   def getPoint2: Int = pointUser2
   def getNumberRound: Int = numberRound
 
-  def setPoint(numberPlayer: Int, newPoint: Int): Unit =
-    if numberPlayer == 1 then pointUser1 = newPoint
-    else pointUser2 = newPoint
-  
+  /** set punteggio di un player
+   * -1: non ha mai giocato il round
+   * 0: ha giocato il round ma non ha mai indovinato la risposta 
+   * 1+ ha giocato il round e indovinato 1+ risposte: */
+  def setPoint(numberPlayer: Int, correct: Boolean): Unit =
+    if numberPlayer == 1 then
+      if getPoint1 == -1 then pointUser1 = 0
+      if correct then pointUser1 = pointUser1 + 1
+    else
+      if getPoint2 == -1 then pointUser2 = 0
+      if correct then pointUser2 = pointUser2 + 1
 }
 
 object Round {
