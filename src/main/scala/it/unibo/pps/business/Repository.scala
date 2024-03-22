@@ -15,6 +15,12 @@ trait Repository[T]:
   def create(t: T)(implicit writer: BSONDocumentWriter[T]): Future[Unit] =
     collection
       .map(_.insert.one(t))
+    
+  def update(t: T, id: String)(implicit writer: BSONDocumentWriter[T]): Future[Unit] =
+    this.collection
+    .map(_.findAndUpdate(BSONDocument(
+      "_id" -> id
+    ), t))
   
   def readOne(query: BSONDocument)(implicit reader: BSONDocumentReader[T]): Future[Option[T]] =
     collection
