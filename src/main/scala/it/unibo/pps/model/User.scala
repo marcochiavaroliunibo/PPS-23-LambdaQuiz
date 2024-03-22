@@ -15,16 +15,18 @@ case class User(username: String, password: String, id: Option[UUID] = None) {
 
 object User {
   implicit object UserReader extends BSONDocumentReader[User]:
-    def readDocument(doc: BSONDocument): Try[User] = for
-      id <- doc.getAsTry[String]("_id")
-      username <- doc.getAsTry[String]("username")
-      password <- doc.getAsTry[String]("password")
-    yield User(username, password, Some(UUID.fromString(id)))
+    def readDocument(doc: BSONDocument): Try[User] =
+      for
+        id <- doc.getAsTry[String]("_id")
+        username <- doc.getAsTry[String]("username")
+        password <- doc.getAsTry[String]("password")
+      yield User(username, password, Some(UUID.fromString(id)))
 
   implicit object UserWriter extends BSONDocumentWriter[User]:
-    override def writeTry(user: User): Try[BSONDocument] = for
-      id <- Try(user.getID)
-      username <- Try(user.getUsername)
-      password <- Try(user.getPassword)
-    yield BSONDocument("_id" -> id, "username" -> username, "password" -> password)
+    override def writeTry(user: User): Try[BSONDocument] =
+      for
+        id <- Try(user.getID)
+        username <- Try(user.getUsername)
+        password <- Try(user.getPassword)
+      yield BSONDocument("_id" -> id, "username" -> username, "password" -> password)
 }
