@@ -8,8 +8,7 @@ import java.util.UUID
 import scala.util.Try
 
 case class Game(
-    user1: User,
-    user2: User,
+    players: List[User],
     completed: Boolean,
     lastUpdate: LocalDateTime,
     categories: List[Category],
@@ -18,8 +17,6 @@ case class Game(
   private val _id: UUID = id.getOrElse(UUID.randomUUID())
 
   def getID: String = _id.toString
-  def getUser1: User = user1
-  def getUser2: User = user2
   def getCompleted: Boolean = completed
   def getLastUpdate: LocalDateTime = lastUpdate
 
@@ -32,26 +29,23 @@ object Game {
     def readDocument(doc: BSONDocument): Try[Game] =
       for
         id <- doc.getAsTry[String]("_id")
-        user1 <- doc.getAsTry[User]("user1")
-        user2 <- doc.getAsTry[User]("user2")
+        players <- doc.getAsTry[List[User]]("players")
         completed <- doc.getAsTry[Boolean]("completed")
         lastUpdate <- doc.getAsTry[LocalDateTime]("lastUpdate")
         categories <- doc.getAsTry[List[String]]("categories")
-      yield Game(user1, user2, completed, lastUpdate, categories.map(Category.valueOf), Some(UUID.fromString(id)))
+      yield Game(players, completed, lastUpdate, categories.map(Category.valueOf), Some(UUID.fromString(id)))
 
   implicit object GameWriter extends BSONDocumentWriter[Game]:
     override def writeTry(game: Game): Try[BSONDocument] =
       for
         id <- Try(game.getID)
-        user1 <- Try(game.getUser1)
-        user2 <- Try(game.getUser2)
+        players <- Try(game.players)
         completed <- Try(game.getCompleted)
         lastUpdate <- Try(game.getLastUpdate)
         categories <- Try(game.getCategories.map(_.toString))
       yield BSONDocument(
         "_id" -> id,
-        "user1" -> user1,
-        "user2" -> user2,
+        "players" -> players,
         "completed" -> completed,
         "lastUpdate" -> lastUpdate,
         "categories" -> categories
