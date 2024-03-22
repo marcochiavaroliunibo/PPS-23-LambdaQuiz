@@ -3,7 +3,6 @@ package it.unibo.pps.business
 import it.unibo.pps.model.User
 import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.*
-import reactivemongo.api.bson.BSONDocument
 
 import scala.language.postfixOps
 

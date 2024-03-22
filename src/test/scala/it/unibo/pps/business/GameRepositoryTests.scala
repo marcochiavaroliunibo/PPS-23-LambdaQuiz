@@ -3,19 +3,19 @@ package it.unibo.pps.business
 import it.unibo.pps.model.{Category, Game, User}
 import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.*
-import reactivemongo.api.bson.BSONDocument
 
 import java.time.LocalDateTime
 
 class GameRepositoryTests extends AsyncFlatSpec with should.Matchers:
-
+  import Category.*
   private val gameRepository = new GameRepository
+  private val categories: List[Category] = List(Storia, Scienze, Geografia)
   private val game = new Game(
-    new User("user1", "pwd"),
-    new User("user2", "pwd"),
+    new User("user1", "PASSWORDDD"),
+    new User("user2", "PASSWORDDD"),
     false,
     LocalDateTime.now(),
-    List(new Category("categoria 1"), new Category("categoria 2"), new Category("categoria 3"))
+    categories
   )
 
   "A game" should "eventually be inserted in the database" in {
@@ -28,6 +28,18 @@ class GameRepositoryTests extends AsyncFlatSpec with should.Matchers:
     gameRepository
       .readById(game.getID)
       .map(_.exists(_.getID == game.getID) should be(true))
+  }
+
+  it should "contains both the inserted users" in {
+    gameRepository
+      .readById(game.getID)
+      .map(_.exists(u => u.user1.username == "user1" && u.user2.username == "user2") should be(true))
+  }
+
+  it should "contains all the inserted categories" in {
+    gameRepository
+      .readById(game.getID)
+      .map(_.exists(u => u.categories.forall(categories.contains)) should be(true))
   }
 
 end GameRepositoryTests

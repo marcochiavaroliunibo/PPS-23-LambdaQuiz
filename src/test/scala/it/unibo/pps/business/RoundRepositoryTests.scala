@@ -3,21 +3,20 @@ package it.unibo.pps.business
 import it.unibo.pps.model.{Category, Game, Round, User}
 import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.*
-import reactivemongo.api.bson.BSONDocument
 
 import java.time.LocalDateTime
 
 class RoundRepositoryTests extends AsyncFlatSpec with should.Matchers:
-
+  import Category.*
   private val roundRepository = new RoundRepository
   private val game = new Game(
     new User("user1", "pwd"),
     new User("user2", "pwd"),
     true,
     LocalDateTime.now(),
-    List(new Category("categoria 1"), new Category("categoria 2"), new Category("categoria 3"))
+    List(Scienze, Storia, Geografia)
   )
-  private val round = new Round(game.getID, 3, 0, 1)
+  private val round = new Round(game.getID, 3, 3, 1000)
 
   "A round" should "eventually be inserted in the database" in {
     roundRepository

@@ -6,13 +6,13 @@ import org.scalatest.matchers.*
 import reactivemongo.api.bson.BSONDocument
 
 class QuestionRepositoryTests extends AsyncFlatSpec with should.Matchers:
-
+  import Category.*
   private val questionRepository = new QuestionRepository
   private val question = new Question(
-    "test domanda",
-    List("risposta 1", "risposta 2", "risposta 3", "Risposta 4"),
+    "quanti anni ha Berlusconi?",
+    List("risposta 1", "risposta 2", "risposta 3"),
     1,
-    new Category("test categoria")
+    CulturaGenerale
   )
 
   "A question" should "eventually be inserted in the database" in {
@@ -21,8 +21,21 @@ class QuestionRepositoryTests extends AsyncFlatSpec with should.Matchers:
       .map(_ shouldBe a[Unit])
   }
 
-  it should "be read from the database" in {
-    questionRepository.readById(question.getID).map(_.exists(_.getText == question.getText) should be(true))
+  it should "be read from the database by id" in {
+    questionRepository
+      .readById(question.getID)
+      .map(_.isDefined should be(true))
+  }
+
+  it should "be read from the database by text and category" in {
+    questionRepository
+      .readOne(
+        BSONDocument(
+          "text" -> question.getText,
+          "category" -> CulturaGenerale.toString
+        )
+      )
+      .map(_.exists(q => q.getText == question.getText && q.getCategory == question.getCategory) should be(true))
   }
 
 end QuestionRepositoryTests
