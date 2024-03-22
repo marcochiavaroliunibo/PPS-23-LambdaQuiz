@@ -47,4 +47,10 @@ class GameRepository extends Repository[Game]:
       )
     ))
 
+  def update(game: Game): Future[Unit] =
+    this.collection
+      .map(_.findAndUpdate(BSONDocument(
+        "_id" -> game.getID
+      ), game))
+
 end GameRepository

@@ -10,7 +10,7 @@ import scala.util.Try
 case class Game(
     user1: User,
     user2: User,
-    completed: Boolean,
+    var completed: Boolean,
     lastUpdate: LocalDateTime,
     categories: List[Category],
     id: Option[UUID] = None
@@ -22,8 +22,9 @@ case class Game(
   def getUser2: User = user2
   def getCompleted: Boolean = completed
   def getLastUpdate: LocalDateTime = lastUpdate
-
   def getCategories: List[Category] = categories
+
+  def setCompleted(status: Boolean): Unit = completed = status
 
 }
 

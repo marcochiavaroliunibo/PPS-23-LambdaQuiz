@@ -1,6 +1,6 @@
 package it.unibo.pps.view.components
 
-import it.unibo.pps.controller.{QuestionController, RoundController}
+import it.unibo.pps.controller.{GameController, QuestionController, RoundController}
 import it.unibo.pps.model.Question
 import it.unibo.pps.view.scenes.{DashboardScene, QuizScene}
 import scalafx.Includes.*
@@ -25,7 +25,9 @@ private class AnswersSpace extends FlowPane(Orientation.Vertical, 0, 10):
   private def callResponse(answer: Int): Unit = {
     RoundController.playRound(answer)
     if QuestionController.nextQuestion then changeScene(scene.get(), new QuizScene)
-    else changeScene(scene.get(), new DashboardScene)
+    else
+      GameController.checkFinishGame()
+      changeScene(scene.get(), new DashboardScene)
   }
 
   alignment = Pos.Center

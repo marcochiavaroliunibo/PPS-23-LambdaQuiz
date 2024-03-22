@@ -18,7 +18,7 @@ object GameController:
   }
 
   def gameOfLoggedUsers: Option[Game] = _gameOfLoggedUsers
-  private def gameOfLoggedUsers_=(g: Game): Unit = _gameOfLoggedUsers = Some(g)
+  def gameOfLoggedUsers_=(g: Game): Unit = _gameOfLoggedUsers = Some(g)
 
   def getCurrentGameFromPlayers(users: List[User]): Option[Game] =
     gameOfLoggedUsers match
@@ -30,7 +30,10 @@ object GameController:
             Some(g)
           case None => None
 
-  //  def computePartialPointsOfUser(u: User): Int =
-//    Await.result(roundRepository.getAllRoundsByGame(gameOfLoggedUsers.get), 5.seconds).
+  def checkFinishGame(): Unit = {
+    if (RoundController.getRound.getNumberRound == QuestionController.QUESTION_FOR_ROUND && RoundController.getRound.pointUser2 != -1)
+      gameOfLoggedUsers.get.setCompleted(true)
+      gameRepository.update(gameOfLoggedUsers.get)
+  }
 
 end GameController
