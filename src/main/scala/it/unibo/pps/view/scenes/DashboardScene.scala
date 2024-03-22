@@ -19,3 +19,7 @@ class DashboardScene extends Scene:
     center = CurrentGameStatus()
   }
 end DashboardScene
+
+object DashboardScene:
+  def apply(): Scene = new DashboardScene
+end DashboardScene

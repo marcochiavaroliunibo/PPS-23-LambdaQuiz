@@ -11,8 +11,8 @@ object View extends JFXApp3:
       title = "My app"
       width = 650
       height = 450
-      scene = new MenuScene
+      scene = MenuScene()
     }
-  
+
   override def stopApp(): Unit = ConnectionMongoDB.closeConnection()
 end View

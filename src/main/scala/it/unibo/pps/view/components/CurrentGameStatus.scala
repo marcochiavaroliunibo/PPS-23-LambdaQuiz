@@ -11,6 +11,7 @@ import scalafx.scene.shape.Rectangle
 private class CurrentGameStatus extends HBox(10):
   private val loggedUsers = UserController.loggedUsers.getOrElse(List.empty)
   private val currentGame = GameController.getCurrentGameFromPlayers(loggedUsers)
+
   case class RounD(p1: List[Int], p2: List[Int])
   private val roundsOfCurrentGameMockup = Seq(
     RounD(List(1, 1, 0), List(1, 1, 0)),

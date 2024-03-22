@@ -1,14 +1,14 @@
 package it.unibo.pps.view.components
 
 import it.unibo.pps.model.User
-import it.unibo.pps.utility.Utility
+import it.unibo.pps.view.UIUtils
 import scalafx.Includes.*
 import scalafx.application.Platform
-import scalafx.geometry.{Insets, Pos}
+import scalafx.geometry.Insets
 import scalafx.scene.control.*
+import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.ButtonBar.ButtonData
 import scalafx.scene.layout.GridPane
-import scalafx.scene.text.Font
 
 private class NewAccountComponent extends Dialog[User]:
   title = "Finestra di registrazione"
@@ -28,18 +28,15 @@ private class NewAccountComponent extends Dialog[User]:
     vgap = 10
     padding = Insets(20, 50, 10, 10)
 
-    val players: Seq[Label] = Seq("Giocatore 1", "Giocatore 2").map(new Label(_) {
-      font = new Font("Arial Bold", 15)
-      alignmentInParent = Pos.Center
-    })
+    val players: Seq[Label] = UIUtils.getPlayersLabels
 
     add(players.head, 1, 0)
     add(new Label("Username:"), 0, 1)
     add(username, 1, 1)
     add(new Label("Password:"), 0, 2)
     add(password, 1, 2)
-    add(new Label("Conferma password:"), 0, 5)
-    add(confirmPassword, 1, 5)
+    add(new Label("Conferma password:"), 0, 3)
+    add(confirmPassword, 1, 3)
   }
   dialogPane().setContent(grid)
 
@@ -48,15 +45,20 @@ private class NewAccountComponent extends Dialog[User]:
 
   // When the login button is clicked, convert the result to
   // a username-password-pair.
+  private val errorMsg = "Campi della registrazione errati. Assicurarsi di aver compilato tutti i campi," +
+    "che abbiano una lunghezza di almeno 6 caratteri e che le password siano identiche. Riprovare"
   resultConverter = {
     case buttonPressedType if buttonPressedType == accountButtonType =>
-      Utility.checkInputRegistration(username.getText, password.getText, confirmPassword.getText)
+      if UIUtils.areRegistrationInputsValid(username)(password, confirmPassword)
+      then new User(username.getText, password.getText)
+      else
+        UIUtils.showSimpleAlert(AlertType.Error, errorMsg)
+        null
     case _ => null
   }
 
 end NewAccountComponent
 
-object NewAccountComponent extends UIComponent[Dialog[User]]:
-  private val newAccountComponent: NewAccountComponent = new NewAccountComponent
-  override def getComponent: Dialog[User] = newAccountComponent
+object NewAccountComponent:
+  def apply(): Dialog[User] = new NewAccountComponent
 end NewAccountComponent

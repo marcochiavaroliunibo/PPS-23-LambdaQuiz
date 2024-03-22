@@ -1,15 +1,13 @@
 package it.unibo.pps.view.components
 
 import it.unibo.pps.model.User
-import it.unibo.pps.utility.Utility
 import it.unibo.pps.view.UIUtils
 import scalafx.Includes.*
 import scalafx.application.Platform
-import scalafx.geometry.{Insets, Pos}
+import scalafx.geometry.Insets
 import scalafx.scene.control.*
 import scalafx.scene.control.ButtonBar.ButtonData
 import scalafx.scene.layout.GridPane
-import scalafx.scene.text.Font
 
 private class LoginComponent extends Dialog[List[User]]:
   title = "Finestra di login"
@@ -30,10 +28,7 @@ private class LoginComponent extends Dialog[List[User]]:
     vgap = 10
     padding = Insets(20, 50, 10, 10)
 
-    val players: Seq[Label] = Seq("Giocatore 1", "Giocatore 2").map(new Label(_) {
-      font = new Font("Arial Bold", 15)
-      alignmentInParent = Pos.Center
-    })
+    val players: List[Label] = UIUtils.getPlayersLabels
 
     add(players.head, 1, 0)
     add(new Label("Username:"), 0, 1)
@@ -56,18 +51,18 @@ private class LoginComponent extends Dialog[List[User]]:
   // a username-password-pair.
   resultConverter = {
     case buttonPressedType if buttonPressedType == loginButtonType =>
-      Utility.checkInputLogin(
-        usernameOfPlayer1.getText,
-        passwordOfPlayer1.getText,
-        usernameOfPlayer2.getText,
-        passwordOfPlayer2.getText
-      )
+      if UIUtils.areLoginInputsValid(usernameOfPlayer1, usernameOfPlayer2)(passwordOfPlayer1, passwordOfPlayer2)
+      then
+        List(
+          User(usernameOfPlayer1.getText, passwordOfPlayer1.getText),
+          User(usernameOfPlayer2.getText, passwordOfPlayer2.getText)
+        )
+      else List.empty
     case _ => null
   }
 
 end LoginComponent
 
-object LoginComponent extends UIComponent[Dialog[List[User]]]:
-  private val loginComponent: LoginComponent = new LoginComponent
-  override def getComponent: Dialog[List[User]] = loginComponent
+object LoginComponent:
+  def apply(): Dialog[List[User]] = new LoginComponent
 end LoginComponent

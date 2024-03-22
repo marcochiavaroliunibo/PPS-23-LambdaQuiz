@@ -8,26 +8,14 @@ import scalafx.Includes.*
 import scalafx.application.Platform
 import scalafx.geometry.{Orientation, Pos}
 import scalafx.scene.control.Alert.AlertType
-import scalafx.scene.control.{Alert, Button, ButtonType}
+import scalafx.scene.control.{Alert, ButtonType}
 import scalafx.scene.layout.*
-import scalafx.scene.paint.Color.{Black, Gold, Goldenrod}
-import scalafx.scene.paint.{LinearGradient, Stops}
-import scalafx.scene.text.Font
 
 /** Questa classe rappresenta il menu principale, che viene mostrato all'avvio dell'applicazipne Contiene il titolo del
   * gioco ed i pulsanti per giocare e per chiudere il programma
   */
 private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):
   import it.unibo.pps.view.UIUtils.*
-  private def craftButton(displayName: String): Button = new Button {
-    text = displayName
-    font = new Font("Comic Sans MS", 24)
-    prefWidth = 250
-    prefHeight = 40
-    val buttonGradient = new LinearGradient(endX = 0, stops = Stops(Gold, Goldenrod))
-    background = craftBackground(buttonGradient, 4)
-    border = new Border(new BorderStroke(Black, BorderStrokeStyle.Solid, new CornerRadii(8), new BorderWidths(4)))
-  }
 
   private val menuButtons = Seq("PLAY", "QUIT", "REGISTRATI").map(craftButton)
   menuButtons.filter(_.text.value == "QUIT").head.onAction = _ => {
@@ -42,33 +30,36 @@ private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):
       .foreach(_ => Platform.exit())
   }
 
+  private val errorMsg = "Campi per il login errati. Assicurarsi di aver compilato tutti i campi," +
+    "che abbiano una lunghezza di almeno 6 caratteri e che i due username non siano uguali. Riprovare"
   menuButtons.filter(_.text.value == "PLAY").head.onAction = _ => {
-    LoginComponent.getComponent.showAndWait() match
+    LoginComponent().showAndWait() match
       case Some(List(u1: User, u2: User)) if UserController.checkLogin(List(u1, u2)) =>
-        changeScene(scene.get(), new DashboardScene)
-      case Some(_) =>
-        Alert(AlertType.Error, "Login errato", ButtonType.Close)
-          .showAndWait()
-      case None =>
+        changeScene(scene.get(), DashboardScene())
+      case Some(_) => // the user prompted wrong data
+        UIUtils.showSimpleAlert(AlertType.Error, errorMsg)
+      case None => // the user closed the login dialog
   }
 
   menuButtons.filter(_.text.value == "REGISTRATI").head.onAction = _ => {
-    NewAccountComponent.getComponent.showAndWait() match
+    val res = NewAccountComponent().showAndWait()
+    println(res)
+    println(res.getOrElse(0))
+    res match
       case Some(user: User) if UserController.checkUsername(user.getUsername) =>
-        UIUtils.showSimpleAlert(AlertType.Error, "Username già esistente")
+        UIUtils.showSimpleAlert(AlertType.Error, "Username già esistente, sceglierne un altro!")
       case Some(user: User) =>
         try
           UserController.registerUser(user)
-          UIUtils.showSimpleAlert(AlertType.Confirmation, "Registrazione eseguita!")
+          UIUtils.showSimpleAlert(AlertType.Confirmation, s"L'utente \"${user.username}\" è stato registrato con successo!")
         catch case e: Exception => UIUtils.showSimpleAlert(AlertType.Error, "Errore di connessione, riprova tra poco")
-      case Some(_) | None =>
+      case Some(_) | None => // the user closed the login dialog or entered wrong data
   }
 
   alignment = Pos.Center
   children = menuButtons
 end MainMenu
 
-object MainMenu extends UIComponent[FlowPane]:
-  private val mainMenu = new MainMenu
-  override def getComponent: FlowPane = mainMenu
+object MainMenu:
+  def apply(): FlowPane = new MainMenu
 end MainMenu
