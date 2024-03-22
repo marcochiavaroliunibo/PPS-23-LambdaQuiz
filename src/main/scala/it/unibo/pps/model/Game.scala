@@ -1,6 +1,6 @@
 package it.unibo.pps.model
 
-import it.unibo.pps.business.{CategoryRepository, UserRepository}
+import it.unibo.pps.business.UserRepository
 import reactivemongo.api.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
 
 import java.time.LocalDateTime
@@ -36,8 +36,8 @@ object Game {
         user2 <- doc.getAsTry[User]("user2")
         completed <- doc.getAsTry[Boolean]("completed")
         lastUpdate <- doc.getAsTry[LocalDateTime]("lastUpdate")
-        categories <- doc.getAsTry[List[Category]]("categories")
-      yield Game(user1, user2, completed, lastUpdate, categories, Some(UUID.fromString(id)))
+        categories <- doc.getAsTry[List[String]]("categories")
+      yield Game(user1, user2, completed, lastUpdate, categories.map(Category.valueOf), Some(UUID.fromString(id)))
 
   implicit object GameWriter extends BSONDocumentWriter[Game]:
     override def writeTry(game: Game): Try[BSONDocument] =
@@ -47,7 +47,7 @@ object Game {
         user2 <- Try(game.getUser2)
         completed <- Try(game.getCompleted)
         lastUpdate <- Try(game.getLastUpdate)
-        categories <- Try(game.getCategories)
+        categories <- Try(game.getCategories.map(_.toString))
       yield BSONDocument(
         "_id" -> id,
         "user1" -> user1,

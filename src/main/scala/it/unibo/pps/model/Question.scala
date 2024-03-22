@@ -35,9 +35,9 @@ object Question {
         id <- doc.getAsTry[String]("_id")
         text <- doc.getAsTry[String]("text")
         answers <- doc.getAsTry[List[String]]("answers")
-        category <- doc.getAsTry[Category]("category")
+        category <- doc.getAsTry[String]("category")
         correctAnswer <- doc.getAsTry[Int]("correctAnswer")
-      yield Question(text, answers, correctAnswer, category, Some(UUID.fromString(id)))
+      yield Question(text, answers, correctAnswer, Category.valueOf(category), Some(UUID.fromString(id)))
 
   implicit object QuestionWriter extends BSONDocumentWriter[Question]:
     override def writeTry(question: Question): Try[BSONDocument] = for
@@ -45,7 +45,7 @@ object Question {
       text <- Try(question.getText)
       answers <- Try(question.getAnswers)
       correctAnswer <- Try(question.getCorrectAnswerNumber)
-      category <- Try(question.getCategory)
+      category <- Try(question.getCategory.toString)
     yield BSONDocument(
       "_id" -> id,
       "text" -> text,
