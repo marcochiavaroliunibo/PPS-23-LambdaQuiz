@@ -33,7 +33,7 @@ object GameController:
   def checkFinishGame(): Unit = {
     if (RoundController.getRound.getNumberRound == QuestionController.QUESTION_FOR_ROUND && RoundController.getRound.pointUser2 != -1)
       gameOfLoggedUsers.get.setCompleted(true)
-      gameRepository.update(gameOfLoggedUsers.get)
+      gameRepository.update(gameOfLoggedUsers.get, gameOfLoggedUsers.get.getID)
   }
 
 end GameController

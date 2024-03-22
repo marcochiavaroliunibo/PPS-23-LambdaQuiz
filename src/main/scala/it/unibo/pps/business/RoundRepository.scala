@@ -12,12 +12,6 @@ import scala.util.{Failure, Success}
 class RoundRepository extends Repository[Round]:
   protected val collection: Future[BSONCollection] = ConnectionMongoDB.getDatabase.map(_.collection("rounds"))
 
-  def update(round: Round) : Future[Unit] =
-    this.collection
-      .map(_.findAndUpdate(BSONDocument(
-        "_id" -> round.getID
-      ), round))
-
   // todo: caso da capire: come gestire ordinamento
   def getLastRoundByGame(game: Game): Future[Option[Round]] =
     this.collection

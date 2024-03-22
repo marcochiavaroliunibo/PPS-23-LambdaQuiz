@@ -45,6 +45,6 @@ object RoundController:
   /** aggiorna il punteggio (dell'utente che ha risposto) per il round in corso */
   private def updatePoints(numberPlayer: Int, correct: Boolean): Unit =
     round.setPoint(numberPlayer, correct)
-    roundRepository.update(round)
+    roundRepository.update(round, round.getID)
   
 end RoundController
