@@ -1,7 +1,7 @@
 package it.unibo.pps.controller
 
 import it.unibo.pps.business.QuestionRepository
-import it.unibo.pps.model.{Category, Question, Round, User}
+import it.unibo.pps.model.{Category, Question, Round, Score, User}
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -38,7 +38,7 @@ object QuestionController:
     else
       lastRound = RoundController.getRound
 
-    val questionCategory: Category = GameController.gameOfLoggedUsers.get.getCategories(lastRound.getNumberRound - 1)
+    val questionCategory: Category = GameController.gameOfLoggedUsers.get.categories(lastRound.numberRound - 1)
     val newQuestion: Question = QuestionController.getRandomQuestionByCategory(questionCategory)
 
     setQuestion(newQuestion)
@@ -60,19 +60,19 @@ object QuestionController:
 
     if lastRound == null then
       // Devo creare il primo round - inizia a giocare user1
-      userPlayer = GameController.gameOfLoggedUsers.get.getUser1
-      lastRound = new Round(GameController.gameOfLoggedUsers.get.getID, -1, -1, 1)
+      userPlayer = GameController.gameOfLoggedUsers.get.players.head
+      lastRound = new Round(GameController.gameOfLoggedUsers.get.getID, List(new Score(userPlayer,-1), new Score(GameController.gameOfLoggedUsers.get.players.last,-1)), 1)
       RoundController.createRound(lastRound)
-    else if lastRound.getPoint2 == -1 then
+    else if lastRound.scores.count(_.score != -1) == 1 then
       // Siamo nel mezzo di un round - deve giocare user2
-      userPlayer = GameController.gameOfLoggedUsers.get.getUser2
+      userPlayer = lastRound.scores.find(_.score == -1).get.user
     else
       // Devo creare il game successivo - inizia a giocare user1
-      userPlayer = GameController.gameOfLoggedUsers.get.getUser1
-      lastRound = new Round(GameController.gameOfLoggedUsers.get.getID, -1, -1, lastRound.getNumberRound + 1)
+      userPlayer = GameController.gameOfLoggedUsers.get.players.head
+      lastRound = new Round(GameController.gameOfLoggedUsers.get.getID, List(new Score(userPlayer,-1), new Score(GameController.gameOfLoggedUsers.get.players.last,-1)),
+                    lastRound.numberRound + 1)
       RoundController.createRound(lastRound)
-
-
+    
     RoundController.setRound(lastRound)
     RoundController.setPlayer(userPlayer)
     lastRound

@@ -13,7 +13,7 @@ private class AnswersSpace extends FlowPane(Orientation.Vertical, 0, 10):
   import it.unibo.pps.view.UIUtils.*
 
   private val question: Question = QuestionController.getQuestion
-  private val menuButtons = question.getAnswers.zipWithIndex.map { case (answer, index) =>
+  private val menuButtons = question.answers.zipWithIndex.map { case (answer, index) =>
     val button = craftButton(answer)
     button.onAction = _ => callResponse(index + 1)
     button

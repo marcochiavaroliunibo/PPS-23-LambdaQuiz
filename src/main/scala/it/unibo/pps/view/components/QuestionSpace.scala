@@ -14,7 +14,7 @@ private class QuestionSpace extends Text:
   fill = new LinearGradient(endX = 0, stops = Stops(Orange, DarkOrange))
   alignmentInParent = Pos.Center
   margin = Insets(40, 0, 0, 0)
-  text = QuestionController.getQuestion.getText
+  text = QuestionController.getQuestion.text
 end QuestionSpace
 
 object QuestionSpace:

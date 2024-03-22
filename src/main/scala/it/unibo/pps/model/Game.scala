@@ -9,7 +9,7 @@ import scala.util.Try
 
 case class Game(
     players: List[User],
-    completed: Boolean,
+    var completed: Boolean,
     lastUpdate: LocalDateTime,
     categories: List[Category],
     id: Option[UUID] = None
@@ -17,10 +17,6 @@ case class Game(
   private val _id: UUID = id.getOrElse(UUID.randomUUID())
 
   def getID: String = _id.toString
-  def getCompleted: Boolean = completed
-  def getLastUpdate: LocalDateTime = lastUpdate
-
-  def getCategories: List[Category] = categories
 
 }
 
@@ -40,9 +36,9 @@ object Game {
       for
         id <- Try(game.getID)
         players <- Try(game.players)
-        completed <- Try(game.getCompleted)
-        lastUpdate <- Try(game.getLastUpdate)
-        categories <- Try(game.getCategories.map(_.toString))
+        completed <- Try(game.completed)
+        lastUpdate <- Try(game.lastUpdate)
+        categories <- Try(game.categories.map(_.toString))
       yield BSONDocument(
         "_id" -> id,
         "players" -> players,

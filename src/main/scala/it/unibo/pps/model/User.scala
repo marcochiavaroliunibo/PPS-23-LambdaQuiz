@@ -9,8 +9,6 @@ case class User(username: String, password: String, id: Option[UUID] = None) {
   private val _id: UUID = id.getOrElse(UUID.randomUUID())
 
   def getID: String = _id.toString
-  def getUsername: String = username
-  def getPassword: String = password
 }
 
 object User {
@@ -26,7 +24,7 @@ object User {
     override def writeTry(user: User): Try[BSONDocument] =
       for
         id <- Try(user.getID)
-        username <- Try(user.getUsername)
-        password <- Try(user.getPassword)
+        username <- Try(user.username)
+        password <- Try(user.password)
       yield BSONDocument("_id" -> id, "username" -> username, "password" -> password)
 }

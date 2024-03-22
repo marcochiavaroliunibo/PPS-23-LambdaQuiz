@@ -31,8 +31,8 @@ object GameController:
           case None => None
 
   def checkFinishGame(): Unit = {
-    if (RoundController.getRound.getNumberRound == QuestionController.QUESTION_FOR_ROUND && RoundController.getRound.pointUser2 != -1)
-      gameOfLoggedUsers.get.setCompleted(true)
+    if (RoundController.getRound.numberRound == QuestionController.QUESTION_FOR_ROUND && RoundController.getRound.scores.forall(_.score != -1))
+      gameOfLoggedUsers.get.completed = true
       gameRepository.update(gameOfLoggedUsers.get, gameOfLoggedUsers.get.getID)
   }
 

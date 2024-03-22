@@ -16,16 +16,6 @@ case class Question(
 
   def getID: String = _id.toString
 
-  def getText: String = text
-
-  def getAnswers: List[String] = answers
-
-  def getCorrectAnswerNumber: Int = correctAnswer
-
-  def getCorrectAnswerString: String = answers(correctAnswer - 1)
-
-  def getCategory: Category = category
-
 }
 
 object Question {
@@ -42,10 +32,10 @@ object Question {
   implicit object QuestionWriter extends BSONDocumentWriter[Question]:
     override def writeTry(question: Question): Try[BSONDocument] = for
       id <- Try(question.getID)
-      text <- Try(question.getText)
-      answers <- Try(question.getAnswers)
-      correctAnswer <- Try(question.getCorrectAnswerNumber)
-      category <- Try(question.getCategory.toString)
+      text <- Try(question.text)
+      answers <- Try(question.answers)
+      correctAnswer <- Try(question.correctAnswer)
+      category <- Try(question.category.toString)
     yield BSONDocument(
       "_id" -> id,
       "text" -> text,

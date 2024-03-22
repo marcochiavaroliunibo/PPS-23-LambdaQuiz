@@ -28,7 +28,7 @@ private class CurrentGameStatus extends HBox(10):
         hgrow = Priority.Always
         alignment = Pos.TopCenter
         children = Seq(
-          new Label(user.getUsername) { style = "-fx-font: normal bold 24px serif" },
+          new Label(user.username) { style = "-fx-font: normal bold 24px serif" },
           new Label(s"Punti parziali: ${currentGame.getOrElse(0)}") { style = "-fx-font: normal bold 20px serif" },
           new Separator { orientation = Orientation.Horizontal; margin = Insets(5, 0, 5, 0) },
           // qui ci saranno tutti i dati relativi alla partita corrente

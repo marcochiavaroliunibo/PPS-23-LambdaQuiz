@@ -24,27 +24,27 @@ object RoundController:
 
   /** controlla se la risposta è corretta: mostra il risutato all'utente e poi aggiorna i punti */
   def playRound(answer: Int): Boolean = {
-    val numberPlayer: Int = getNumberPlayer
-    if answer == QuestionController.getQuestion.getCorrectAnswerNumber then
-      updatePoints(numberPlayer, true)
+    if answer == QuestionController.getQuestion.correctAnswer then
+      updatePoints(true)
       Alert(AlertType.Confirmation, "Risposta corretta!", ButtonType.Close)
         .showAndWait()
       true
     else
-      updatePoints(numberPlayer, false)
+      updatePoints(false)
       Alert(AlertType.Error, "Risposta errata!", ButtonType.Close)
         .showAndWait()
       false
   }
 
   /** ottiene se sta giocando utente 1 o utente 2 */
-  private def getNumberPlayer: Int =
-    if player.getUsername == GameController.gameOfLoggedUsers.get.getUser1.getUsername then 1
+  /*private def getNumberPlayer: Int =
+    if player.username == GameController.gameOfLoggedUsers.get.user1.username then 1
     else 2
-
+  */
+  
   /** aggiorna il punteggio (dell'utente che ha risposto) per il round in corso */
-  private def updatePoints(numberPlayer: Int, correct: Boolean): Unit =
-    round.setPoint(numberPlayer, correct)
+  private def updatePoints(correct: Boolean): Unit =
+    round.setPoint(player, correct)
     roundRepository.update(round, round.getID)
   
 end RoundController
