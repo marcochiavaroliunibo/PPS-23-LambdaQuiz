@@ -1,8 +1,10 @@
 package it.unibo.pps.controller
 
 import it.unibo.pps.business.{GameRepository, RoundRepository}
+import it.unibo.pps.model.Category.{CulturaGenerale, Geografia, Scienze}
 import it.unibo.pps.model.{Game, Round, User}
 
+import java.time.LocalDateTime
 import scala.concurrent.Await
 import scala.concurrent.duration.*
 
@@ -31,9 +33,21 @@ object GameController:
           case None => None
 
   def checkFinishGame(): Unit = {
-    if (RoundController.getRound.numberRound == QuestionController.QUESTION_FOR_ROUND && RoundController.getRound.scores.forall(_.score != -1))
+    if (
+      RoundController.getRound.numberRound == QuestionController.QUESTION_FOR_ROUND && RoundController.getRound.scores
+        .forall(_.score != -1)
+    )
       gameOfLoggedUsers.get.completed = true
       gameRepository.update(gameOfLoggedUsers.get, gameOfLoggedUsers.get.getID)
   }
+
+  def createNewMatch(): Unit =
+    val newGame = new Game(
+      UserController.loggedUsers.getOrElse(List.empty),
+      false,
+      LocalDateTime.now(),
+      List(CulturaGenerale, Scienze, Geografia)
+    )
+    Await.result(gameRepository.create(newGame), 5.seconds)
 
 end GameController

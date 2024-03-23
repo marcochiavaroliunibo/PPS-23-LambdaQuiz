@@ -30,7 +30,7 @@ class RoundRepository extends Repository[Round]:
   
   def getAllRoundsByGame(game: Game): Future[Option[List[Round]]] =
     readMany(BSONDocument(
-      "game" -> game.getID
+      "gameID" -> game.getID
     ))
     
 

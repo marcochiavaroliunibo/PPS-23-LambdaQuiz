@@ -43,8 +43,6 @@ private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):
 
   menuButtons.filter(_.text.value == "REGISTRATI").head.onAction = _ => {
     val res = NewAccountComponent().showAndWait()
-    println(res)
-    println(res.getOrElse(0))
     res match
       case Some(user: User) if UserController.checkUsername(user.username) =>
         UIUtils.showSimpleAlert(AlertType.Error, "Username già esistente, sceglierne un altro!")
