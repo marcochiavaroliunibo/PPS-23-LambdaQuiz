@@ -16,36 +16,12 @@ class GameRepository extends Repository[Game]:
       "players" -> BSONDocument("$elemMatch" -> BSONDocument("_id" -> BSONDocument("$in" -> players.map(_.getID))))
     )
     readOne(query)
-
-  // mi sa che non ci serve questo metodo
-  def getGameInProgressByUser(user: User): Future[Option[List[Game]]] =
-    readMany(
-      BSONDocument(
-        "$and" -> BSONArray(
-          "completed" -> false,
-          BSONDocument(
-            "$or" -> BSONArray(
-              BSONDocument("user1" -> user.getID),
-              BSONDocument("user2" -> user.getID)
-            )
-          )
-        )
-      )
-    )
-
+  
   def getLastGameCompletedByUser(user: User): Future[Option[List[Game]]] =
-    readMany(
-      BSONDocument(
-        "$and" -> BSONArray(
-          "completed" -> true,
-          BSONDocument(
-            "$or" -> BSONArray(
-              BSONDocument("user1" -> user.getID),
-              BSONDocument("user2" -> user.getID)
-            )
-          )
-        )
-      )
+    val query = BSONDocument(
+      "completed" -> true,
+      "players" -> BSONDocument("$elemMatch" -> BSONDocument("_id" -> BSONDocument("$in" -> user.getID)))
     )
+    readMany(query)
 
 end GameRepository
