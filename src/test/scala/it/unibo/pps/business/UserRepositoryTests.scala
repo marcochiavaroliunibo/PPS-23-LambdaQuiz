@@ -17,7 +17,7 @@ class UserRepositoryTests extends AsyncFlatSpec with should.Matchers:
   it should "be read from the database by id" in {
     userRepository
       .readById(user.getID)
-      .map(_.exists(_.getUsername == user.getUsername) should be(true))
+      .map(_.exists(_.username == user.username) should be(true))
   }
 
   it should "be read from the database by username and password" in {

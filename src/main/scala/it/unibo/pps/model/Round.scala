@@ -7,7 +7,7 @@ import java.util.UUID
 import scala.util.Try
 
 case class Round(
-    private val _relatedGameID: String,
+    _relatedGameID: String,
     scores: List[Score],
     numberRound: Int,
     id: Option[UUID] = None
@@ -26,13 +26,6 @@ case class Round(
     if correct then point.score = point.score + 1
   }
   
-//  def setPoint(numberPlayer: Int, correct: Boolean): Unit =
-//    if numberPlayer == 1 then
-//      if getPoint1 == -1 then pointUser1 = 0
-//      if correct then pointUser1 = pointUser1 + 1
-//    else
-//      if getPoint2 == -1 then pointUser2 = 0
-//      if correct then pointUser2 = pointUser2 + 1
 }
 
 object Round {

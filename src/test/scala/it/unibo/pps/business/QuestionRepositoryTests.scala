@@ -31,11 +31,11 @@ class QuestionRepositoryTests extends AsyncFlatSpec with should.Matchers:
     questionRepository
       .readOne(
         BSONDocument(
-          "text" -> question.getText,
+          "text" -> question.text,
           "category" -> CulturaGenerale.toString
         )
       )
-      .map(_.exists(q => q.getText == question.getText && q.getCategory == question.getCategory) should be(true))
+      .map(_.exists(q => q.text == question.text && q.category == question.category) should be(true))
   }
 
 end QuestionRepositoryTests
