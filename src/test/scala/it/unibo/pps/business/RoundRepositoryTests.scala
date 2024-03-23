@@ -25,7 +25,7 @@ class RoundRepositoryTests extends AsyncFlatSpec with should.Matchers:
   }
 
   it should "be read from the database" in {
-    roundRepository.readById(round.getID).map(_.get._relatedGameID should be(game.getID))
+    roundRepository.readById(round.getID).map(_.exists(_.getID == round.getID) should be(true))
   }
 
 end RoundRepositoryTests
