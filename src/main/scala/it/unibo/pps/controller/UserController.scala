@@ -19,7 +19,7 @@ object UserController:
   def checkLogin(users: List[User]): Boolean =
     val foundUsers = users.map(u => Await.result(userRepository.getUserByLogin(u), 5.seconds))
     _loggedUsers = foundUsers.count(_.isDefined) match
-      case 2 => foundUsers.foreach(println); Some(foundUsers.map(_.get))
+      case 2 => Some(foundUsers.map(_.get))
       case _                => None
     _loggedUsers.nonEmpty
 

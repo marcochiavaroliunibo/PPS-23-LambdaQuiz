@@ -18,11 +18,7 @@ object User {
         id <- doc.getAsTry[String]("_id")
         username <- doc.getAsTry[String]("username")
         password <- doc.getAsTry[String]("password")
-      yield User(username, password, {
-        println(id)
-        println(Some(UUID.fromString(id)))
-        Some(UUID.fromString(id))
-      })
+      yield User(username, password, Some(UUID.fromString(id)))
 
   implicit object UserWriter extends BSONDocumentWriter[User]:
     override def writeTry(user: User): Try[BSONDocument] =
