@@ -1,7 +1,7 @@
 package it.unibo.pps.view.scenes
 
-import it.unibo.pps.controller.{QuestionController, RoundController}
-import it.unibo.pps.model.Question
+import it.unibo.pps.controller.{GameController, QuestionController, RoundController}
+import it.unibo.pps.model.{Category, Question}
 import it.unibo.pps.view.UIUtils
 import it.unibo.pps.view.components.{AnswersSpace, QuestionSpace}
 import scalafx.scene.Scene
@@ -15,7 +15,10 @@ class QuizScene extends Scene:
 
   val question: Question = QuestionController.prepareQuestion()
   if QuestionController.counterQuestionRound == 0 then
-    UIUtils.showSimpleAlert(AlertType.Information, s"E' il turno di ${RoundController.getPlayer.username}")
+    val category: Category = GameController.gameOfLoggedUsers.get
+      .categories(RoundController.getRound.numberRound - 1)
+    UIUtils.showSimpleAlert(AlertType.Information,
+      s"Gioca ${RoundController.getPlayer.username} per la categoria $category")
 
   root = new BorderPane {
     top = QuestionSpace()

@@ -47,7 +47,7 @@ object GameController:
       UserController.loggedUsers.getOrElse(List.empty),
       false,
       LocalDateTime.now(),
-      List(CulturaGenerale, Scienze, Geografia)
+      CategoryController.getRandomCategories(ROUND_FOR_GAME)
     )
     Await.result(gameRepository.create(newGame), 5.seconds)
 
