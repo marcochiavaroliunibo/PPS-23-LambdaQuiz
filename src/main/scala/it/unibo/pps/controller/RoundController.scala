@@ -61,13 +61,12 @@ object RoundController:
       .filter(_.user.username == user.username) // filtra soo le Score dell'utente in input
       .foldRight(0)(_.score + _)                // calcola il punteggio per accumulazione
 
-  def getPlayedRounds: List[Round] = {
-    try
-      val optionGame = GameController.gameOfLoggedUsers.get
-      Await
-        .result(roundRepository.getAllRoundsByGame(optionGame), 5.seconds)
-        .getOrElse(List.empty)
-    catch case e: NoSuchElementException => null
-  }
+  def getPlayedRounds: List[Round] =
+    GameController.gameOfLoggedUsers
+      .flatMap(game =>
+        Await
+          .result(roundRepository.getAllRoundsByGame(game), 5.seconds)
+      )
+      .getOrElse(List.empty)
 
 end RoundController

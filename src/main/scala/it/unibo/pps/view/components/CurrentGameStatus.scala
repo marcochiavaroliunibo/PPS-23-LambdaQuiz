@@ -1,34 +1,27 @@
 package it.unibo.pps.view.components
 
-import it.unibo.pps.controller.{GameController, RoundController, UserController}
+import it.unibo.pps.controller.RoundController
 import it.unibo.pps.model.{Game, Round, User}
 import it.unibo.pps.view.UIUtils
 import scalafx.geometry.{Insets, Orientation, Pos}
-import scalafx.scene.control.{Button, Label, Separator}
+import scalafx.scene.control.{Label, Separator}
 import scalafx.scene.layout.*
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
 import scalafx.scene.text.Text
 
-private class CurrentGameStatus extends HBox(10):
-  private val loggedUsers = UserController.loggedUsers.getOrElse(List.empty)
-  private val currentGame = GameController.getCurrentGameFromPlayers(loggedUsers)
-  
+private class CurrentGameStatus(currentGame: Option[Game]) extends HBox(10):
   private val playedRounds = RoundController.getPlayedRounds
-  private val partialPointsOfUser: User => Int = currentGame match
-    case Some(g: Game) => RoundController.computePartialPointsOfUser
-    case None => _ => 0
-//  case class RounD(p1: List[Int], p2: List[Int])
-//  private val roundsOfCurrentGameMockup = Seq(
-//    RounD(List(1, 1, 0), List(1, 1, 0)),
-//    RounD(List(0, 0, 0), List(0, 1, 0)),
-//    RounD(List(1, 1, 1), List(0, 0, 1))
-//  )
+  private val partialPointsOfUser: User => Int = currentGame
+    .map(g => RoundController.computePartialPointsOfUser)
+    .getOrElse(_ => 0)
 
   margin = Insets(3)
   background = UIUtils.craftBackground(Color.web("#707070"), 5)
   alignment = Pos.TopCenter
-  children = loggedUsers
+  children = currentGame
+    .map(_.players)
+    .getOrElse(List.empty)
     .map(user =>
       new VBox {
         hgrow = Priority.Always
@@ -58,5 +51,5 @@ private class CurrentGameStatus extends HBox(10):
 end CurrentGameStatus
 
 object CurrentGameStatus:
-  def apply(): CurrentGameStatus = new CurrentGameStatus
+  def apply(g: Option[Game]): CurrentGameStatus = new CurrentGameStatus(g)
 end CurrentGameStatus
