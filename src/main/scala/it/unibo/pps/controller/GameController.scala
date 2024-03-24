@@ -13,10 +13,11 @@ object GameController:
   private var _gameOfLoggedUsers: Option[Game] = None
   private val gameRepository = new GameRepository
   private val roundRepository = new RoundRepository
+  private val ROUND_FOR_GAME: Int = 3
 
   def getLastRoundByGame: Round = {
-    val roundResult = Await.result(roundRepository.getLastRoundByGame(gameOfLoggedUsers.get), 5.seconds)
-    if roundResult.isDefined then roundResult.get else null
+    val roundResult = Await.result(roundRepository.getAllRoundsByGame(gameOfLoggedUsers.get), 5.seconds)
+    if roundResult.isDefined then roundResult.get.last else null
   }
 
   def gameOfLoggedUsers: Option[Game] = _gameOfLoggedUsers
@@ -34,12 +35,11 @@ object GameController:
           case None => None
 
   def checkFinishGame(): Unit = {
-    if (
-      RoundController.getRound.numberRound == QuestionController.QUESTION_FOR_ROUND && RoundController.getRound.scores
-        .forall(_.score != -1)
-    )
-      gameOfLoggedUsers.get.completed = true
-      gameRepository.update(gameOfLoggedUsers.get, gameOfLoggedUsers.get.getID)
+    if (RoundController.getRound.numberRound == ROUND_FOR_GAME && RoundController.getRound.scores.forall(_.score != -1))
+      val gameEdited: Game = gameOfLoggedUsers.get
+      gameEdited.completed = true
+      gameEdited.lastUpdate = LocalDateTime.now()
+      gameRepository.update(gameEdited, gameEdited.getID)
   }
 
   def createNewMatch(): Unit =

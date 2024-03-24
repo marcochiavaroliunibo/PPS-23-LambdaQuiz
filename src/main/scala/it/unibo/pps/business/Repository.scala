@@ -45,5 +45,17 @@ trait Repository[T]:
         f.printStackTrace()
         None
       }
+    
+  def readWithSort(query: BSONDocument, sort: BSONDocument)(implicit reader: BSONDocumentReader[T]): Future[Option[List[T]]] =
+    collection
+      .flatMap(_.find(query).sort(sort).cursor[T]().collect[List]())
+      .map {
+        case l: List[T] if l.nonEmpty => Some(l)
+        case _                        => None
+      }
+      .recover { case f: Throwable =>
+        f.printStackTrace()
+        None
+      }
 
 end Repository

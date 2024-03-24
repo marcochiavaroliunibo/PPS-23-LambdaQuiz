@@ -15,9 +15,9 @@ object RoundController:
   private val roundRepository = new RoundRepository
 
   def setRound(newRound: Round): Unit = round = newRound
-
   def getRound: Round = round
 
+  def getPlayer: User = player
   def setPlayer(newPlayer: User): Unit = player = newPlayer
 
   def createRound(round: Round): Unit = roundRepository.create(round)
@@ -36,12 +36,6 @@ object RoundController:
       false
   }
 
-  /** ottiene se sta giocando utente 1 o utente 2 */
-  /*private def getNumberPlayer: Int =
-    if player.username == GameController.gameOfLoggedUsers.get.user1.username then 1
-    else 2
-   */
-
   /** aggiorna il punteggio (dell'utente che ha risposto) per il round in corso */
   private def updatePoints(correct: Boolean): Unit =
     round.setPoint(player, correct)
@@ -59,6 +53,7 @@ object RoundController:
       .getOrElse(List.empty)
       .flatMap(_.scores)                        // trasforma la lista di Round in lista di Score
       .filter(_.user.username == user.username) // filtra soo le Score dell'utente in input
+      .filter(_.score != -1)                    // esclude i valori -1 (round non ancora giocato dall'utente)
       .foldRight(0)(_.score + _)                // calcola il punteggio per accumulazione
 
   def getPlayedRounds: List[Round] =
@@ -69,4 +64,9 @@ object RoundController:
       )
       .getOrElse(List.empty)
 
+  /** a fine giocata, resetto le variabili per la prossima giocata */
+  def resetVariable(): Unit =
+    round = null
+    player = null
+  
 end RoundController

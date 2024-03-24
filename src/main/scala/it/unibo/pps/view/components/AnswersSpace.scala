@@ -27,6 +27,7 @@ private class AnswersSpace extends FlowPane(Orientation.Vertical, 0, 10):
     if QuestionController.nextQuestion then changeScene(scene.get(), new QuizScene)
     else
       GameController.checkFinishGame()
+      RoundController.resetVariable()
       changeScene(scene.get(), new DashboardScene)
   }
 

@@ -10,7 +10,7 @@ import scala.util.Try
 case class Game(
     players: List[User],
     var completed: Boolean,
-    lastUpdate: LocalDateTime,
+    var lastUpdate: LocalDateTime,
     categories: List[Category],
     id: Option[UUID] = None
 ) {

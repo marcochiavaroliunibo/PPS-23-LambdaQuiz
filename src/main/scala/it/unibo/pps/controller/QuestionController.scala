@@ -11,10 +11,10 @@ object QuestionController:
   
   private var question: Question = null
   private val questionRepository = new QuestionRepository
-  private var counterQuestionRound: Int = 0
-  val QUESTION_FOR_ROUND: Int = 3
+  var counterQuestionRound: Int = 0
+  private val QUESTION_FOR_ROUND: Int = 3
   
-  def getRandomQuestionByCategory(category: Category): Question =
+  private def getRandomQuestionByCategory(category: Category): Question =
     val questionResult = Await.result(questionRepository.getQuestionsByCategory(category), Duration.Inf).get
     val randomQuestion = Random.nextInt(questionResult.length)
     questionResult(randomQuestion)
@@ -26,7 +26,11 @@ object QuestionController:
    * basta modificre la costante per cambiare il numero di domande effettuate ad ogni turno */
   def nextQuestion: Boolean = {
     counterQuestionRound = counterQuestionRound + 1
-    !(counterQuestionRound == QUESTION_FOR_ROUND)
+    if counterQuestionRound == QUESTION_FOR_ROUND then
+      counterQuestionRound = 0
+      false
+    else
+      true
   }
 
   /** estraggo la domanda da mostrare */
@@ -63,7 +67,7 @@ object QuestionController:
       userPlayer = GameController.gameOfLoggedUsers.get.players.head
       lastRound = new Round(GameController.gameOfLoggedUsers.get.getID, List(new Score(userPlayer,-1), new Score(GameController.gameOfLoggedUsers.get.players.last,-1)), 1)
       RoundController.createRound(lastRound)
-    else if lastRound.scores.count(_.score != -1) == 1 then
+    else if lastRound.scores.count(_.score == -1) > 0 then
       // Siamo nel mezzo di un round - deve giocare user2
       userPlayer = lastRound.scores.find(_.score == -1).get.user
     else

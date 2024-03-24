@@ -1,10 +1,11 @@
 package it.unibo.pps.view.scenes
 
-import it.unibo.pps.controller.QuestionController
+import it.unibo.pps.controller.{QuestionController, RoundController}
 import it.unibo.pps.model.Question
 import it.unibo.pps.view.UIUtils
 import it.unibo.pps.view.components.{AnswersSpace, QuestionSpace}
 import scalafx.scene.Scene
+import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.layout.BorderPane
 
 /** Questa classe rappresenta la pagina di gioco, composta da due componenti QuestionSpace: visualizzazione della
@@ -13,6 +14,8 @@ import scalafx.scene.layout.BorderPane
 class QuizScene extends Scene:
 
   val question: Question = QuestionController.prepareQuestion()
+  if QuestionController.counterQuestionRound == 0 then
+    UIUtils.showSimpleAlert(AlertType.Information, s"E' il turno di ${RoundController.getPlayer.username}")
 
   root = new BorderPane {
     top = QuestionSpace()
