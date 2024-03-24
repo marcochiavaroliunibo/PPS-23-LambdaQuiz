@@ -23,7 +23,8 @@ object GameController:
   def gameOfLoggedUsers_=(g: Game): Unit = _gameOfLoggedUsers = Some(g)
 
   def getCurrentGameFromPlayers(users: List[User]): Option[Game] =
-    gameOfLoggedUsers match
+    if users.isEmpty then None
+    else gameOfLoggedUsers match
       case Some(g: Game) => Some(g)
       case None =>
         Await.result(gameRepository.getCurrentGameFromPlayers(users), 5.seconds) match
