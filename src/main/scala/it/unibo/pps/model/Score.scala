@@ -10,7 +10,7 @@ object Score:
   implicit object ScoreReader extends BSONDocumentReader[Score]:
     def readDocument(doc: BSONDocument): Try[Score] =
       for
-        user <- doc.getAsTry[User]("users")
+        user <- doc.getAsTry[User]("user")
         score <- doc.getAsTry[Int]("score")
       yield Score(user, score)
 
