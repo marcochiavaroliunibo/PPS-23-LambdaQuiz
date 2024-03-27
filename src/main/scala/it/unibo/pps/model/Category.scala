@@ -5,4 +5,7 @@ enum Category:
   case Geografia
   case Storia
   case CulturaGenerale
+  case Sport
+  case Politica
+  case Psicologia
 end Category

@@ -12,7 +12,7 @@ object QuestionController:
   private var question: Question = null
   private val questionRepository = new QuestionRepository
   var counterQuestionRound: Int = 0
-  private val QUESTION_FOR_ROUND: Int = 3
+  val QUESTION_FOR_ROUND: Int = 3
   
   private def getRandomQuestionByCategory(category: Category): Question =
     val questionResult = Await.result(questionRepository.getQuestionsByCategory(category), Duration.Inf).get

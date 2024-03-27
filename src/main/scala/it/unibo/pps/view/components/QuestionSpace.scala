@@ -10,7 +10,7 @@ import scalafx.scene.text.{Font, Text}
 /** Questa classe rappresenta la pagina di gioco, in cui i giocatori visualizzano la domanda del turno
   */
 private class QuestionSpace extends Text:
-  font = new Font("Verdana Bold", 40)
+  font = new Font("Verdana Bold", 22)
   fill = new LinearGradient(endX = 0, stops = Stops(Orange, DarkOrange))
   alignmentInParent = Pos.Center
   margin = Insets(40, 0, 0, 0)

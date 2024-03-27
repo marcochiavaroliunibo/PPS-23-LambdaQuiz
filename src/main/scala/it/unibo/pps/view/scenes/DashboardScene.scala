@@ -17,15 +17,23 @@ class DashboardScene extends Scene:
   private val loggedUsers = UserController.loggedUsers.getOrElse(List.empty)
   private val currentGame = GameController.getCurrentGameFromPlayers(loggedUsers)
 
-  private val newMatchBtn = craftButton("Nuova partita")
-  newMatchBtn.disable = currentGame.isDefined
+  private val goToBackBtn = craftButton("Indietro")
+  goToBackBtn.onAction = e => {
+    GameController.resetVariable()
+    changeScene(this.window.get().getScene, MenuScene())
+  }
+
+  private val newMatchBtn = craftButton("Nuovo match")
+  newMatchBtn.disable = currentGame.isDefined && !currentGame.get.completed // la partita esiste ed è in corso
   newMatchBtn.onAction = e => {
-    GameController.createNewMatch()
+    GameController.resetVariable()
+    GameController.createNewGame()
     showSimpleAlert(AlertType.Confirmation, "Partita creata con successo!")
     changeScene(this.window.get().getScene, DashboardScene())
   }
-  private val goToMatchBtn = craftButton("Vai alla partita")
-  goToMatchBtn.disable = currentGame.isEmpty
+
+  private val goToMatchBtn = craftButton("Gioca")
+  goToMatchBtn.disable = currentGame.isEmpty || currentGame.get.completed // la partita non esiste o è conclusa
   goToMatchBtn.onAction = _ => changeScene(this.window.get().getScene, QuizScene())
 
   root = new BorderPane {
@@ -37,7 +45,7 @@ class DashboardScene extends Scene:
     center = CurrentGameStatus(currentGame)
     bottom = new HBox(10) {
       alignment = Pos.Center
-      children = List(newMatchBtn, goToMatchBtn)
+      children = List(goToBackBtn, newMatchBtn, goToMatchBtn)
     }
   }
 end DashboardScene

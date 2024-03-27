@@ -14,7 +14,7 @@ private class AnswersSpace extends FlowPane(Orientation.Vertical, 0, 10):
 
   private val question: Question = QuestionController.getQuestion
   private val menuButtons = question.answers.zipWithIndex.map { case (answer, index) =>
-    val button = craftButton(answer)
+    val button = craftButton(answer, 22, 600)
     button.onAction = _ => callResponse(index + 1)
     button
   }
@@ -24,11 +24,12 @@ private class AnswersSpace extends FlowPane(Orientation.Vertical, 0, 10):
     */
   private def callResponse(answer: Int): Unit = {
     RoundController.playRound(answer)
-    if QuestionController.nextQuestion then changeScene(scene.get(), new QuizScene)
+    if QuestionController.nextQuestion then 
+      changeScene(scene.get(), QuizScene())
     else
       GameController.checkFinishGame()
       RoundController.resetVariable()
-      changeScene(scene.get(), new DashboardScene)
+      changeScene(scene.get(), DashboardScene())
   }
 
   alignment = Pos.Center

@@ -1,5 +1,6 @@
 package it.unibo.pps.view
 
+import it.unibo.pps.view.scenes.MenuScene
 import javafx.stage.Stage
 import scalafx.Includes.*
 import scalafx.geometry.{Insets, Pos}
@@ -7,8 +8,8 @@ import scalafx.scene.Scene
 import scalafx.scene.control.*
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.layout.*
-import scalafx.scene.paint.Color.{Black, DeepSkyBlue, DodgerBlue, Gold, Goldenrod}
-import scalafx.scene.paint.{LinearGradient, Paint, Stops}
+import scalafx.scene.paint.Color.{Black, DeepSkyBlue, DodgerBlue, Gold, Goldenrod, Green, Red}
+import scalafx.scene.paint.{Color, LinearGradient, Paint, Stops}
 import scalafx.scene.text.Font
 
 object UIUtils:
@@ -34,20 +35,29 @@ object UIUtils:
   def defaultBackground: Background =
     this.craftBackground(new LinearGradient(endX = 0, stops = Stops(DodgerBlue, DeepSkyBlue)))
 
-  def craftButton(displayName: String): Button = new Button {
+  def craftButton(displayName: String, fontSize: Int = 24, widthBtn: Int = 250, heightBtn: Int = 40,
+                  colorTop: Color = Gold, colorDown: Color = Goldenrod): Button = new Button {
     text = displayName
-    font = new Font("Comic Sans MS", 24)
-    prefWidth = 250
-    prefHeight = 40
-    val buttonGradient = new LinearGradient(endX = 0, stops = Stops(Gold, Goldenrod))
+    font = new Font("Comic Sans MS", fontSize)
+    prefWidth = widthBtn
+    prefHeight = heightBtn
+    val buttonGradient = new LinearGradient(endX = 0, stops = Stops(colorTop, colorDown))
     background = craftBackground(buttonGradient, 4)
     border = new Border(new BorderStroke(Black, BorderStrokeStyle.Solid, new CornerRadii(8), new BorderWidths(4)))
   }
+
+  def craftButtonWin(displayName: String): Button = craftButton(displayName, 24, 250, 40, Green, Green)
+  def craftButtonLose(displayName: String): Button = craftButton(displayName, 24, 250, 40, Red, Red)
 
   def getPlayersLabels: List[Label] = List("Giocatore 1", "Giocatore 2").map(new Label(_) {
     font = new Font("Arial Bold", 15)
     alignmentInParent = Pos.Center
   })
+  
+  def getSinglePlayerLabel: Label = new Label("Dati giocatore") {
+    font = new Font("Arial Bold", 15)
+    alignmentInParent = Pos.Center
+  }
 
   /** verifica che i campi in input siano conformi. In particolare, verifica che non ci siano campi vuoti e che abbiano
     * una lunghezza maggiore o uguale di 6 caratteri .

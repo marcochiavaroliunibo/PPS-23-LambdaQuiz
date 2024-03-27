@@ -10,18 +10,20 @@ import scala.concurrent.Future
 class GameRepository extends Repository[Game]:
   override val collection: Future[BSONCollection] = ConnectionMongoDB.getDatabase.map(_.collection("games"))
 
-  def getCurrentGameFromPlayers(players: List[User]): Future[Option[Game]] =
+  def getCurrentGameFromPlayers(players: List[User]): Future[Option[List[Game]]] =
     val query = BSONDocument(
       "completed" -> false,
-      "players" -> BSONDocument("$elemMatch" -> BSONDocument("_id" -> BSONDocument("$in" -> players.map(_.getID))))
+      "players" -> BSONDocument("$all" -> players)
     )
-    readOne(query)
-  
-  def getLastGameCompletedByUser(user: User): Future[Option[List[Game]]] =
+    val sort = BSONDocument("lastUpdate" -> -1)
+    readWithSort(query, sort)
+
+  def getLastGameCompletedByUser(user: User, maxDocs: Int = Int.MaxValue): Future[Option[List[Game]]] =
     val query = BSONDocument(
       "completed" -> true,
-      "players" -> BSONDocument("$elemMatch" -> BSONDocument("_id" -> BSONDocument("$in" -> user.getID)))
+      "players" -> BSONDocument("$eq" -> user)
     )
-    readMany(query)
+    val sort = BSONDocument("lastUpdate" -> -1)
+    readWithSort(query, sort, maxDocs)
 
 end GameRepository

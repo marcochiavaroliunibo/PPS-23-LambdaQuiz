@@ -46,9 +46,9 @@ trait Repository[T]:
         None
       }
     
-  def readWithSort(query: BSONDocument, sort: BSONDocument)(implicit reader: BSONDocumentReader[T]): Future[Option[List[T]]] =
+  def readWithSort(query: BSONDocument, sort: BSONDocument, maxDocs: Int = Int.MaxValue)(implicit reader: BSONDocumentReader[T]): Future[Option[List[T]]] =
     collection
-      .flatMap(_.find(query).sort(sort).cursor[T]().collect[List]())
+      .flatMap(_.find(query).sort(sort).cursor[T]().collect[List](maxDocs))
       .map {
         case l: List[T] if l.nonEmpty => Some(l)
         case _                        => None

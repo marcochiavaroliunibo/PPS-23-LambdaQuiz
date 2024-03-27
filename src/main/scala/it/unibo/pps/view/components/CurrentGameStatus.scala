@@ -1,6 +1,6 @@
 package it.unibo.pps.view.components
 
-import it.unibo.pps.controller.RoundController
+import it.unibo.pps.controller.{QuestionController, RoundController}
 import it.unibo.pps.model.{Game, Round, User}
 import it.unibo.pps.view.UIUtils
 import scalafx.geometry.{Insets, Orientation, Pos}
@@ -13,7 +13,7 @@ import scalafx.scene.text.Text
 private class CurrentGameStatus(currentGame: Option[Game]) extends HBox(10):
   private val playedRounds = RoundController.getPlayedRounds
   private val partialPointsOfUser: User => Int = currentGame
-    .map(g => RoundController.computePartialPointsOfUser)
+    .map(g => RoundController.computePartialPointsOfUser(_))
     .getOrElse(_ => 0)
 
   margin = Insets(3)
@@ -38,9 +38,16 @@ private class CurrentGameStatus(currentGame: Option[Game]) extends HBox(10):
               case rounds: List[Round] =>
                 rounds.map(round =>
                   new HBox(2) {
-                    children = round.scores
-                      .filter(_.user == user)
-                      .map(s => Rectangle(30, 20, if s.score == 1 then Color.Green else Color.Red))
+                    val score: Seq[Int] = round.scores.filter(_.user == user).filter(_.score != -1).map(s => s.score)
+                    var listBox: List[Rectangle] = List()
+                    if score.nonEmpty then
+                      /** aggiungo box verdi per ogni domanda indovinata dall'utente nel round */
+                      for (i <- 1 to score.head)
+                        listBox = Rectangle(30, 20, Color.Green) :: listBox
+                      /** aggiungo box rossi per ogni domanda sbagliata dall'utente nel round */
+                      for (i <- listBox.length + 1 to QuestionController.QUESTION_FOR_ROUND)
+                        listBox = Rectangle(30, 20, Color.Red) :: listBox
+                      children = listBox
                   }
                 )
               case null => List(new Text("Non c'è alcuna partita in corso al momento!"))
