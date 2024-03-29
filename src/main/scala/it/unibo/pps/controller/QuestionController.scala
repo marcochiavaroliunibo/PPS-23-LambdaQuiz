@@ -40,13 +40,15 @@ object QuestionController:
     if counterQuestionRound == 0 then
       lastRound = setVariableQuestion()
     else
-      lastRound = RoundController.getRound
+      lastRound = RoundController.round.orNull
 
-    val questionCategory: Category = GameController.gameOfLoggedUsers.get.categories(lastRound.numberRound - 1)
-    val newQuestion: Question = QuestionController.getRandomQuestionByCategory(questionCategory)
-
-    setQuestion(newQuestion)
-    newQuestion
+    if lastRound != null then
+      val questionCategory: Category = GameController.gameOfLoggedUsers.get.categories(lastRound.numberRound - 1)
+      val newQuestion: Question = QuestionController.getRandomQuestionByCategory(questionCategory)
+      setQuestion(newQuestion)
+      newQuestion
+    else
+      null
   }
 
   /** funzione che si occupa di caricare la domanda da visualizzare all'utente */
@@ -63,22 +65,22 @@ object QuestionController:
     var userPlayer: User = null
 
     if lastRound == null then
-      // Devo creare il primo round - inizia a giocare user1
+      /** Devo creare il primo round - inizia a giocare user1 */
       userPlayer = GameController.gameOfLoggedUsers.get.players.head
       lastRound = new Round(GameController.gameOfLoggedUsers.get.getID, List(new Score(userPlayer,-1), new Score(GameController.gameOfLoggedUsers.get.players.last,-1)), 1)
       RoundController.createRound(lastRound)
     else if lastRound.scores.count(_.score == -1) > 0 then
-      // Siamo nel mezzo di un round - deve giocare user2
+      /** Siamo nel mezzo di un round - deve giocare user2 */
       userPlayer = lastRound.scores.find(_.score == -1).get.user
     else
-      // Devo creare il game successivo - inizia a giocare user1
+      /** Devo creare il game successivo - inizia a giocare user1 */
       userPlayer = GameController.gameOfLoggedUsers.get.players.head
       lastRound = new Round(GameController.gameOfLoggedUsers.get.getID, List(new Score(userPlayer,-1), new Score(GameController.gameOfLoggedUsers.get.players.last,-1)),
                     lastRound.numberRound + 1)
       RoundController.createRound(lastRound)
     
-    RoundController.setRound(lastRound)
-    RoundController.setPlayer(userPlayer)
+    RoundController.round_=(lastRound)
+    RoundController.player_=(userPlayer)
     lastRound
   }
   

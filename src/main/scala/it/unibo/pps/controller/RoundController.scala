@@ -1,6 +1,7 @@
 package it.unibo.pps.controller
 
 import it.unibo.pps.business.RoundRepository
+import it.unibo.pps.controller.RoundController.roundRepository
 import it.unibo.pps.model.{Game, Round, User}
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.{Alert, ButtonType}
@@ -10,15 +11,14 @@ import scala.concurrent.duration.*
 
 object RoundController:
 
-  private var round: Round = null
-  private var player: User = null
+  private var _round: Option[Round] = None
+  private var _player: Option[User] = None
   private val roundRepository = new RoundRepository
 
-  def setRound(newRound: Round): Unit = round = newRound
-  def getRound: Round = round
-
-  def getPlayer: User = player
-  def setPlayer(newPlayer: User): Unit = player = newPlayer
+  def round_=(newRound: Round): Unit = _round = Some(newRound)
+  def round: Option[Round] = _round
+  def player_=(newPlayer: User): Unit = _player = Some(newPlayer)
+  def player: Option[User] = _player
 
   def createRound(round: Round): Unit = roundRepository.create(round)
 
@@ -38,8 +38,12 @@ object RoundController:
 
   /** aggiorna il punteggio (dell'utente che ha risposto) per il round in corso */
   private def updatePoints(correct: Boolean): Unit =
-    round.setPoint(player, correct)
-    roundRepository.update(round, round.getID)
+    round match
+      case Some(r) =>
+        player match
+          case Some(u) =>
+            round.get.setPoint(player.get, correct)
+            roundRepository.update(round.get, round.get.getID)
 
   /** Calcola il punteggio di un utente sulla base dei round che fino a quel momento ha giocato.
     * @param user

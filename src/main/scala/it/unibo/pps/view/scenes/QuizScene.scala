@@ -13,12 +13,12 @@ import scalafx.scene.layout.BorderPane
   */
 class QuizScene extends Scene:
 
-  val question: Question = QuestionController.prepareQuestion()
+  QuestionController.prepareQuestion()
   if QuestionController.counterQuestionRound == 0 then
     val category: Category = GameController.gameOfLoggedUsers.get
-      .categories(RoundController.getRound.numberRound - 1)
+      .categories(RoundController.round.get.numberRound - 1)
     UIUtils.showSimpleAlert(AlertType.Information,
-      s"Gioca ${RoundController.getPlayer.username} per la categoria $category")
+      s"Gioca ${RoundController.player.get.username} per la categoria $category")
 
   root = new BorderPane {
     top = QuestionSpace()

@@ -57,7 +57,7 @@ object GameController:
   /** verifica se si è arrivati alla conclusione di una partita
     * eventualmente aggiorna lo stato in completed = true */
   def checkFinishGame(): Unit = {
-    if (RoundController.getRound.numberRound == ROUND_FOR_GAME && RoundController.getRound.scores.forall(_.score != -1))
+    if (RoundController.round.get.numberRound == ROUND_FOR_GAME && RoundController.round.get.scores.forall(_.score != -1))
       val gameEdited: Game = gameOfLoggedUsers.get
       gameEdited.completed = true
       gameEdited.lastUpdate = LocalDateTime.now()
