@@ -5,7 +5,7 @@ import it.unibo.pps.view.UIUtils
 import it.unibo.pps.view.UIUtils.*
 import it.unibo.pps.view.components.CurrentGameStatus
 import scalafx.Includes.*
-import scalafx.geometry.Pos
+import scalafx.geometry.{Insets, Pos}
 import scalafx.scene
 import scalafx.scene.Scene
 import scalafx.scene.control.Alert.AlertType
@@ -17,8 +17,8 @@ class DashboardScene extends Scene:
   private val loggedUsers = UserController.loggedUsers.getOrElse(List.empty)
   private val currentGame = GameController.getCurrentGameFromPlayers(loggedUsers)
 
-  private val goToBackBtn = craftButton("Indietro")
-  goToBackBtn.onAction = e => {
+  private val goBackBtn = craftButton("Indietro")
+  goBackBtn.onAction = e => {
     GameController.resetVariable()
     changeScene(this.window.get().getScene, MenuScene())
   }
@@ -45,7 +45,8 @@ class DashboardScene extends Scene:
     center = CurrentGameStatus(currentGame)
     bottom = new HBox(10) {
       alignment = Pos.Center
-      children = List(goToBackBtn, newMatchBtn, goToMatchBtn)
+      margin = Insets(5)
+      children = goBackBtn :: newMatchBtn :: goToMatchBtn :: Nil
     }
   }
 end DashboardScene

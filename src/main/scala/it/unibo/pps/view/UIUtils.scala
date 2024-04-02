@@ -21,7 +21,7 @@ object UIUtils:
     currentScene.window.value.asInstanceOf[Stage].scene = newScene
 
   def getSceneTitleFont: Font =
-    new Font("Verdana", 24)
+    new Font("Verdana", 32)
 
   def getTextFieldWithPromptedText(t: String): TextField = new TextField() { promptText = t }
 

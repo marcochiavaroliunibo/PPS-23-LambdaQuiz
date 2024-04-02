@@ -16,7 +16,7 @@ private class CurrentGameStatus(currentGame: Option[Game]) extends HBox(10):
     .map(g => RoundController.computePartialPointsOfUser(_))
     .getOrElse(_ => 0)
 
-  margin = Insets(3)
+  margin = Insets(5)
   background = UIUtils.craftBackground(Color.web("#707070"), 5)
   alignment = Pos.TopCenter
   children = currentGame
