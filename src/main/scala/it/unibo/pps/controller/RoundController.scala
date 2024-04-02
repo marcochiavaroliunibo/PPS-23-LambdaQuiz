@@ -63,13 +63,12 @@ object RoundController:
       .filter(_.score != -1)                    // esclude i valori -1 (round non ancora giocato dall'utente)
       .foldRight(0)(_.score + _)                // calcola il punteggio per accumulazione
   
-  def getPlayedRounds: List[Round] =
+  def getPlayedRounds: Option[List[Round]] =
     GameController.gameOfLoggedUsers
       .flatMap(game =>
         Await
           .result(roundRepository.getAllRoundsByGame(game), 5.seconds)
       )
-      .getOrElse(List.empty)
     
   def getAllRoundByGame(game: Game): List[Round] = {
     Await.result(roundRepository.getAllRoundsByGame(game), 5.seconds).getOrElse(List.empty)
