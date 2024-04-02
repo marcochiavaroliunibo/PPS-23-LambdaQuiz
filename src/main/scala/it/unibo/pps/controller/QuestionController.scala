@@ -76,7 +76,7 @@ object QuestionController:
   }
 
   private def createRound(gameId: String, user: Option[User], roundNumber: Int): Round = {
-    val newScores = GameController.gameOfLoggedUsers.map(_.players.map(new Score(_, -1))).getOrElse(List.empty)
+    val newScores = GameController.gameOfLoggedUsers.map(_.players.map(new Score(_))).getOrElse(List.empty)
     val newRound = new Round(gameId, newScores, roundNumber)
     RoundController.createRound(newRound)
     RoundController.round = newRound

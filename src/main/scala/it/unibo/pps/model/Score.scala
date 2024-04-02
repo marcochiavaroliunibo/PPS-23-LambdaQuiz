@@ -4,7 +4,7 @@ import reactivemongo.api.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWri
 
 import scala.util.Try
 
-case class Score(user: User, var score: Int)
+case class Score(user: User, var score: Int = -1)
 
 object Score:
   implicit object ScoreReader extends BSONDocumentReader[Score]:
