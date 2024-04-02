@@ -1,7 +1,6 @@
 package it.unibo.pps.controller
 
 import it.unibo.pps.business.{GameRepository, RoundRepository, UserRepository}
-import it.unibo.pps.model.Category.{CulturaGenerale, Geografia, Scienze}
 import it.unibo.pps.model.{Game, Round, User}
 import reactivemongo.api.bson.BSONDocument
 
@@ -18,10 +17,8 @@ object GameController:
   private val ROUND_FOR_GAME: Int = 3
 
   /** ottiene ultimo round di una partita */
-  def getLastRoundByGame: Round = {
-    val roundResult = Await.result(roundRepository.getAllRoundsByGame(gameOfLoggedUsers.get), 5.seconds)
-    if roundResult.isDefined then roundResult.get.last else null
-  }
+  def getLastRoundByGame: Option[Round] =
+    Await.result(roundRepository.getAllRoundsByGame(gameOfLoggedUsers.get), 5.seconds).map(_.last)
 
   def gameOfLoggedUsers: Option[Game] = _gameOfLoggedUsers
   def gameOfLoggedUsers_=(g: Game): Unit = _gameOfLoggedUsers = Some(g)
@@ -29,14 +26,15 @@ object GameController:
   /** ottiene l'eventuale partita in corso fra due utenti */
   def getCurrentGameFromPlayers(users: List[User]): Option[Game] =
     if users.isEmpty then None
-    else gameOfLoggedUsers match
-      case Some(g: Game) => Some(g)
-      case None =>
-        Await.result(gameRepository.getCurrentGameFromPlayers(users), 5.seconds) match
-          case Some(g) =>
-            gameOfLoggedUsers = g.head
-            Some(g.head)
-          case None => None
+    else
+      gameOfLoggedUsers match
+        case Some(g: Game) => Some(g)
+        case None =>
+          Await.result(gameRepository.getCurrentGameFromPlayers(users), 5.seconds) match
+            case Some(g) =>
+              gameOfLoggedUsers = g.head
+              Some(g.head)
+            case None => None
 
   /** ottiene tutte le partite in corso di un utente */
   def getCurrentGamesFromSinglePlayer(user: User): Option[List[Game]] =
@@ -45,19 +43,22 @@ object GameController:
         Some(g)
       case None => None
 
-  /** ottiene le ultime partite completate di un utente
-   *  di default estrae le ultime 5 partite (valore parametrizzabile da chi esegue la chiamata) */
+  /** ottiene le ultime partite completate di un utente di default estrae le ultime 5 partite (valore parametrizzabile
+    * da chi esegue la chiamata)
+    */
   val NUMBER_LAST_GAME: Int = 5
   def getLastGameCompletedByUser(user: User, limit: Int = NUMBER_LAST_GAME): Option[List[Game]] =
     Await.result(gameRepository.getLastGameCompletedByUser(user, NUMBER_LAST_GAME), 5.seconds) match
       case Some(g) =>
         Some(g)
       case None => None
-  
-  /** verifica se si è arrivati alla conclusione di una partita
-    * eventualmente aggiorna lo stato in completed = true */
+
+  /** verifica se si è arrivati alla conclusione di una partita eventualmente aggiorna lo stato in completed = true
+    */
   def checkFinishGame(): Unit = {
-    if (RoundController.round.get.numberRound == ROUND_FOR_GAME && RoundController.round.get.scores.forall(_.score != -1))
+    if (
+      RoundController.round.get.numberRound == ROUND_FOR_GAME && RoundController.round.get.scores.forall(_.score != -1)
+    )
       val gameEdited: Game = gameOfLoggedUsers.get
       gameEdited.completed = true
       gameEdited.lastUpdate = LocalDateTime.now()
@@ -83,12 +84,14 @@ object GameController:
   /** ottiene la posizione in classifica (per numero di partite vinte) di un utente */
   def getRankingUser(user: User): Int =
     val myPoint = getGameWonByUser(user).length
-    val otherUsers: List[User] = Await.result(userRepository.readMany(BSONDocument("_id" -> BSONDocument("$ne" -> user.getID))),
-      5.seconds).getOrElse(List())
+    val otherUsers: List[User] = Await
+      .result(userRepository.readMany(BSONDocument("_id" -> BSONDocument("$ne" -> user.getID))), 5.seconds)
+      .getOrElse(List())
     otherUsers.count(u => getGameWonByUser(u).length > myPoint) + 1
 
-  /** ottiene la lista degli utenti ordinata partendo da chi ha più vittorie
-   *  di default estrae i migliori 5 utenti (valore parametrizzabile da chi esegue la chiamata) */
+  /** ottiene la lista degli utenti ordinata partendo da chi ha più vittorie di default estrae i migliori 5 utenti
+    * (valore parametrizzabile da chi esegue la chiamata)
+    */
   val BEST_PLAYERS: Int = 5
   def getGlobalRanking(max: Int = BEST_PLAYERS): List[User] =
     val users: List[User] = Await.result(userRepository.readMany(BSONDocument()), 5.seconds).getOrElse(List())

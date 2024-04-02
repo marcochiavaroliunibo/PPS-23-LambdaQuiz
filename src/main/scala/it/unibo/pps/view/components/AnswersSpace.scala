@@ -12,20 +12,18 @@ import scalafx.scene.layout.*
 private class AnswersSpace extends FlowPane(Orientation.Vertical, 0, 10):
   import it.unibo.pps.view.UIUtils.*
 
-  private val question: Question = QuestionController.getQuestion
-  private val menuButtons = question.answers.zipWithIndex.map { case (answer, index) =>
+  private val menuButtons = QuestionController.getQuestion.map(_.answers.zipWithIndex.map { case (answer, index) =>
     val button = craftButton(answer, 22, 600)
     button.onAction = _ => callResponse(index + 1)
     button
-  }
+  })
 
   /** aggiorno il round in base la risposta dell'utente quando l'utente clicca avaanti, mostro la domanda successiva o
     * torno in dashboard
     */
   private def callResponse(answer: Int): Unit = {
     RoundController.playRound(answer)
-    if QuestionController.nextQuestion then 
-      changeScene(scene.get(), QuizScene())
+    if QuestionController.nextQuestion then changeScene(scene.get(), QuizScene())
     else
       GameController.checkFinishGame()
       RoundController.resetVariable()
@@ -33,7 +31,7 @@ private class AnswersSpace extends FlowPane(Orientation.Vertical, 0, 10):
   }
 
   alignment = Pos.Center
-  children = menuButtons
+  children = menuButtons.getOrElse(List.empty)
 end AnswersSpace
 
 object AnswersSpace:

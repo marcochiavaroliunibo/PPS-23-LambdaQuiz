@@ -1,8 +1,7 @@
 package it.unibo.pps.controller
 
 import it.unibo.pps.business.RoundRepository
-import it.unibo.pps.controller.RoundController.roundRepository
-import it.unibo.pps.model.{Game, Round, User}
+import it.unibo.pps.model.{Game, Question, Round, User}
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.{Alert, ButtonType}
 
@@ -23,32 +22,33 @@ object RoundController:
   def createRound(round: Round): Unit = roundRepository.create(round)
 
   /** controlla se la risposta è corretta: mostra il risutato all'utente e poi aggiorna i punti */
-  def playRound(answer: Int): Boolean = {
-    if answer == QuestionController.getQuestion.correctAnswer then
-      updatePoints(true)
-      Alert(AlertType.Confirmation, "Risposta corretta!", ButtonType.Close)
-        .showAndWait()
-      true
-    else
-      updatePoints(false)
-      Alert(AlertType.Error, "Risposta errata!", ButtonType.Close)
-        .showAndWait()
-      false
-  }
+  def playRound(answer: Int): Boolean =
+    QuestionController.getQuestion match
+      case Some(q: Question) if q.correctAnswer == answer =>
+        updatePoints(true)
+        Alert(AlertType.Confirmation, "Risposta corretta!", ButtonType.Close)
+          .showAndWait()
+        true
+      case Some(q: Question) =>
+        updatePoints(false)
+        Alert(AlertType.Error, "Risposta errata!", ButtonType.Close)
+          .showAndWait()
+        false
+      case None => false
 
   /** aggiorna il punteggio (dell'utente che ha risposto) per il round in corso */
   private def updatePoints(correct: Boolean): Unit =
-    round match
-      case Some(r) =>
-        player match
-          case Some(u) =>
-            round.get.setPoint(player.get, correct)
-            roundRepository.update(round.get, round.get.getID)
+    player.flatMap(p =>
+      round.map(r => {
+        r.setPoint(p, correct)
+        roundRepository.update(r, r.getID)
+      })
+    )
 
   /** Calcola il punteggio di un utente sulla base dei round che fino a quel momento ha giocato.
     * @param user
-    *   Lo [[User]] di cui si vuole conoscere il punteggio
-    *   Eventualmente, è possibile passare un [[Game]], altrimenti si prenderà quello che si sta giocando
+    *   Lo [[User]] di cui si vuole conoscere il punteggio Eventualmente, è possibile passare un [[Game]], altrimenti si
+    *   prenderà quello che si sta giocando
     * @return
     *   il punteggio di [[user]], se ci sono round giocati. Altrimenti [[0]]
     */
@@ -62,21 +62,21 @@ object RoundController:
       .filter(_.user.username == user.username) // filtra soo le Score dell'utente in input
       .filter(_.score != -1)                    // esclude i valori -1 (round non ancora giocato dall'utente)
       .foldRight(0)(_.score + _)                // calcola il punteggio per accumulazione
-  
+
   def getPlayedRounds: Option[List[Round]] =
     GameController.gameOfLoggedUsers
       .flatMap(game =>
         Await
           .result(roundRepository.getAllRoundsByGame(game), 5.seconds)
       )
-    
+
   def getAllRoundByGame(game: Game): List[Round] = {
     Await.result(roundRepository.getAllRoundsByGame(game), 5.seconds).getOrElse(List.empty)
   }
 
   /** a fine giocata, resetto le variabili per la prossima giocata */
   def resetVariable(): Unit =
-    round = null
-    player = null
-  
+    _round = None
+    _player = None
+
 end RoundController
