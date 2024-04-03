@@ -23,7 +23,7 @@ class DashboardScene extends Scene:
     changeScene(this.window.get().getScene, MenuScene())
   }
 
-  private val newMatchBtn = craftButton("Nuovo match")
+  private val newMatchBtn = craftButton("Nuova partita")
   newMatchBtn.disable = currentGame.isDefined && !currentGame.get.completed // la partita esiste ed è in corso
   newMatchBtn.onAction = e => {
     GameController.resetVariable()
@@ -43,11 +43,7 @@ class DashboardScene extends Scene:
       font = getSceneTitleFont
     }
     center = CurrentGameStatus(currentGame)
-    bottom = new HBox(10) {
-      alignment = Pos.Center
-      margin = Insets(5)
-      children = goBackBtn :: newMatchBtn :: goToMatchBtn :: Nil
-    }
+    bottom = getFooterWithButtons(goBackBtn, newMatchBtn, goToMatchBtn)
   }
 end DashboardScene
 
