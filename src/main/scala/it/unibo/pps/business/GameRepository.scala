@@ -8,7 +8,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class GameRepository extends Repository[Game]:
-  override val collection: Future[BSONCollection] = ConnectionMongoDB.getDatabase.map(_.collection("games"))
+  override val collection: Future[BSONCollection] = ConnectionMongoDB.getDatabase().map(_.collection("games"))
 
   def getCurrentGameFromPlayers(players: List[User]): Future[Option[List[Game]]] =
     val query = BSONDocument(
