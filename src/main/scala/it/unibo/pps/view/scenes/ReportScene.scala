@@ -85,10 +85,7 @@ class ReportScene extends Scene:
       )
     }
 
-    bottom = new HBox(10) {
-      alignment = Pos.Center
-      children = List(goToBackBtn, goToGlobalRankingBtn)
-    }
+    bottom = UIUtils.getFooterWithButtons(goToBackBtn, goToGlobalRankingBtn)
     background = UIUtils.defaultBackground
   }
 end ReportScene

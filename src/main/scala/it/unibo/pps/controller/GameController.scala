@@ -5,8 +5,9 @@ import it.unibo.pps.model.{Game, Round, User}
 import reactivemongo.api.bson.BSONDocument
 
 import java.time.LocalDateTime
-import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.*
+import scala.concurrent.{Await, Future}
 
 object GameController:
 
@@ -38,20 +39,14 @@ object GameController:
 
   /** ottiene tutte le partite in corso di un utente */
   def getCurrentGamesFromSinglePlayer(user: User): Option[List[Game]] =
-    Await.result(gameRepository.getCurrentGameFromPlayers(List(user)), 5.seconds) match
-      case Some(g) =>
-        Some(g)
-      case None => None
+    Await.result(gameRepository.getCurrentGameFromPlayers(List(user)), 5.seconds)
 
   /** ottiene le ultime partite completate di un utente di default estrae le ultime 5 partite (valore parametrizzabile
     * da chi esegue la chiamata)
     */
-  val NUMBER_LAST_GAME: Int = 5
+  private val NUMBER_LAST_GAME: Int = 5
   def getLastGameCompletedByUser(user: User, limit: Int = NUMBER_LAST_GAME): Option[List[Game]] =
-    Await.result(gameRepository.getLastGameCompletedByUser(user, NUMBER_LAST_GAME), 5.seconds) match
-      case Some(g) =>
-        Some(g)
-      case None => None
+    Await.result(gameRepository.getLastGameCompletedByUser(user, NUMBER_LAST_GAME), 5.seconds)
 
   /** verifica se si è arrivati alla conclusione di una partita eventualmente aggiorna lo stato in completed = true
     */
@@ -69,16 +64,20 @@ object GameController:
   def getGameWonByUser(user: User): List[Game] =
     val games: List[Game] = getLastGameCompletedByUser(user, Int.MaxValue).getOrElse(List())
     games.filter(game => {
-      RoundController.computePartialPointsOfUser(user, game)
-        > RoundController.computePartialPointsOfUser(game.players.filter(u => u.username != user.username).head, game)
+      RoundController.computePartialPointsOfUser(user, game) > RoundController.computePartialPointsOfUser(
+        game.players.filter(u => u.username != user.username).head,
+        game
+      )
     })
 
   /** ottiene le partite perse da un utente */
   def getGameLostByUser(user: User): List[Game] =
     val games: List[Game] = getLastGameCompletedByUser(user, Int.MaxValue).getOrElse(List())
     games.filter(game => {
-      RoundController.computePartialPointsOfUser(user, game)
-        < RoundController.computePartialPointsOfUser(game.players.filter(u => u.username != user.username).head, game)
+      RoundController.computePartialPointsOfUser(user, game) < RoundController.computePartialPointsOfUser(
+        game.players.filter(u => u.username != user.username).head,
+        game
+      )
     })
 
   /** ottiene la posizione in classifica (per numero di partite vinte) di un utente */
@@ -92,11 +91,15 @@ object GameController:
   /** ottiene la lista degli utenti ordinata partendo da chi ha più vittorie di default estrae i migliori 5 utenti
     * (valore parametrizzabile da chi esegue la chiamata)
     */
-  val BEST_PLAYERS: Int = 5
-  def getGlobalRanking(max: Int = BEST_PLAYERS): List[User] =
-    val users: List[User] = Await.result(userRepository.readMany(BSONDocument()), 5.seconds).getOrElse(List())
-    // todo: il calcolo di seguito è molto lento: sarebbe il caso di mostrare un elemento attesa di caricamento
-    users.sortBy(getGameWonByUser(_).length).reverse.take(max)
+  private val BEST_PLAYERS: Int = 5
+  def getGlobalRanking(max: Int = BEST_PLAYERS): Future[List[User]] =
+    userRepository
+      .readMany(BSONDocument())
+      .flatMap(allUsers =>
+        Future {
+          allUsers.getOrElse(List.empty).sortBy(getGameWonByUser(_).length).reverse.take(max)
+        }
+      )
 
   /** crea un nuovo game */
   def createNewGame(): Unit =

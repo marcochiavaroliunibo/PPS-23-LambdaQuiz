@@ -48,6 +48,11 @@ object UIUtils:
 
   def craftButtonWin(displayName: String): Button = craftButton(displayName, 24, 250, 40, Green, Green)
   def craftButtonLose(displayName: String): Button = craftButton(displayName, 24, 250, 40, Red, Red)
+  
+  def getFooterWithButtons(buttons: Button*): HBox = new HBox(10) {
+    alignment = Pos.Center
+    children = buttons
+  }
 
   def getPlayersLabels: List[Label] = List("Giocatore 1", "Giocatore 2").map(new Label(_) {
     font = new Font("Arial Bold", 15)
