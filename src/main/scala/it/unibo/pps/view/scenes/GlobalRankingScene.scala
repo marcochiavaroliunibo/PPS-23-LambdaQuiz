@@ -6,9 +6,11 @@ import it.unibo.pps.view.UIUtils
 import it.unibo.pps.view.UIUtils.{changeScene, craftButton}
 import scalafx.Includes.*
 import scalafx.application.Platform
+import scalafx.beans.property.{IntegerProperty, ObjectProperty, StringProperty}
+import scalafx.collections.ObservableBuffer
 import scalafx.geometry.Pos
 import scalafx.scene.Scene
-import scalafx.scene.control.Button
+import scalafx.scene.control.{Button, ListView, TableColumn, TableView}
 import scalafx.scene.layout.*
 import scalafx.scene.text.Text
 
@@ -28,11 +30,20 @@ class GlobalRankingScene extends Scene:
   private val goToReportBtn = craftButton("Le tue statistiche")
   goToReportBtn.onAction = _ => changeScene(this.window.get().getScene, ReportScene())
 
-  private val rankingData = new VBox(10) {
+  private val rankingList = new ListView[String](List.empty) {
+    prefWidth = 250
+    prefHeight = 250
+    cellFactory = (cell, value) => {
+      cell.text = value
+      cell.style = "-fx-font: normal bold 22px serif"
+    }
+  }
+
+  private val rankingPane = new VBox(5) {
     alignment = Pos.Center
     children = List(
       new Text("Caricamento in corso...") { style = "-fx-font: normal bold 24px serif" },
-      new Text("Non uscire da questa pagina.") { style = "-fx-font: normal normal 20px serif" }
+      new Text("Non uscire da questa pagina.") { style = "-fx-font: normal normal 18px serif" }
     )
   }
 
@@ -41,11 +52,12 @@ class GlobalRankingScene extends Scene:
     .onComplete {
       case Success(result) =>
         Platform.runLater {
-          rankingData.children = result.map(u => craftButton(u.username))
+          rankingList.items = ObservableBuffer(result.map(_.username)*)
+          rankingPane.children = rankingList
         }
       case Failure(_) =>
         Platform.runLater {
-          rankingData.children = new Text("Errore durante il calcolo della classifica globale. Riprovare!")
+          rankingPane.children = new Text("Errore durante il calcolo della classifica globale. Riprovare!")
         }
     }
 
@@ -54,7 +66,7 @@ class GlobalRankingScene extends Scene:
       alignmentInParent = Pos.Center
       font = UIUtils.getSceneTitleFont
     }
-    center = rankingData
+    center = rankingPane
     bottom = UIUtils.getFooterWithButtons(goToBackBtn, goToReportBtn)
     background = UIUtils.defaultBackground
   }
