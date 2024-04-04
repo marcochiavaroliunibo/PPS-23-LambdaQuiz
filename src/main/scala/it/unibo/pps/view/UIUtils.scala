@@ -1,6 +1,5 @@
 package it.unibo.pps.view
 
-import it.unibo.pps.view.scenes.MenuScene
 import javafx.stage.Stage
 import scalafx.Includes.*
 import scalafx.geometry.{Insets, Pos}
@@ -8,9 +7,9 @@ import scalafx.scene.Scene
 import scalafx.scene.control.*
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.layout.*
-import scalafx.scene.paint.Color.{Black, DeepSkyBlue, DodgerBlue, Gold, Goldenrod, Green, Red}
+import scalafx.scene.paint.Color.{Black, DeepSkyBlue, DodgerBlue, Gold, Goldenrod, LightCoral, MediumSeaGreen, SandyBrown}
 import scalafx.scene.paint.{Color, LinearGradient, Paint, Stops}
-import scalafx.scene.text.Font
+import scalafx.scene.text.{Font, Text}
 
 object UIUtils:
 
@@ -20,8 +19,10 @@ object UIUtils:
   def changeScene(currentScene: Scene, newScene: => Scene): Unit =
     currentScene.window.value.asInstanceOf[Stage].scene = newScene
 
-  def getSceneTitleFont: Font =
-    new Font("Verdana", 32)
+  def getSceneTitle(t: String): Text = new Text(t) {
+    alignmentInParent = Pos.Center
+    font = new Font("Verdana", 32)
+  }
 
   def getTextFieldWithPromptedText(t: String): TextField = new TextField() { promptText = t }
 
@@ -35,8 +36,14 @@ object UIUtils:
   def defaultBackground: Background =
     this.craftBackground(new LinearGradient(endX = 0, stops = Stops(DodgerBlue, DeepSkyBlue)))
 
-  def craftButton(displayName: String, fontSize: Int = 24, widthBtn: Int = 250, heightBtn: Int = 40,
-                  colorTop: Color = Gold, colorDown: Color = Goldenrod): Button = new Button {
+  def craftButton(
+    displayName: String,
+    fontSize: Int = 24,
+    widthBtn: Int = 250,
+    heightBtn: Int = 40,
+    colorTop: Color = Gold,
+    colorDown: Color = Goldenrod
+  ): Button = new Button {
     text = displayName
     font = new Font("Comic Sans MS", fontSize)
     prefWidth = widthBtn
@@ -46,19 +53,34 @@ object UIUtils:
     border = new Border(new BorderStroke(Black, BorderStrokeStyle.Solid, new CornerRadii(8), new BorderWidths(4)))
   }
 
-  def craftButtonWin(displayName: String): Button = craftButton(displayName, 24, 250, 40, Green, Green)
-  def craftButtonLose(displayName: String): Button = craftButton(displayName, 24, 250, 40, Red, Red)
-  
+  def craftButtonWin(n: String): Button =
+    craftButton(displayName = n, colorTop = MediumSeaGreen, colorDown = MediumSeaGreen)
+  def craftButtonLose(n: String): Button = craftButton(displayName = n, colorTop = LightCoral, colorDown = LightCoral)
+  def craftButtonDraw(n: String): Button = craftButton(displayName = n, colorTop = SandyBrown, colorDown = SandyBrown)
+
   def getFooterWithButtons(buttons: Button*): HBox = new HBox(10) {
+    margin = Insets(5)
     alignment = Pos.Center
     children = buttons
+  }
+
+  def getLoadingScreen: VBox = new VBox(5) {
+    alignment = Pos.Center
+    children = List(
+      new Text("Caricamento in corso...") {
+        style = "-fx-font: normal bold 24px serif"
+      },
+      new Text("Non uscire da questa pagina.") {
+        style = "-fx-font: normal normal 18px serif"
+      }
+    )
   }
 
   def getPlayersLabels: List[Label] = List("Giocatore 1", "Giocatore 2").map(new Label(_) {
     font = new Font("Arial Bold", 15)
     alignmentInParent = Pos.Center
   })
-  
+
   def getSinglePlayerLabel: Label = new Label("Dati giocatore") {
     font = new Font("Arial Bold", 15)
     alignmentInParent = Pos.Center
@@ -92,7 +114,7 @@ object UIUtils:
   private def passwordFieldsAreIdentical(passwordFields: Seq[TextField]): Boolean =
     passwordFields.map(_.getText) match
       case Seq(p1, p2) => p1 == p2
-      case _           => false
+      case _ => false
 
   /** Verifica se i campi di input per il login sono validi. In particolare, verifica che gli username e le password
     * siano tutti non vuoti e di lunghezza maggiore o uguale a 6 caratteri e poi controlla che gli username siano

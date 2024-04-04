@@ -3,7 +3,7 @@ package it.unibo.pps.view.scenes
 import it.unibo.pps.controller.{GameController, UserController}
 import it.unibo.pps.model.User
 import it.unibo.pps.view.UIUtils
-import it.unibo.pps.view.UIUtils.{changeScene, craftButton}
+import it.unibo.pps.view.UIUtils.{changeScene, craftButton, getLoadingScreen}
 import scalafx.Includes.*
 import scalafx.application.Platform
 import scalafx.beans.property.{IntegerProperty, ObjectProperty, StringProperty}
@@ -31,21 +31,15 @@ class GlobalRankingScene extends Scene:
   goToReportBtn.onAction = _ => changeScene(this.window.get().getScene, ReportScene())
 
   private val rankingList = new ListView[String](List.empty) {
-    prefWidth = 250
-    prefHeight = 250
+    maxWidth = 250
+    maxHeight = 250
     cellFactory = (cell, value) => {
       cell.text = value
       cell.style = "-fx-font: normal bold 22px serif"
     }
   }
 
-  private val rankingPane = new VBox(5) {
-    alignment = Pos.Center
-    children = List(
-      new Text("Caricamento in corso...") { style = "-fx-font: normal bold 24px serif" },
-      new Text("Non uscire da questa pagina.") { style = "-fx-font: normal normal 18px serif" }
-    )
-  }
+  private val rankingScreen = getLoadingScreen
 
   GameController
     .getGlobalRanking()
@@ -53,20 +47,17 @@ class GlobalRankingScene extends Scene:
       case Success(result) =>
         Platform.runLater {
           rankingList.items = ObservableBuffer(result.map(_.username)*)
-          rankingPane.children = rankingList
+          rankingScreen.children = rankingList
         }
       case Failure(_) =>
         Platform.runLater {
-          rankingPane.children = new Text("Errore durante il calcolo della classifica globale. Riprovare!")
+          rankingScreen.children = new Text("Errore durante il calcolo della classifica globale. Riprovare!")
         }
     }
 
   root = new BorderPane {
-    top = new Text(s"Ciao ${user.username}, ecco la classifica globale") {
-      alignmentInParent = Pos.Center
-      font = UIUtils.getSceneTitleFont
-    }
-    center = rankingPane
+    top = UIUtils.getSceneTitle("Classifica globale")
+    center = rankingScreen
     bottom = UIUtils.getFooterWithButtons(goToBackBtn, goToReportBtn)
     background = UIUtils.defaultBackground
   }

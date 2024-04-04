@@ -38,10 +38,7 @@ class DashboardScene extends Scene:
 
   root = new BorderPane {
     background = defaultBackground
-    top = new Text("Dashboard") {
-      alignmentInParent = Pos.Center
-      font = getSceneTitleFont
-    }
+    top = getSceneTitle("Dashboard")
     center = CurrentGameStatus(currentGame)
     bottom = getFooterWithButtons(goBackBtn, newMatchBtn, goToMatchBtn)
   }

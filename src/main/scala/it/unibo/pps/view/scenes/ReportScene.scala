@@ -128,10 +128,7 @@ class ReportScene extends Scene:
   goToGlobalRankingBtn.onAction = _ => changeScene(this.window.get().getScene, GlobalRankingScene())
 
   root = new BorderPane {
-    top = new Text("Statistiche giocatore") {
-      alignmentInParent = Pos.Center
-      font = getSceneTitleFont
-    }
+    top = getSceneTitle("Statistiche giocatore")
     center = rankingScreen
     bottom = getFooterWithButtons(goToBackBtn, goToGlobalRankingBtn)
     background = defaultBackground
