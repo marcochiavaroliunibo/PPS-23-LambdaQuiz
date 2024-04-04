@@ -5,6 +5,6 @@ import org.scalatest.matchers.*
 
 class ConnectionMongoDBTests extends AsyncFlatSpec with should.Matchers:
   "The application" should "connect to the database" in {
-    ConnectionMongoDB.getDatabase.map(db => db.name shouldEqual "LambdaQuiz")
+    ConnectionMongoDB.getDatabase(true).map(db => db.name shouldEqual "LambdaQuiz-test")
   }
 end ConnectionMongoDBTests

@@ -1,12 +1,12 @@
 package it.unibo.pps.controller
 
-import it.unibo.pps.business.GameRepository
+import it.unibo.pps.business.{GameRepository, UserRepository}
 import it.unibo.pps.model.Category.{Geografia, Scienze, Storia}
 import it.unibo.pps.model.{Game, User}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.*
-import scala.concurrent.ExecutionContext.Implicits.global
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import java.time.LocalDateTime
 
 class GameControllerTests extends AnyFlatSpec with should.Matchers:
@@ -15,9 +15,13 @@ class GameControllerTests extends AnyFlatSpec with should.Matchers:
   private val user2 = new User("user2", "PASSWORDDD")
   private val game = new Game(List(user1, user2),
     false, LocalDateTime.now(), List(Storia, Geografia, Scienze))
+  
   private val gameRepository = new GameRepository
+  private val userRepository = new UserRepository
 
   "GameController" should "be able to create a new game" in {
+    userRepository.create(user1)
+    userRepository.create(user2)
     UserController.checkLogin(List(user1, user2))
     GameController.createNewGame()
     gameRepository.readById(game.getID)
@@ -33,5 +37,12 @@ class GameControllerTests extends AnyFlatSpec with should.Matchers:
     val game = GameController.getCurrentGameFromPlayers(List(user1, user2)).orNull
     game != null
   }
+  
+  "GameController" should "be able to calculate ranking position" in {
+    val position1 = GameController.getRankingUser(user1)
+    val position2 = GameController.getRankingUser(user2)
+    position1 == position2
+  }
+  
 
 end GameControllerTests

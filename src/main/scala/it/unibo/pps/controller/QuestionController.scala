@@ -74,6 +74,9 @@ object QuestionController:
 
     lastRound
   }
+  
+  def createQuestion(question: Question) : Unit =
+    questionRepository.create(question)
 
   private def createRound(gameId: String, user: Option[User], roundNumber: Int): Round = {
     val newScores = GameController.gameOfLoggedUsers.map(_.players.map(new Score(_))).getOrElse(List.empty)

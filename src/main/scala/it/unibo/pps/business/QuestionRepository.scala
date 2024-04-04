@@ -8,7 +8,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class QuestionRepository extends Repository[Question]:
-  protected val collection: Future[BSONCollection] = ConnectionMongoDB.getDatabase.map(_.collection("questions"))
+  protected val collection: Future[BSONCollection] = ConnectionMongoDB.getDatabase().map(_.collection("questions"))
   def getQuestionsByCategory(category: Category): Future[Option[List[Question]]] =
     readMany(
       BSONDocument(

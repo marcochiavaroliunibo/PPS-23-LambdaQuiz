@@ -12,7 +12,7 @@ object ConnectionMongoDB {
   // Variabili per la connessione
   private val connectionString =
     "mongodb+srv://user-login:marco1234@cluster0.9jwsjr8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-  private val databaseName = "LambdaQuiz"
+  private var databaseName = "LambdaQuiz"
   private val mongoDriver = AsyncDriver()
 
   import scala.concurrent.ExecutionContext.Implicits.global
@@ -37,8 +37,14 @@ object ConnectionMongoDB {
     database = Some(futureDB)
     futureDB
 
-  def getDatabase: Future[DB] = database.getOrElse(initiateDatabaseConnection())
+  def getDatabase(testMode: Boolean = false): Future[DB] = {
+    if testMode then
+      activeTestMode()
+    database.getOrElse(initiateDatabaseConnection())
+  }
 
   def closeConnection(): Unit = mongoDriver.close()
+
+  private def activeTestMode(): Unit = databaseName = "LambdaQuiz-test"
 
 }
