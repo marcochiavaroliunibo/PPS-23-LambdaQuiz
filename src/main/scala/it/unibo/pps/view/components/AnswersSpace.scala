@@ -1,7 +1,6 @@
 package it.unibo.pps.view.components
 
 import it.unibo.pps.controller.{GameController, QuestionController, RoundController}
-import it.unibo.pps.model.Question
 import it.unibo.pps.view.scenes.{DashboardScene, QuizScene}
 import scalafx.Includes.*
 import scalafx.geometry.{Orientation, Pos}
@@ -13,7 +12,8 @@ private class AnswersSpace extends FlowPane(Orientation.Vertical, 0, 10):
   import it.unibo.pps.view.UIUtils.*
 
   private val menuButtons = QuestionController.getQuestion.map(_.answers.zipWithIndex.map { case (answer, index) =>
-    val button = craftButton(answer, 22, 600)
+    val btnColor = getAnswerBtnColor(index)
+    val button = craftButton(answer, colorTop = btnColor._1, colorDown = btnColor._2)
     button.onAction = _ => callResponse(index + 1)
     button
   })

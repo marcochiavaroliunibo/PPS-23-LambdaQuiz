@@ -9,6 +9,7 @@ import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.layout.*
 import scalafx.scene.paint.Color.{Black, DeepSkyBlue, DodgerBlue, Gold, Goldenrod, LightCoral, MediumSeaGreen, SandyBrown}
 import scalafx.scene.paint.{Color, LinearGradient, Paint, Stops}
+import scalafx.scene.shape.{Rectangle, StrokeType}
 import scalafx.scene.text.{Font, Text}
 
 object UIUtils:
@@ -21,7 +22,8 @@ object UIUtils:
 
   def getSceneTitle(t: String): Text = new Text(t) {
     alignmentInParent = Pos.Center
-    font = new Font("Verdana", 32)
+    margin = Insets(5)
+    font = new Font("Roboto Bold", 32)
   }
 
   def getTextFieldWithPromptedText(t: String): TextField = new TextField() { promptText = t }
@@ -49,14 +51,18 @@ object UIUtils:
     prefWidth = widthBtn
     prefHeight = heightBtn
     val buttonGradient = new LinearGradient(endX = 0, stops = Stops(colorTop, colorDown))
-    background = craftBackground(buttonGradient, 4)
+    background = craftBackground(buttonGradient, 10)
     border = new Border(new BorderStroke(Black, BorderStrokeStyle.Solid, new CornerRadii(8), new BorderWidths(4)))
   }
 
-  def craftButtonWin(n: String): Button =
-    craftButton(displayName = n, colorTop = MediumSeaGreen, colorDown = MediumSeaGreen)
-  def craftButtonLose(n: String): Button = craftButton(displayName = n, colorTop = LightCoral, colorDown = LightCoral)
-  def craftButtonDraw(n: String): Button = craftButton(displayName = n, colorTop = SandyBrown, colorDown = SandyBrown)
+  def craftRectangle(c: Color): Rectangle = new Rectangle {
+    width = 30
+    height = 20
+    fill = c
+    stroke = Color.Black
+    strokeWidth = 2
+    strokeType = StrokeType.Inside
+  }
 
   def getFooterWithButtons(buttons: Button*): HBox = new HBox(10) {
     margin = Insets(5)
@@ -75,6 +81,12 @@ object UIUtils:
       }
     )
   }
+
+  def getAnswerBtnColor(an: Int): (Color, Color) = an match
+    case 0 => (Color.web("#FFD700"), Color.web("#F7C200")) // giallo
+    case 1 => (Color.web("#FF7F00"), Color.web("#E75700")) // arancio
+    case 2 => (Color.web("#00FF00"), Color.web("#00E700")) // verde
+    case _ => (Color.web("#A040FF"), Color.web("#8B2BE7")) // viola
 
   def getPlayersLabels: List[Label] = List("Giocatore 1", "Giocatore 2").map(new Label(_) {
     font = new Font("Arial Bold", 15)

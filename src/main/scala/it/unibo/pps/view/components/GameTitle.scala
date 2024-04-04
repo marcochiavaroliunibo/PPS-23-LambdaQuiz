@@ -9,7 +9,7 @@ private class GameTitle extends Text("LambdaQuiz"):
   font = new Font("Verdana Bold", 75)
   fill = new LinearGradient(endX = 0, stops = Stops(Orange, DarkOrange))
   alignmentInParent = Pos.Center
-  margin = Insets(40, 0, 0, 0)
+  margin = Insets(20, 0, 0, 0)
 end GameTitle
 
 object GameTitle:

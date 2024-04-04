@@ -6,11 +6,10 @@ import it.unibo.pps.view.UIUtils
 import it.unibo.pps.view.UIUtils.{changeScene, craftButton, getLoadingScreen}
 import scalafx.Includes.*
 import scalafx.application.Platform
-import scalafx.beans.property.{IntegerProperty, ObjectProperty, StringProperty}
 import scalafx.collections.ObservableBuffer
 import scalafx.geometry.Pos
 import scalafx.scene.Scene
-import scalafx.scene.control.{Button, ListView, TableColumn, TableView}
+import scalafx.scene.control.{Button, ListView}
 import scalafx.scene.layout.*
 import scalafx.scene.text.Text
 
@@ -35,7 +34,8 @@ class GlobalRankingScene extends Scene:
     maxHeight = 250
     cellFactory = (cell, value) => {
       cell.text = value
-      cell.style = "-fx-font: normal bold 22px serif"
+      cell.alignment = Pos.Center
+      cell.style = "-fx-font: normal bold 22px sans-serif"
     }
   }
 

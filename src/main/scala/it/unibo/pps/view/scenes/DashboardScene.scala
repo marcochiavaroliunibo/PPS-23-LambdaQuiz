@@ -5,13 +5,11 @@ import it.unibo.pps.view.UIUtils
 import it.unibo.pps.view.UIUtils.*
 import it.unibo.pps.view.components.CurrentGameStatus
 import scalafx.Includes.*
-import scalafx.geometry.{Insets, Pos}
 import scalafx.scene
 import scalafx.scene.Scene
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.{Alert, Button}
 import scalafx.scene.layout.*
-import scalafx.scene.text.Text
 
 class DashboardScene extends Scene:
   private val loggedUsers = UserController.loggedUsers.getOrElse(List.empty)

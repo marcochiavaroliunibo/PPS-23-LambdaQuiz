@@ -52,7 +52,10 @@ private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):
       case Some(user: User) =>
         try
           UserController.registerUser(user)
-          UIUtils.showSimpleAlert(AlertType.Confirmation, s"L'utente \"${user.username}\" è stato registrato con successo!")
+          UIUtils.showSimpleAlert(
+            AlertType.Confirmation,
+            s"L'utente \"${user.username}\" è stato registrato con successo!"
+          )
         catch case e: Exception => UIUtils.showSimpleAlert(AlertType.Error, "Errore di connessione, riprova tra poco")
       case Some(_) | None => // the user closed the login dialog or entered wrong data
   }

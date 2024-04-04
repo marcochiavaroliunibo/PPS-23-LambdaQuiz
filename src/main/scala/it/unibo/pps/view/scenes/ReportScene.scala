@@ -12,7 +12,7 @@ import scalafx.scene.control.{Button, TableColumn, TableView}
 import scalafx.scene.layout.*
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
-import scalafx.scene.text.Text
+import scalafx.scene.text.{Text, TextAlignment}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -38,7 +38,7 @@ class ReportScene extends Scene:
           Ranking(adversary.username, userPoints, adversaryPoints)
         )*
       )
-  private val rankingFuture = Future {
+  private val computeRanking = Future {
     val currentGame: List[Game] = GameController.getCurrentGamesFromSinglePlayer(user).getOrElse(List())
     val completedGame: List[Game] = GameController.getLastGameCompletedByUser(user).getOrElse(List())
     val gamesWon: Int = GameController.getGameWonByUser(user).length
@@ -50,6 +50,7 @@ class ReportScene extends Scene:
   }
 
   private def rankingTable(b: ObservableBuffer[Ranking]): TableView[Ranking] = {
+    val cellStyle = "-fx-font: normal normal 18px sans-serif"
     val playerNameColumn: TableColumn[Ranking, String] = new TableColumn[Ranking, String] {
       text = "Nome avversario"
       var ranking: Option[Ranking] = None
@@ -59,6 +60,7 @@ class ReportScene extends Scene:
       sortable = false
       cellFactory = (cell, value) => {
         cell.text = ranking.map(_.playerName).getOrElse("")
+        cell.style = cellStyle
         cell.graphic = ranking
           .map(r =>
             new Circle {
@@ -77,36 +79,49 @@ class ReportScene extends Scene:
       text = "Punteggio utente"
       cellValueFactory = d => ObjectProperty(d.value.playerPoints)
       sortable = false
+      cellFactory = (cell, value) =>
+        cell.text = String.valueOf(value)
+        cell.style = cellStyle
     }
 
-    val adversaryPointsColumn = new TableColumn[Ranking, Int] {
+    val adversaryPointsColumn = new TableColumn[Ranking, String] {
       text = "Punteggio avversario"
-      cellValueFactory = d => ObjectProperty(d.value.adversaryPoints)
+      cellValueFactory = d => ObjectProperty(d.value.adversaryPoints.toString)
       sortable = false
+      cellFactory = (cell, value) =>
+        cell.text = value
+        cell.style = cellStyle
     }
 
     new TableView[Ranking](b) {
-
+      maxWidth = 400
+      maxHeight = 350
       columns ++= Seq(playerNameColumn, playerPointsColumn, adversaryPointsColumn)
     }
   }
 
-  private val getTextWithTopMargin: String => Text = t => new Text(t) {
-    margin = Insets(5, 0, 0, 0)
-    style = "-fx-font: normal normal 20px serif"
-  }
+  private val getTextWithSize: String => Int => Text = t =>
+    s =>
+      new Text(t) {
+        margin = Insets(5, 0, 0, 0)
+        wrappingWidth = 450
+        textAlignment = TextAlignment.Center
+        style = s"-fx-font: normal normal ${s}px sans-serif"
+      }
 
-  rankingFuture.onComplete {
+  computeRanking.onComplete {
     case Success(result) =>
       val currentMatchRankingTable = rankingTable(result._3)
       val completedMatchesRankingTable = rankingTable(result._4)
       val updatedRankingScene = new VBox(5) {
         alignment = Pos.Center
         children = List(
-          getTextWithTopMargin(s"Ciao ${user.username}, fino ad ora hai vinto ${result._1} partite e ne hai perse ${result._2}"),
-          getTextWithTopMargin("Statistiche relative alla partita in corso"),
+          getTextWithSize(
+            s"Ciao ${user.username}, fino ad ora hai vinto ${result._1} partite e ne hai perse ${result._2}"
+          )(22),
+          getTextWithSize("Statistiche relative alla partita in corso")(18),
           currentMatchRankingTable,
-          getTextWithTopMargin("Statistiche relative alle partite concluse"),
+          getTextWithSize("Statistiche relative alle partite concluse")(18),
           completedMatchesRankingTable
         )
       }

@@ -38,22 +38,25 @@ private class CurrentGameStatus(currentGame: Option[Game]) extends HBox(10):
                 .getOrElse(List.empty)
                 .zipWithIndex
                 .map((round, i) =>
-                  new HBox(2) {
-                    children = new Text(s"${i + 1})  ") :: round.scores
+                  new HBox(3) {
+                    margin = Insets(3)
+                    val roundResults: List[Rectangle] = round.scores
                       .filter(_.user == user)
                       .filter(_.score != -1)
                       .flatMap(s =>
                         var listBox: List[Rectangle] = List.empty
-
                         /** aggiungo box verdi per ogni domanda indovinata dall'utente nel round */
                         for (i <- 1 to s.score)
-                          listBox = Rectangle(30, 20, Color.Green) :: listBox
+                          listBox = UIUtils.craftRectangle(Color.Green) :: listBox
 
                         /** aggiungo box rossi per ogni domanda sbagliata dall'utente nel round */
                         for (i <- listBox.length + 1 to QuestionController.QUESTION_FOR_ROUND)
-                          listBox = Rectangle(30, 20, Color.Red) :: listBox
+                          listBox = UIUtils.craftRectangle(Color.Red) :: listBox
                         listBox
                       )
+                    children =
+                      if roundResults.nonEmpty then new Text(s"${i + 1})  ") :: roundResults
+                      else List.empty
                   }
                 )
             }
