@@ -13,10 +13,12 @@ import scalafx.scene.text.{Font, Text, TextAlignment}
   * domanda del turno AnswerSpace: visualizzazione delle risposte e possibilità di selezionarne una per giocare
   */
 class QuizScene extends Scene:
+
   QuestionController.prepareQuestion()
+
   if QuestionController.counterQuestionRound == 0 then
     val category: String = GameController.gameOfLoggedUsers
-      .map(_.categories(RoundController.round.map(_.numberRound + 1).getOrElse(0)).toString)
+      .map(_.categories(RoundController.round.map(_.numberRound - 1).getOrElse(0)).toString)
       .getOrElse("")
     UIUtils.showSimpleAlert(
       AlertType.Information,

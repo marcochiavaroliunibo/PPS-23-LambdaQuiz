@@ -58,4 +58,8 @@ trait Repository[T]:
         None
       }
 
+  def delete(selector: BSONDocument): Future[Unit] =
+    collection
+      .map(_.delete.one(selector))
+
 end Repository
