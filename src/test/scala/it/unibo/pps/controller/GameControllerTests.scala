@@ -30,18 +30,18 @@ class GameControllerTests extends AnyFlatSpec with should.Matchers:
 
   "GameController" should "be able to read games of a user" in {
     val games = GameController.getCurrentGamesFromSinglePlayer(user1).orNull
-    games != null && games.nonEmpty
+    games != null && games.nonEmpty should be(true)
   }
 
   "GameController" should "be able to read a current game" in {
     val game = GameController.getCurrentGameFromPlayers(List(user1, user2)).orNull
-    game != null
+    game != null should be(true)
   }
   
   "GameController" should "be able to calculate ranking position" in {
     val position1 = GameController.getRankingUser(user1)
     val position2 = GameController.getRankingUser(user2)
-    position1 == position2
+    position1 == position2 should be(true)
   }
   
 

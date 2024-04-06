@@ -32,12 +32,12 @@ class RoundControllerTests extends AnyFlatSpec with should.Matchers:
   }
 
   "RoundController" should "be able to read the points" in {
-    RoundController.computePartialPointsOfUser(user1, game) == 0
+    RoundController.computePartialPointsOfUser(user1, game) == 0 should be(true)
   }
 
   "RoundController" should "be able to read all rounds of the game" in {
     val rounds = RoundController.getAllRoundByGame(game)
-    rounds.length == 1 && rounds.head.getID == round.getID
+    rounds.length == 1 && rounds.head.getID == round.getID should be(true)
   }
 
 end RoundControllerTests
