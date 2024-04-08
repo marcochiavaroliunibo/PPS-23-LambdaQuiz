@@ -22,7 +22,7 @@ class DashboardScene extends Scene:
   }
 
   private val newMatchBtn = craftButton("Nuova partita")
-  newMatchBtn.disable = currentGame.isDefined && !currentGame.get.completed // la partita esiste ed è in corso
+  newMatchBtn.disable = currentGame.isDefined && !currentGame.forall(_.completed) // la partita esiste ed è in corso
   newMatchBtn.onAction = e => {
     GameController.resetVariable()
     GameController.createNewGame()
@@ -31,7 +31,7 @@ class DashboardScene extends Scene:
   }
 
   private val goToMatchBtn = craftButton("Gioca")
-  goToMatchBtn.disable = currentGame.isEmpty || currentGame.get.completed // la partita non esiste o è conclusa
+  goToMatchBtn.disable = currentGame.isEmpty || currentGame.forall(_.completed) // la partita non esiste o è conclusa
   goToMatchBtn.onAction = _ => changeScene(this.window.get().getScene, QuizScene())
 
   root = new BorderPane {

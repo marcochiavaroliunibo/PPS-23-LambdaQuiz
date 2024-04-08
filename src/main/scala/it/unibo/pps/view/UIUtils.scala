@@ -12,6 +12,8 @@ import scalafx.scene.paint.{Color, LinearGradient, Paint, Stops}
 import scalafx.scene.shape.{Rectangle, StrokeType}
 import scalafx.scene.text.{Font, Text}
 
+/** Object utile per raccogliere i metodi statici utili alla parte di UI
+  */
 object UIUtils:
 
   def craftBackground(paint: Paint, round: Int = 0): Background =
@@ -47,7 +49,7 @@ object UIUtils:
     colorDown: Color = Goldenrod
   ): Button = new Button {
     text = displayName
-    font = new Font("Comic Sans MS", fontSize)
+    font = new Font("Arial", fontSize)
     prefWidth = widthBtn
     prefHeight = heightBtn
     val buttonGradient = new LinearGradient(endX = 0, stops = Stops(colorTop, colorDown))
@@ -88,15 +90,11 @@ object UIUtils:
     case 2 => (Color.web("#00FF00"), Color.web("#00E700")) // verde
     case _ => (Color.web("#A040FF"), Color.web("#8B2BE7")) // viola
 
-  def getPlayersLabels: List[Label] = List("Giocatore 1", "Giocatore 2").map(new Label(_) {
-    font = new Font("Arial Bold", 15)
-    alignmentInParent = Pos.Center
-  })
-
-  def getSinglePlayerLabel: Label = new Label("Dati giocatore") {
-    font = new Font("Arial Bold", 15)
-    alignmentInParent = Pos.Center
-  }
+  val getLabel: String => Label =
+    new Label(_) {
+      font = new Font("Arial Bold", 15)
+      alignmentInParent = Pos.Center
+    }
 
   /** verifica che i campi in input siano conformi. In particolare, verifica che non ci siano campi vuoti e che abbiano
     * una lunghezza maggiore o uguale di 6 caratteri .

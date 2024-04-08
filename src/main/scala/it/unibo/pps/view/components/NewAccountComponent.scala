@@ -1,7 +1,7 @@
 package it.unibo.pps.view.components
 
 import it.unibo.pps.model.User
-import it.unibo.pps.view.UIUtils
+import it.unibo.pps.view.UIUtils.*
 import scalafx.Includes.*
 import scalafx.application.Platform
 import scalafx.geometry.Insets
@@ -10,6 +10,7 @@ import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.ButtonBar.ButtonData
 import scalafx.scene.layout.GridPane
 
+/** Componente grafico utilizzato per la registrazione di un utente. */
 private class NewAccountComponent extends Dialog[User]:
   title = "Finestra di registrazione"
   headerText = "Inserire il nome utente e la password desiderata"
@@ -28,9 +29,7 @@ private class NewAccountComponent extends Dialog[User]:
     vgap = 10
     padding = Insets(20, 50, 10, 10)
 
-    val players: Seq[Label] = UIUtils.getPlayersLabels
-
-    add(players.head, 1, 0)
+    add(getLabel("Dati utente da registrare"), 1, 0)
     add(new Label("Username:"), 0, 1)
     add(username, 1, 1)
     add(new Label("Password:"), 0, 2)
@@ -47,18 +46,20 @@ private class NewAccountComponent extends Dialog[User]:
   // a username-password-pair.
   private val errorMsg = "Campi della registrazione errati. Assicurarsi di aver compilato tutti i campi," +
     "che abbiano una lunghezza di almeno 6 caratteri e che le password siano identiche. Riprovare"
+
   resultConverter = {
     case buttonPressedType if buttonPressedType == accountButtonType =>
-      if UIUtils.areRegistrationInputsValid(username)(password, confirmPassword)
+      if areRegistrationInputsValid(username)(password, confirmPassword)
       then new User(username.getText, password.getText)
       else
-        UIUtils.showSimpleAlert(AlertType.Error, errorMsg)
+        showSimpleAlert(AlertType.Error, errorMsg)
         null
     case _ => null
   }
 
 end NewAccountComponent
 
+/** Factory for [[NewAccountComponent]] instances. */
 object NewAccountComponent:
   def apply(): Dialog[User] = new NewAccountComponent
 end NewAccountComponent

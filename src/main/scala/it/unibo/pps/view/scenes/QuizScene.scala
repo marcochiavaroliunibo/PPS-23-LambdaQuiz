@@ -13,7 +13,6 @@ import scalafx.scene.text.{Font, Text, TextAlignment}
   * domanda del turno AnswerSpace: visualizzazione delle risposte e possibilità di selezionarne una per giocare
   */
 class QuizScene extends Scene:
-
   QuestionController.prepareQuestion()
 
   if QuestionController.counterQuestionRound == 0 then
@@ -22,7 +21,7 @@ class QuizScene extends Scene:
       .getOrElse("")
     UIUtils.showSimpleAlert(
       AlertType.Information,
-      s"Gioca ${RoundController.player.get.username} per la categoria $category"
+      s"Gioca ${RoundController.player.map(_.username).getOrElse("")} per la categoria $category"
     )
 
   private val questionText: Text = new Text {

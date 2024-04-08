@@ -2,7 +2,7 @@ package it.unibo.pps.view.components
 
 import it.unibo.pps.controller.UserController
 import it.unibo.pps.model.User
-import it.unibo.pps.view.UIUtils
+import it.unibo.pps.view.UIUtils.*
 import it.unibo.pps.view.scenes.{DashboardScene, ReportScene}
 import scalafx.Includes.*
 import scalafx.application.Platform
@@ -11,65 +11,60 @@ import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.{Alert, Button, ButtonType}
 import scalafx.scene.layout.*
 
-/** Questa classe rappresenta il menu principale, che viene mostrato all'avvio dell'applicazipne Contiene il titolo del
-  * gioco ed i pulsanti per giocare e per chiudere il programma
+/** Questa classe rappresenta il menu principale, che viene mostrato all'avvio dell'applicazipne. Contiene il titolo del
+  * gioco ed i pulsanti per accedere alle funzionalità dell'applicazione.
   */
 private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):
-  import it.unibo.pps.view.UIUtils.*
 
   private val errorMsg = "Campi per il login errati. Assicurarsi di aver compilato tutti i campi," +
     "che abbiano una lunghezza di almeno 6 caratteri e che i due username non siano uguali. Riprovare"
 
-  /** gestione click pulsante PLAY */
+  // Gestione click pulsante PLAY
   private val playBtn: Button = craftButton("PLAY")
   playBtn.onAction = _ => {
     LoginComponent().showAndWait() match
       case Some(List(u1: User, u2: User)) if UserController.checkLogin(List(u1, u2)) =>
         changeScene(scene.get(), DashboardScene())
       case Some(_) => // the user prompted wrong data
-        UIUtils.showSimpleAlert(AlertType.Error, errorMsg)
+        showSimpleAlert(AlertType.Error, errorMsg)
       case None => // the user closed the login dialog
   }
 
-  /** gestione click pulsante STATISTICHE */
+  // Gestione click pulsante STATISTICHE
   private val reportBtn: Button = craftButton("STATISTICHE")
   reportBtn.onAction = _ => {
-    LoginReportComponent().showAndWait() match
+    LoginComponent(true).showAndWait() match
       case Some(List(u: User)) if UserController.checkLogin(List(u)) =>
         changeScene(scene.get(), ReportScene())
       case Some(_) => // the user prompted wrong data
-        UIUtils.showSimpleAlert(AlertType.Error, errorMsg)
+        showSimpleAlert(AlertType.Error, errorMsg)
       case None => // the user closed the login dialog
   }
 
-  /** gestione click pulsante REGISTRATI */
+  // Gestione click pulsante REGISTRATI
   private val registerBtn: Button = craftButton("REGISTRATI")
   registerBtn.onAction = _ => {
-    val res = NewAccountComponent().showAndWait()
-    res match
+    NewAccountComponent().showAndWait() match
       case Some(user: User) if UserController.checkUsername(user.username) =>
-        UIUtils.showSimpleAlert(AlertType.Error, "Username già esistente, sceglierne un altro!")
+        showSimpleAlert(AlertType.Error, "Username già esistente, Riprovare!")
       case Some(user: User) =>
-        try
-          UserController.registerUser(user)
-          UIUtils.showSimpleAlert(
-            AlertType.Confirmation,
-            s"L'utente \"${user.username}\" è stato registrato con successo!"
-          )
-        catch case e: Exception => UIUtils.showSimpleAlert(AlertType.Error, "Errore di connessione, riprova tra poco")
+        UserController.registerUser(user)
+        showSimpleAlert(
+          AlertType.Confirmation,
+          s"L'utente \"${user.username}\" è stato registrato con successo!"
+        )
       case Some(_) | None => // the user closed the login dialog or entered wrong data
   }
 
-  /** gestione click pulsante QUIT */
+  // Gestione click pulsante QUIT
   private val quitBtn: Button = craftButton("QUIT")
   quitBtn.onAction = _ => {
-    UIUtils
-      .showAlertWithButtons(
-        AlertType.Confirmation,
-        "Sei sicuro di voler uscire dal gioco?",
-        ButtonType.No,
-        ButtonType.Yes
-      )
+    showAlertWithButtons(
+      AlertType.Confirmation,
+      "Sei sicuro di voler uscire dal gioco?",
+      ButtonType.No,
+      ButtonType.Yes
+    )
       .filter(_ == ButtonType.Yes)
       .foreach(_ => Platform.exit())
   }

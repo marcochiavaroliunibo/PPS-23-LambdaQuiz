@@ -26,8 +26,6 @@ class ReportScene extends Scene:
   // TODO: si potrebbe pensare di aggiungere al modello la case class Ranking e creare dei controllers
   //  che contengono i metodi per il calcolo delle classifiche. Forse separeremmo meglio la logica dalla view
   private case class Ranking(playerName: String, playerPoints: Int, adversaryPoints: Int)
-
-  private val user: User = UserController.loggedUsers.get.head
   private val getRankings: List[Game] => User => ObservableBuffer[Ranking] = games =>
     user =>
       ObservableBuffer(
@@ -38,15 +36,17 @@ class ReportScene extends Scene:
           Ranking(adversary.username, userPoints, adversaryPoints)
         )*
       )
-  private val computeRanking = Future {
-    val currentGame: List[Game] = GameController.getCurrentGamesFromSinglePlayer(user).getOrElse(List())
-    val completedGame: List[Game] = GameController.getLastGameCompletedByUser(user).getOrElse(List())
-    val gamesWon: Int = GameController.getGameWonByUser(user).length
-    val gamesLost: Int = GameController.getGameLostByUser(user).length
 
-    val currentMatchRanking = getRankings(currentGame)(user)
-    val completedMatchesRanking = getRankings(completedGame)(user)
-    (gamesWon, gamesLost, currentMatchRanking, completedMatchesRanking)
+  private val computeRanking = Future {
+    UserController.loggedUsers.map(_.head).map(user =>
+      val currentGame: List[Game] = GameController.getCurrentGamesFromSinglePlayer(user).getOrElse(List())
+      val completedGame: List[Game] = GameController.getLastGameCompletedByUser(user).getOrElse(List())
+      val gamesWon: Int = GameController.getGameWonByUser(user).length
+      val gamesLost: Int = GameController.getGameLostByUser(user).length
+      val currentMatchRanking = getRankings(currentGame)(user)
+      val completedMatchesRanking = getRankings(completedGame)(user)
+      (gamesWon, gamesLost, currentMatchRanking, completedMatchesRanking)
+    ).getOrElse((0, 0, ObservableBuffer.empty, ObservableBuffer.empty))
   }
 
   private def rankingTable(b: ObservableBuffer[Ranking]): TableView[Ranking] = {
@@ -108,7 +108,15 @@ class ReportScene extends Scene:
         textAlignment = TextAlignment.Center
         style = s"-fx-font: normal normal ${s}px sans-serif"
       }
+  
+  private val rankingScreen = getLoadingScreen
 
+  private val goToBackBtn = craftButton("Indietro")
+  goToBackBtn.onAction = _ => changeScene(this.window.get().getScene, MenuScene())
+
+  private val goToGlobalRankingBtn = craftButton("Classifica globale")
+  goToGlobalRankingBtn.onAction = _ => changeScene(this.window.get().getScene, GlobalRankingScene())
+  
   computeRanking.onComplete {
     case Success(result) =>
       val currentMatchRankingTable = rankingTable(result._3)
@@ -117,7 +125,7 @@ class ReportScene extends Scene:
         alignment = Pos.Center
         children = List(
           getTextWithSize(
-            s"Ciao ${user.username}, fino ad ora hai vinto ${result._1} partite e ne hai perse ${result._2}"
+            s"Ciao ${UserController.loggedUsers.map(_.head.username).getOrElse("")}, fino ad ora hai vinto ${result._1} partite e ne hai perse ${result._2}"
           )(22),
           getTextWithSize("Statistiche relative alla partita in corso")(18),
           currentMatchRankingTable,
@@ -133,14 +141,6 @@ class ReportScene extends Scene:
         rankingScreen.children = new Text("Errore durante il calcolo della classifica. Riprovare!")
       }
   }
-
-  private val rankingScreen = getLoadingScreen
-
-  private val goToBackBtn = craftButton("Indietro")
-  goToBackBtn.onAction = _ => changeScene(this.window.get().getScene, MenuScene())
-
-  private val goToGlobalRankingBtn = craftButton("Classifica globale")
-  goToGlobalRankingBtn.onAction = _ => changeScene(this.window.get().getScene, GlobalRankingScene())
 
   root = new BorderPane {
     top = getSceneTitle("Statistiche giocatore")

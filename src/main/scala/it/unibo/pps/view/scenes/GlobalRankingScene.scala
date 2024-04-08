@@ -20,9 +20,6 @@ import scala.util.{Failure, Success}
   * dell'utente per cui vogliamo visualizzare le statistiche
   */
 class GlobalRankingScene extends Scene:
-
-  private val user: User = UserController.loggedUsers.get.head
-
   private val goToBackBtn = craftButton("Indietro")
   goToBackBtn.onAction = _ => changeScene(this.window.get().getScene, MenuScene())
 

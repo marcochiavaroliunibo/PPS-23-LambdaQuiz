@@ -5,6 +5,8 @@ import scalafx.scene.paint.Color.{DarkOrange, Orange}
 import scalafx.scene.paint.{LinearGradient, Stops}
 import scalafx.scene.text.{Font, Text}
 
+/** Componente grafico per la visualizzazione del titolo di gioco con un aspetto estetico accattivante
+  */
 private class GameTitle extends Text("LambdaQuiz"):
   font = new Font("Verdana Bold", 75)
   fill = new LinearGradient(endX = 0, stops = Stops(Orange, DarkOrange))
