@@ -11,37 +11,37 @@ import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.{Alert, Button, ButtonType}
 import scalafx.scene.layout.*
 
-/** Questa classe rappresenta il menu principale, che viene mostrato all'avvio dell'applicazipne. Contiene il titolo del
-  * gioco ed i pulsanti per accedere alle funzionalità dell'applicazione.
+/** Componente grafico che rappresenta il menu principale, il quale viene mostrato all'avvio dell'applicazipne. Contiene
+  * il titolo del gioco ed i pulsanti per accedere alle funzionalità dell'applicazione.
   */
 private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):
 
   private val errorMsg = "Campi per il login errati. Assicurarsi di aver compilato tutti i campi," +
     "che abbiano una lunghezza di almeno 6 caratteri e che i due username non siano uguali. Riprovare"
 
-  // Gestione click pulsante PLAY
-  private val playBtn: Button = craftButton("PLAY")
+  // Gestione pulsante per andare alla dashboard
+  private val playBtn: Button = craftButton("DASHBOARD")
   playBtn.onAction = _ => {
     LoginComponent().showAndWait() match
       case Some(List(u1: User, u2: User)) if UserController.checkLogin(List(u1, u2)) =>
         changeScene(scene.get(), DashboardScene())
-      case Some(_) => // the user prompted wrong data
+      case Some(_) => // l'utente ha inserito dei dati che non hanno soddisfatto i criteri di verifica
         showSimpleAlert(AlertType.Error, errorMsg)
-      case None => // the user closed the login dialog
+      case None => // l'utente ha chiuso il pannello di login
   }
 
-  // Gestione click pulsante STATISTICHE
+  // Gestione pulsante per aprire le statistiche di un utente
   private val reportBtn: Button = craftButton("STATISTICHE")
   reportBtn.onAction = _ => {
     LoginComponent(true).showAndWait() match
       case Some(List(u: User)) if UserController.checkLogin(List(u)) =>
         changeScene(scene.get(), ReportScene())
-      case Some(_) => // the user prompted wrong data
+      case Some(_) => // l'utente ha inserito dei dati che non hanno soddisfatto i criteri di verifica
         showSimpleAlert(AlertType.Error, errorMsg)
-      case None => // the user closed the login dialog
+      case None => // l'utente ha chiuso il pannello di login
   }
 
-  // Gestione click pulsante REGISTRATI
+  // Gestione pulsante per registrare un utente
   private val registerBtn: Button = craftButton("REGISTRATI")
   registerBtn.onAction = _ => {
     NewAccountComponent().showAndWait() match
@@ -53,11 +53,11 @@ private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):
           AlertType.Confirmation,
           s"L'utente \"${user.username}\" è stato registrato con successo!"
         )
-      case Some(_) | None => // the user closed the login dialog or entered wrong data
+      case Some(_) | None => // l'utente ha chiuso il pannello di login oppure ha inserito dati non corretti
   }
 
-  // Gestione click pulsante QUIT
-  private val quitBtn: Button = craftButton("QUIT")
+  // Gestione pulsante per uscire dal gioco
+  private val quitBtn: Button = craftButton("ESCI")
   quitBtn.onAction = _ => {
     showAlertWithButtons(
       AlertType.Confirmation,
@@ -73,6 +73,11 @@ private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):
   children = List(playBtn, reportBtn, registerBtn, quitBtn)
 end MainMenu
 
+/** Factory per le istanze di [[MainMenu]]. */
 object MainMenu:
+  /** Crea il componente del menu principale.
+    * @return
+    *   una nuova istanza di [[MainMenu]] sotto forma di un [[FlowPane]]
+    */
   def apply(): FlowPane = new MainMenu
 end MainMenu

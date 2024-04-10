@@ -12,20 +12,26 @@ import scalafx.scene.layout.*
   */
 private class AnswersSpace extends FlowPane(Orientation.Vertical, 0, 10):
 
+  /** Lista dei 4 pulsanti utilizzati per mostrare e selezionare le risposte alle domande */
   private val answersButtons = QuestionController.getQuestion.map(_.answers.zipWithIndex.map { case (answer, index) =>
-    val btnColor = getAnswerBtnColor(index)
-    val button = craftButton(answer, colorTop = btnColor._1, colorDown = btnColor._2)
-    button.onAction = _ => answer(index + 1)
+    val btnColors = getAnswerBtnColor(index)
+    val button = craftButton(answer, btnColors)
+    button.onAction = e => answerQuestion(index + 1)
     button
   })
 
-  // TODO: spostare questa logica in Round Controller
-  /** Metodo invocato ogni volta che viene premuto uno dei bottoni relativi alle risposte alla domanda corrente. La sua
-    * invocazione ha l'effetto di giocare il round corrente e di mostrare la prossima domanda, se ce n'é una, oppure di
-    * tornare alla dashboard.
+  /** Gestore dell'evento [[scalafx.scene.control.ButtonBase.onAction]] per i bottoni relativi alle risposte della
+    * domanda corrente.
+    *
+    * Scatena la procedura di gioco del round corrente, la quale gestisce anche il cambio della domanda a cui rispondere
+    * ed il ritorno alla dashboard.
+    *
+    * @param answerIndex
+    *   il numero della risposta selezionata dall'utente in fase di gioco
     */
-  private def answer(answerIndex: Int): Unit = {
+  private def answerQuestion(answerIndex: Int): Unit = {
     RoundController.playRound(answerIndex)
+    // TODO: spostare questa logica in Round Controller
     if QuestionController.nextQuestion then changeScene(scene.get(), QuizScene())
     else
       GameController.checkFinishGame()
@@ -37,6 +43,11 @@ private class AnswersSpace extends FlowPane(Orientation.Vertical, 0, 10):
   children = answersButtons.getOrElse(List.empty)
 end AnswersSpace
 
+/** Factory per le istanze di [[AnswersSpace]]. */
 object AnswersSpace:
+  /** Crea il componente che visualizza la domanda e le relative risposte.
+    * @return
+    *   una nuova istanza della classe [[AnswersSpace]] sotto forma di un [[FlowPane]]
+    */
   def apply(): FlowPane = new AnswersSpace
 end AnswersSpace

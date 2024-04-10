@@ -1,6 +1,6 @@
 package it.unibo.pps.view.scenes
 
-import it.unibo.pps.controller.{GameController, UserController}
+import it.unibo.pps.controller.GameController
 import it.unibo.pps.model.User
 import it.unibo.pps.view.UIUtils
 import it.unibo.pps.view.UIUtils.{changeScene, craftButton, getLoadingScreen}
@@ -16,8 +16,9 @@ import scalafx.scene.text.Text
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
 
-/** Questa classe rappresenta la pagina di visualizzazione delle statistiche dell'utente. Bisogna selezionare il nome
-  * dell'utente per cui vogliamo visualizzare le statistiche
+/** Componente grafico che rappresenta la classifica globale di tutti i giocatori.
+  *
+  * In particolare, essa coincide con la lista dei 5 giocatori che hanno vinto più partite in assoluto.
   */
 class GlobalRankingScene extends Scene:
   private val goToBackBtn = craftButton("Indietro")
@@ -26,6 +27,7 @@ class GlobalRankingScene extends Scene:
   private val goToReportBtn = craftButton("Le tue statistiche")
   goToReportBtn.onAction = _ => changeScene(this.window.get().getScene, ReportScene())
 
+  /** [[ListView]] che mostra la classifica globale. */
   private val rankingList = new ListView[String](List.empty) {
     maxWidth = 250
     maxHeight = 250
@@ -36,6 +38,7 @@ class GlobalRankingScene extends Scene:
     }
   }
 
+  // Schermata di caricamento
   private val rankingScreen = getLoadingScreen
 
   GameController
@@ -60,6 +63,11 @@ class GlobalRankingScene extends Scene:
   }
 end GlobalRankingScene
 
+/** Factory per le istanze di [[GlobalRankingScene]]. */
 object GlobalRankingScene:
+  /** Crea il componente che mostra la classifica globale.
+    * @return
+    *   una nuova istanza della classe [[GlobalRankingScene]] sotto forma di una [[Scene]]
+    */
   def apply(): Scene = new GlobalRankingScene
 end GlobalRankingScene

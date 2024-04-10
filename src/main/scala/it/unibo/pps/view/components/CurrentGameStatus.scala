@@ -11,6 +11,13 @@ import scalafx.scene.shape.Rectangle
 import scalafx.scene.text.Text
 
 /** Componente grafico per la visualizzazione della panoramica dell'eventuale partita in corso.
+  *
+  * Visualizza i due giocatori che hanno effettuato l'accesso e i loro punteggi parziali. Inoltre, per ogni round
+  * giocato, mostra i risultati ottenuti per ogni utente.
+  *
+  * Infone, è presente un footer che contiene i pulsanti per creare una nuova partita o accedere ad una partita in
+  * corso.
+  *
   * @param currentGame
   *   rappresenta la partita in corso tra i due giocatori che hanno effettuato l'accesso
   */
@@ -34,7 +41,7 @@ private class CurrentGameStatus(currentGame: Option[Game]) extends HBox(10):
             new Label(user.username) { style = "-fx-font: normal bold 24px serif" },
             new Label(s"Punti parziali: ${partialPointsOfUser(user)}") { style = "-fx-font: normal bold 20px serif" },
             new Separator { orientation = Orientation.Horizontal; margin = Insets(5, -5, 5, -5) },
-            // qui ci saranno tutti i dati relativi alla partita corrente
+            // Qui ci saranno tutti i dati relativi alla partita corrente
             new Label("Rounds") { style = "-fx-font: normal bold 20px serif" },
             new VBox(5) {
               alignment = Pos.TopCenter
@@ -48,19 +55,15 @@ private class CurrentGameStatus(currentGame: Option[Game]) extends HBox(10):
                       .filter(_.user == user)
                       .filter(_.score != -1)
                       .flatMap(s =>
-                        (1 to s.score)
-                          .map(_ => craftRectangle(Color.Green))
-                          .padTo(QuestionController.QUESTION_FOR_ROUND, craftRectangle(Color.Red))
-                          .reverse
-//                        var listBox: List[Rectangle] = List.empty
-//                        /** aggiungo box verdi per ogni domanda indovinata dall'utente nel round */
-//                        for (i <- 1 to s.score)
-//                          listBox = craftRectangle(Color.Green) :: listBox
-//
-//                        /** aggiungo box rossi per ogni domanda sbagliata dall'utente nel round */
-//                        for (i <- listBox.length + 1 to QuestionController.QUESTION_FOR_ROUND)
-//                          listBox = craftRectangle(Color.Red) :: listBox
-//                        listBox
+                        var rectangles: List[Rectangle] = List.empty
+                        // Aggiungo rettangoli verdi per ogni domanda indovinata dall'utente nel round
+                        for (i <- 1 to s.score)
+                          rectangles = craftRectangle(Color.Green) :: rectangles
+
+                        // Aggiungo rettangoli rossi per ogni domanda sbagliata dall'utente nel round
+                        for (i <- rectangles.length + 1 to QuestionController.QUESTION_FOR_ROUND)
+                          rectangles = craftRectangle(Color.Red) :: rectangles
+                        rectangles
                       )
                     children =
                       if roundResults.nonEmpty then new Text(s"${i + 1})  ") :: roundResults
@@ -78,7 +81,13 @@ private class CurrentGameStatus(currentGame: Option[Game]) extends HBox(10):
     }))
 end CurrentGameStatus
 
-/** Factory for [[CurrentGameStatus]] instances. */
+/** Factory per le istanze di [[CurrentGameStatus]]. */
 object CurrentGameStatus:
-  def apply(g: Option[Game]): CurrentGameStatus = new CurrentGameStatus(g)
+  /** Crea il componente che mostra una panoramica della possibile partita in corso tra i giocatori autenticati.
+    * @param game
+    *   partita in corso sotto forma di [[Option]]. Può essere [[None]]
+    * @return
+    *   una nuova istanza della classe [[CurrentGameStatus]] sotto forma di un [[HBox]]
+    */
+  def apply(game: Option[Game]): HBox = new CurrentGameStatus(game)
 end CurrentGameStatus

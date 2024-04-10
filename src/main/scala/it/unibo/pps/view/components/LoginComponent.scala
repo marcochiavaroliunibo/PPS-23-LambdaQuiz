@@ -9,24 +9,30 @@ import scalafx.scene.control.*
 import scalafx.scene.control.ButtonBar.ButtonData
 import scalafx.scene.layout.GridPane
 
-/** a
+/** Componente grafico per l'autenticazione degli utenti.
+  *
+  * Consiste in un [[Dialog]] che contiene i campi da compilare per effettuare l'accesso. Se l'operazione va a buon
+  * fine, esso restituisce la lista degli [[User]] che sono stati autenticati.
+  *
   * @param singleUserSignIn
-  *   a
+  *   booleano che indica se il componente verrà usato per autenticare un singolo utente, oppure no
   */
 private class LoginComponent(singleUserSignIn: Boolean) extends Dialog[List[User]]:
   title = "Finestra di login"
   headerText = "Inserire il nome utente e la password dei due giocatori"
 
-  // Set the button types.
+  // Creazione di un tipo di bottone personalizzato per la funzione del login
   private val loginButtonType = new ButtonType("Login", ButtonData.OKDone)
   dialogPane().buttonTypes = Seq(loginButtonType, ButtonType.Cancel)
 
-  // Create the username and password labels and fields.
+  // Creazione dei campi per lo username e la password dei giocatori.
   private val usernameOfPlayer1 = getTextFieldWithPromptedText("Username")
   private val passwordOfPlayer1 = getPasswordField
   private val usernameOfPlayer2 = getTextFieldWithPromptedText("Username")
   private val passwordOfPlayer2 = getPasswordField
-  private val userDataGrid: GridPane = new GridPane() {
+
+  // Form per il login
+  private val loginDataGrid: GridPane = new GridPane() {
     hgap = 10
     vgap = 10
     padding = Insets(20, 50, 10, 10)
@@ -36,23 +42,21 @@ private class LoginComponent(singleUserSignIn: Boolean) extends Dialog[List[User
     add(new Label("Password:"), 0, 2)
     add(passwordOfPlayer1, 1, 2)
   }
+  dialogPane().setContent(loginDataGrid)
 
-  if singleUserSignIn then userDataGrid.add(getLabel("Dati giocatore"), 1, 0)
+  // Completamento della form in base a se verrà usata da un solo utente oppure da due
+  if singleUserSignIn then loginDataGrid.add(getLabel("Dati giocatore"), 1, 0)
   else
-    userDataGrid.add(getLabel("Giocatore 1"), 1, 0)
-    userDataGrid.add(getLabel("Giocatore 2"), 1, 3)
-    userDataGrid.add(new Label("Username:"), 0, 4)
-    userDataGrid.add(usernameOfPlayer2, 1, 4)
-    userDataGrid.add(new Label("Password:"), 0, 5)
-    userDataGrid.add(passwordOfPlayer2, 1, 5)
+    loginDataGrid.add(getLabel("Giocatore 1"), 1, 0)
+    loginDataGrid.add(getLabel("Giocatore 2"), 1, 3)
+    loginDataGrid.add(new Label("Username:"), 0, 4)
+    loginDataGrid.add(usernameOfPlayer2, 1, 4)
+    loginDataGrid.add(new Label("Password:"), 0, 5)
+    loginDataGrid.add(passwordOfPlayer2, 1, 5)
 
-  dialogPane().setContent(userDataGrid)
-
-  // Request focus on the username field by default.
   Platform.runLater(usernameOfPlayer1.requestFocus())
 
-  // When the login button is clicked, convert the result to
-  // a User case class.
+  // Quando viene premuto il pulsante per il login, si converte il risultato di ritorno in una lista di utenti
   resultConverter = {
     case buttonPressedType if buttonPressedType == loginButtonType =>
       if singleUserSignIn then
@@ -70,6 +74,13 @@ private class LoginComponent(singleUserSignIn: Boolean) extends Dialog[List[User
   }
 end LoginComponent
 
+/** Factory per le istanze di [[LoginComponent]]. */
 object LoginComponent:
+  /** Crea il componente per il login dei giocatori, che sarà predisposto per l'autenticazione di uno oppure due utenti.
+    * @param su
+    *   booleano che indica se il componente di login dovrà gestire uno o due utenti
+    * @return
+    *   una nuova istanza della classe [[LoginComponent]] sotto forma di un [[Dialog]]
+    */
   def apply(su: Boolean = false): Dialog[List[User]] = new LoginComponent(su)
 end LoginComponent

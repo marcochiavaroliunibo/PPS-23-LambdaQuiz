@@ -2,6 +2,7 @@ package it.unibo.pps.view.scenes
 
 import it.unibo.pps.controller.{GameController, RoundController, UserController}
 import it.unibo.pps.model.{Game, User}
+import it.unibo.pps.view.UIUtils.*
 import scalafx.Includes.*
 import scalafx.application.Platform
 import scalafx.beans.property.ObjectProperty
@@ -18,14 +19,46 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
-/** Questa classe rappresenta la pagina di visualizzazione delle statistiche dell'utente. Bisogna selezionare il nome
-  * dell'utente per cui vogliamo visualizzare le statistiche
+/** Componente grafico che rappresenta la schermata relativa alle statistiche di un particolare giocatore.
+  *
+  * Per accedere ad essa, infatti, occorre inserire i dati di accesso dell'utente per il quale si vuole visionare le
+  * statistiche.
+  *
+  * Si compone di tre sezioni principali: una panoramica sul numero di partite vinte e perse, una tabella inerente lo
+  * stato attuale dell'eventuale partita in corso e una seconda tabella contenente l'esito delle ultime 5 partite
+  * concluse.
+  *
+  * Nella parte bassa della schermata, è inoltre presente un pulsante per accedere alla classifica globale, gestita dal
+  * componente [[GlobalRankingScene]].
   */
 class ReportScene extends Scene:
-  import it.unibo.pps.view.UIUtils.*
+
+  private val goToBackBtn = craftButton("Indietro")
+  goToBackBtn.onAction = _ => changeScene(this.window.get().getScene, MenuScene())
+
+  private val goToGlobalRankingBtn = craftButton("Classifica globale")
+  goToGlobalRankingBtn.onAction = _ => changeScene(this.window.get().getScene, GlobalRankingScene())
+
   // TODO: si potrebbe pensare di aggiungere al modello la case class Ranking e creare dei controllers
   //  che contengono i metodi per il calcolo delle classifiche. Forse separeremmo meglio la logica dalla view
   private case class Ranking(playerName: String, playerPoints: Int, adversaryPoints: Int)
+
+  /** Higher-order function che restituisce una lista di [[Ranking]] a partire da una lista di [[Game]] e da uno
+    * [[User]].
+    *
+    * In particolare, consente di calcolare le statistiche partendo dalla lista delle partite di interesse e dall'utente
+    * per il quale si vogliono mostrare i risultati.
+    *
+    * Per specificare entrambi i paarmetri, bisogna usare il currying. Esempi di utilizzo:
+    * {{{
+    *   // Utilizzo completo con il currying
+    *   val rankings: ObservableBuffer[Ranking] = getRankings(lastFiveCompletedGames)(loggedUser)
+    *
+    *   // Utilizzo parziale, specificando solo il primo parametro.
+    *   val showStatsForUser: User => ObservableBuffer[Ranking] = getRankings(lastFiveCompletedGames)
+    *   val statsOfMario: Text = showStatsForUser(mario)
+    * }}}
+    */
   private val getRankings: List[Game] => User => ObservableBuffer[Ranking] = games =>
     user =>
       ObservableBuffer(
@@ -37,18 +70,33 @@ class ReportScene extends Scene:
         )*
       )
 
+  /** [[Future]] per calcolare in maniera asincrona i dati delle statistiche da mostrare.
+    */
   private val computeRanking = Future {
-    UserController.loggedUsers.map(_.head).map(user =>
-      val currentGame: List[Game] = GameController.getCurrentGamesFromSinglePlayer(user).getOrElse(List())
-      val completedGame: List[Game] = GameController.getLastGameCompletedByUser(user).getOrElse(List())
-      val gamesWon: Int = GameController.getGameWonByUser(user).length
-      val gamesLost: Int = GameController.getGameLostByUser(user).length
-      val currentMatchRanking = getRankings(currentGame)(user)
-      val completedMatchesRanking = getRankings(completedGame)(user)
-      (gamesWon, gamesLost, currentMatchRanking, completedMatchesRanking)
-    ).getOrElse((0, 0, ObservableBuffer.empty, ObservableBuffer.empty))
+    UserController.loggedUsers
+      .map(_.head)
+      .map(user =>
+        val currentGame: List[Game] = GameController.getCurrentGamesFromSinglePlayer(user).getOrElse(List())
+        val completedGame: List[Game] = GameController.getLastGameCompletedByUser(user).getOrElse(List())
+        val gamesWon: Int = GameController.getGameWonByUser(user).length
+        val gamesLost: Int = GameController.getGameLostByUser(user).length
+        val currentMatchRanking = getRankings(currentGame)(user)
+        val completedMatchesRanking = getRankings(completedGame)(user)
+        (gamesWon, gamesLost, currentMatchRanking, completedMatchesRanking)
+      )
+      .getOrElse((0, 0, ObservableBuffer.empty, ObservableBuffer.empty))
   }
 
+  /** Genera una tabella che contiene i dati relativi alle statistiche di gioco per l'utente selezionato.
+    *
+    * In particolare, essa è formata da tre colonne: nome dell'avversario, punteggio dell'utente nella partita contro
+    * quell'avversario e punteggio dell'avversario.
+    *
+    * @param b
+    *   lista dei dati da visualizzare, di tipo [[Ranking]]
+    * @return
+    *   un'istanza della classe [[TableView]], contenente i dati passati in input
+    */
   private def rankingTable(b: ObservableBuffer[Ranking]): TableView[Ranking] = {
     val cellStyle = "-fx-font: normal normal 18px sans-serif"
     val playerNameColumn: TableColumn[Ranking, String] = new TableColumn[Ranking, String] {
@@ -100,6 +148,19 @@ class ReportScene extends Scene:
     }
   }
 
+  /** Higher-order function che restituisce un [[Text]] a partire da una [[String]], che rappresenta il testo, e da un
+    * [[Int]], il quale corrisponde alla grandezza dei caratteri.
+    *
+    * Per specificare entrambi i paarmetri, bisogna usare il currying. Esempi di utilizzo:
+    * {{{
+    *   // Utilizzo completo con il currying
+    *   val bigText: Text = getTextWithSize("Hello world")(64)
+    *
+    *   // Utilizzo parziale, specificando solo il primo parametro.
+    *   val chooseFontSizeLater: Int => Text = getTextWithSize("choose a font size!")
+    *   val smallText: Text = chooseFontSizeLater(12)
+    * }}}
+    */
   private val getTextWithSize: String => Int => Text = t =>
     s =>
       new Text(t) {
@@ -108,17 +169,12 @@ class ReportScene extends Scene:
         textAlignment = TextAlignment.Center
         style = s"-fx-font: normal normal ${s}px sans-serif"
       }
-  
+
   private val rankingScreen = getLoadingScreen
 
-  private val goToBackBtn = craftButton("Indietro")
-  goToBackBtn.onAction = _ => changeScene(this.window.get().getScene, MenuScene())
-
-  private val goToGlobalRankingBtn = craftButton("Classifica globale")
-  goToGlobalRankingBtn.onAction = _ => changeScene(this.window.get().getScene, GlobalRankingScene())
-  
   computeRanking.onComplete {
     case Success(result) =>
+      // creazione delle tabelle con i dati delle statistiche
       val currentMatchRankingTable = rankingTable(result._3)
       val completedMatchesRankingTable = rankingTable(result._4)
       val updatedRankingScene = new VBox(5) {
@@ -150,6 +206,11 @@ class ReportScene extends Scene:
   }
 end ReportScene
 
+/** Factory per le istanze di [[ReportScene]]. */
 object ReportScene:
+  /** Crea la schermata della classifiche.
+    * @return
+    *   una nuova istanza della classe [[ReportScene]] sotto forma di una [[Scene]]
+    */
   def apply(): Scene = new ReportScene
 end ReportScene

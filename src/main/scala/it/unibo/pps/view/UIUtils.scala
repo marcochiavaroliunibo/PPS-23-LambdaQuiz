@@ -7,71 +7,148 @@ import scalafx.scene.Scene
 import scalafx.scene.control.*
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.layout.*
-import scalafx.scene.paint.Color.{Black, DeepSkyBlue, DodgerBlue, Gold, Goldenrod, LightCoral, MediumSeaGreen, SandyBrown}
+import scalafx.scene.paint.Color.{Black, DeepSkyBlue, DodgerBlue, Gold, Goldenrod}
 import scalafx.scene.paint.{Color, LinearGradient, Paint, Stops}
 import scalafx.scene.shape.{Rectangle, StrokeType}
 import scalafx.scene.text.{Font, Text}
 
-/** Object utile per raccogliere i metodi statici utili alla parte di UI
+/** Contiene una serie di metodi statici che supportano ed organizzano le procedure della View.
   */
 object UIUtils:
 
+  /** Restituisce uno sfondo a partire da un [[Paint]], come ad esempio un colore
+    * @param paint
+    *   oggetto estetico da utilizzare come sfondo. Ad esempio, un [[Color]]
+    * @param round
+    *   intero che specifica la rotondezza degli angoli dello sfondo. Di default ha un valore pari a [[0]]
+    * @return
+    *   un'istanza della classe [[Background]] da usare come sfondo nei [[Node]] di ScalaFX
+    */
   def craftBackground(paint: Paint, round: Int = 0): Background =
     new Background(Array(new BackgroundFill(paint, CornerRadii(round), Insets.Empty)))
 
+  /** Funzione utile per modificare la schermata da visualizzare all'utente.
+    * @param currentScene
+    *   schermata corrente
+    * @param newScene
+    *   schermata che si vuole visualizzare
+    */
   def changeScene(currentScene: Scene, newScene: => Scene): Unit =
     currentScene.window.value.asInstanceOf[Stage].scene = newScene
 
+  /** Restituisce il titolo per una [[Scene]] partendo da una stringa, con delle caratteristiche di formattazione ben
+    * definite.
+    * @param t
+    *   la stringa che rappresenta il titolo
+    * @return
+    *   un'istanza della classe [[Text]]
+    */
   def getSceneTitle(t: String): Text = new Text(t) {
     alignmentInParent = Pos.Center
     margin = Insets(5)
     font = new Font("Roboto Bold", 32)
   }
 
+  /** Restituisce un campo di testo, avente una brevissima descrizione sul valore da inserire
+    * @param t
+    *   la descrizione sul valore che il campo di testo deve ospitare
+    * @return
+    *   un'istanza della classe [[TextField]]
+    */
   def getTextFieldWithPromptedText(t: String): TextField = new TextField() { promptText = t }
 
+  /** @return
+    */
   def getPasswordField: PasswordField = new PasswordField() { promptText = "Password" }
 
-  def showSimpleAlert(at: AlertType, m: String): Unit = Alert(at, m, ButtonType.Close).showAndWait()
+  /** Versione semplificata di [[showAlertWithButtons]] che mostra una finestra di avviso con un solo pulsante che ha la
+    * funzione di chiuderla.
+    */
+  def showSimpleAlert(at: AlertType, m: String): Unit = this.showAlertWithButtons(at, m, ButtonType.Close)
 
+  /** Crea e visualizza una finestra di avviso in sovraimpressione con caratteristiche personalizzabili.
+    *
+    * In particolare, è possibile scegliere la tipologia di avviso da mostrare, un testo descrittivo dello stesso e una
+    * serie di pulsanti.
+    *
+    * @param at
+    *   tipologia di avviso da mostrare, appartenente ai valori di [[AlertType]]
+    * @param m
+    *   testo descrittivo dell'avviso
+    * @param bt
+    *   pulsanti da aggiungere alla finestra, di tipo [[ButtonType]]
+    */
   def showAlertWithButtons(at: AlertType, m: String, bt: ButtonType*): Option[ButtonType] =
     Alert(at, m, bt*).showAndWait()
 
+  /** Viene utilizzato dalle varie schermate dell'applicazione per impostare uno sfondo omogeneo.
+    *
+    * @return
+    *   un oggetto [[Background]] composto da un gradiente verticale di due tonalità del colore blu, dalla più chiara in
+    *   alto alla più scura in basso.
+    */
   def defaultBackground: Background =
     this.craftBackground(new LinearGradient(endX = 0, stops = Stops(DodgerBlue, DeepSkyBlue)))
 
+  /** Consente di creare un pulsante, specificando il testo da mostrare al suo interno ed il colore di sfondo.
+    *
+    * Il pulsante restituitò ha delle caratteristiche grafiche già definite, come le dimensioni, il bordo, il font del
+    * testo ed un colore di default.
+    *
+    * @param displayName
+    *   testo da mostrare all'interno del pulsante
+    * @param gradientColours
+    *   i due colori di tipo [[Color]] da usare per lo sfondo del pulsante sotto forma di tupla [[(colore1, colore2)]]
+    * @return
+    *   un'istanza della classe [[Button]]
+    */
   def craftButton(
     displayName: String,
-    fontSize: Int = 24,
-    widthBtn: Int = 250,
-    heightBtn: Int = 40,
-    colorTop: Color = Gold,
-    colorDown: Color = Goldenrod
+    gradientColours: (Color, Color) = (Gold, Goldenrod)
   ): Button = new Button {
     text = displayName
-    font = new Font("Arial", fontSize)
-    prefWidth = widthBtn
-    prefHeight = heightBtn
-    val buttonGradient = new LinearGradient(endX = 0, stops = Stops(colorTop, colorDown))
+    font = new Font("Roboto Bold", 22)
+    minWidth = 200
+    prefHeight = 40
+    val buttonGradient = new LinearGradient(endX = 0, stops = Stops(gradientColours._1, gradientColours._2))
     background = craftBackground(buttonGradient, 10)
     border = new Border(new BorderStroke(Black, BorderStrokeStyle.Solid, new CornerRadii(8), new BorderWidths(4)))
   }
 
+  /** Crea la forma geometrica del rettangolo, con un colore di riempimento ed un bordo nero
+    * @param c
+    *   colore di riempimento per il rettangolo
+    * @return
+    *   un'istanza della classe [[Rectangle]]
+    */
   def craftRectangle(c: Color): Rectangle = new Rectangle {
     width = 30
     height = 20
     fill = c
     stroke = Color.Black
-    strokeWidth = 2
+    strokeWidth = 1.5
     strokeType = StrokeType.Inside
   }
 
+  /** Restituisce il componente grafico che funge da footer per alcune schermate dell'applicazione.
+    *
+    * Esso è costituito da un componente che dispone gli elementi orizzontalmente, uno accanto all'altro.
+    *
+    * @param buttons
+    *   i pulsanti da inserire nel footer
+    * @return
+    *   un'istanza della classe [[HBox]] che contiene i bottoni passati in input
+    */
   def getFooterWithButtons(buttons: Button*): HBox = new HBox(10) {
     margin = Insets(5)
     alignment = Pos.Center
     children = buttons
   }
 
+  /** Restituisce un componente grafico che informa l'utente del fatto che è in corso il caricamento di alcune risorse.
+    * @return
+    *   un'istanza della classe [[VBox]]
+    */
   def getLoadingScreen: VBox = new VBox(5) {
     alignment = Pos.Center
     children = List(
@@ -84,12 +161,22 @@ object UIUtils:
     )
   }
 
+  /** Funzione per determinare il colore deii pulsanti per le risposte, sulla base dell'indice di quest'ultima.
+    * @param an
+    *   indice della risposta dal quale si vuole ricavare il colore del rispettivo bottone
+    * @return
+    *   una tupla formata da due elementi di tipo [[Color]], ch everranno utilizzati per dare al pulsante un colore di
+    *   sfondo a gradiente.
+    */
   def getAnswerBtnColor(an: Int): (Color, Color) = an match
     case 0 => (Color.web("#FFD700"), Color.web("#F7C200")) // giallo
     case 1 => (Color.web("#FF7F00"), Color.web("#E75700")) // arancio
     case 2 => (Color.web("#00FF00"), Color.web("#00E700")) // verde
     case _ => (Color.web("#A040FF"), Color.web("#8B2BE7")) // viola
 
+  /** Restituisce un'istanza di [[Label]] a partire da una stringa in input, impostando un determinato font e
+    * l'allineamento del testo al centro rispetto al componente padre.
+    */
   val getLabel: String => Label =
     new Label(_) {
       font = new Font("Arial Bold", 15)

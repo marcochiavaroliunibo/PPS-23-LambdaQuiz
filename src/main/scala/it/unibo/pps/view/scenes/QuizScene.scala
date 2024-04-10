@@ -9,8 +9,9 @@ import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.layout.{BorderPane, VBox}
 import scalafx.scene.text.{Font, Text, TextAlignment}
 
-/** Questa classe rappresenta la pagina di gioco, composta da due componenti QuestionSpace: visualizzazione della
-  * domanda del turno AnswerSpace: visualizzazione delle risposte e possibilità di selezionarne una per giocare
+/** Componente grafico che rappresenta la schermata di gioco.
+  *
+  * Essa è composta dal testo della domanda corrente e dai pulsanti che racchiudono le varie risposte.
   */
 class QuizScene extends Scene:
   QuestionController.prepareQuestion()
@@ -24,8 +25,9 @@ class QuizScene extends Scene:
       s"Gioca ${RoundController.player.map(_.username).getOrElse("")} per la categoria $category"
     )
 
+  /** Testo della domanda corrente. */
   private val questionText: Text = new Text {
-    font = new Font("Roboto", 24)
+    font = new Font("Roboto", 28)
     text = QuestionController.getQuestion.map(_.text).getOrElse("")
     textAlignment = TextAlignment.Center
     margin = Insets(20, 0, 0, 0)
@@ -42,6 +44,11 @@ class QuizScene extends Scene:
   }
 end QuizScene
 
+/** Factory per le istanze di [[QuizScene]]. */
 object QuizScene:
+  /** Crea la schermata di gioco.
+    * @return
+    *   una nuova istanza della classe [[QuizScene]] sotto forma di una [[Scene]]
+    */
   def apply(): Scene = new QuizScene
 end QuizScene
