@@ -3,7 +3,6 @@ package it.unibo.pps.controller
 import it.unibo.pps.business.{GameRepository, RoundRepository, UserRepository}
 import it.unibo.pps.model.{Game, Round, User}
 import reactivemongo.api.bson.BSONDocument
-
 import java.time.LocalDateTime
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.*
@@ -16,13 +15,13 @@ object GameController:
   private val roundRepository = new RoundRepository
   private val userRepository = new UserRepository
   private val ROUND_FOR_GAME: Int = 3
-
+  
+  def gameOfLoggedUsers: Option[Game] = _gameOfLoggedUsers
+  def gameOfLoggedUsers_=(g: Game): Unit = _gameOfLoggedUsers = Some(g)
+  
   /** ottiene ultimo round di una partita */
   def getLastRoundByGame: Option[Round] =
     Await.result(roundRepository.getAllRoundsByGame(gameOfLoggedUsers.get), 5.seconds).map(_.last)
-
-  def gameOfLoggedUsers: Option[Game] = _gameOfLoggedUsers
-  def gameOfLoggedUsers_=(g: Game): Unit = _gameOfLoggedUsers = Some(g)
 
   /** ottiene l'eventuale partita in corso fra due utenti */
   def getCurrentGameFromPlayers(users: List[User]): Option[Game] =

@@ -4,7 +4,6 @@ import it.unibo.pps.business.RoundRepository
 import it.unibo.pps.model.{Game, Question, Round, User}
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.{Alert, ButtonType}
-
 import scala.concurrent.Await
 import scala.concurrent.duration.*
 
@@ -19,6 +18,7 @@ object RoundController:
   def player_=(newPlayer: User): Unit = _player = Some(newPlayer)
   def player: Option[User] = _player
 
+  /** crea un round */
   def createRound(round: Round): Unit = roundRepository.create(round)
 
   /** controlla se la risposta è corretta: mostra il risutato all'utente e poi aggiorna i punti */
@@ -58,11 +58,12 @@ object RoundController:
       case _ => Await.result(roundRepository.getAllRoundsByGame(game), 5.seconds)
     allRounds
       .getOrElse(List.empty)
-      .flatMap(_.scores)                        // trasforma la lista di Round in lista di Score
-      .filter(_.user.username == user.username) // filtra soo le Score dell'utente in input
-      .filter(_.score != -1)                    // esclude i valori -1 (round non ancora giocato dall'utente)
-      .foldRight(0)(_.score + _)                // calcola il punteggio per accumulazione
-
+      .flatMap(_.scores)                          /** trasforma la lista di Round in lista di Score */
+      .filter(_.user.username == user.username)   /** filtra soo le Score dell'utente in input */
+      .filter(_.score != -1)                      /** esclude i valori -1 (round non ancora giocato dall'utente) */
+      .foldRight(0)(_.score + _)                  /** calcola il punteggio per accumulazione */
+    
+  /** ottiene i round giocati per il game aperto in questo momento nella dashboard */
   def getPlayedRounds: Option[List[Round]] =
     GameController.gameOfLoggedUsers
       .flatMap(game =>
@@ -70,6 +71,7 @@ object RoundController:
           .result(roundRepository.getAllRoundsByGame(game), 5.seconds)
       )
 
+  /** ottiene tutti i round per il game passato come parametro */
   def getAllRoundByGame(game: Game): List[Round] = {
     Await.result(roundRepository.getAllRoundsByGame(game), 5.seconds).getOrElse(List.empty)
   }
