@@ -6,17 +6,12 @@ import scala.util.Random
 
 object CategoryController:
 
+  /** estrae casualmente un numero di categorie pari al numero di round giocati per ogni game */
   def getRandomCategories(roundForGame: Int): List[Category] =
     var listCategories: List[Category] = List()
+    val sizeCategory: Int = Category.values.length 
     for (i <- 1 to roundForGame) {
-      listCategories = Random.nextInt(7) match
-        case 0 => Scienze :: listCategories
-        case 1 => Geografia :: listCategories
-        case 2 => Storia :: listCategories
-        case 3 => CulturaGenerale :: listCategories
-        case 4 => Politica :: listCategories
-        case 5 => Sport :: listCategories
-        case 6 => Psicologia :: listCategories
+      listCategories = Category.values(Random.nextInt(sizeCategory)) :: listCategories
     }
     listCategories
 
