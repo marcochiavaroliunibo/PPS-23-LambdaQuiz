@@ -26,7 +26,7 @@ class GameRepository extends Repository[Game]:
       "players" -> BSONDocument("$all" -> players)
     )
     val sort = BSONDocument("lastUpdate" -> -1)
-    readWithSort(query, sort)
+    readMany(query, sort)
 
   /**
    * Metodo che permette di ottenere l'ultima partita completata da un utente.
@@ -40,6 +40,6 @@ class GameRepository extends Repository[Game]:
       "players" -> BSONDocument("$eq" -> user)
     )
     val sort = BSONDocument("lastUpdate" -> -1)
-    readWithSort(query, sort, maxDocs)
+    readMany(query, sort, maxDocs)
 
 end GameRepository

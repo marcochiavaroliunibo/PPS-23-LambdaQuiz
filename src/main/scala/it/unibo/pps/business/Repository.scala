@@ -108,33 +108,6 @@ trait Repository[T]:
         None
       }
 
-  /** Metodo che permette di leggere più oggetti di tipo [[T]] dal database ordinati secondo un criterio specifico.
-    * @param query
-    *   [[BSONDocument]] che rappresenta il filtro da applicare alla ricerca
-    * @param sort
-    *   [[BSONDocument]] che rappresenta il criterio di ordinamento
-    * @param maxDocs
-    *   numero massimo di documenti da leggere. Default: [[Int.MaxValue]]
-    * @param reader
-    *   implicito che si occupa di deserializzare un [[BSONDocument]] in un oggetto di tipo [[T]]
-    * @return
-    *   la lista ordinata di oggetti letti dal database come [[Future]] di [[Option]] di [[List]] di [[T]]
-    */
-  @deprecated("Use readMany instead")
-  def readWithSort(query: BSONDocument, sort: BSONDocument, maxDocs: Int = -1)(implicit
-    reader: BSONDocumentReader[T]
-  ): Future[Option[List[T]]] =
-    this.collection
-      .flatMap(_.find(query).sort(sort).cursor[T]().collect[List](maxDocs))
-      .map {
-        case l: List[T] if l.nonEmpty => Some(l)
-        case _ => None
-      }
-      .recover { case f: Throwable =>
-        f.printStackTrace()
-        None
-      }
-
   /** Metodo che permette di eliminare un oggetto di tipo [[T]] dal database.
     * @param selector
     *   filtro per la ricerca dell'oggetto da eliminare
