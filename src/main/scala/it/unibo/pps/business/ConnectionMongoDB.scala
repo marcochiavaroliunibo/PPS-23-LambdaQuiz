@@ -3,22 +3,32 @@ package it.unibo.pps.business
 import org.slf4j.{Logger, LoggerFactory}
 import reactivemongo.api.{AsyncDriver, DB, MongoConnection}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-/** Questo object si occupa di fornire i servizi di connessione al database MongoDB
+/** Oggetto che si occupa di gestire la connessione al database MongoDB.
   */
 object ConnectionMongoDB {
   private val logger: Logger = LoggerFactory.getLogger(getClass)
-  // Variabili per la connessione
+
+  /** Stringa di connessione al database. */
   private val connectionString =
     "mongodb+srv://user-login:marco1234@cluster0.9jwsjr8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+
+  /** Nome del database. */
   private var databaseName = "LambdaQuiz"
+
+  /** Driver asincrono per la connessione al database. */
   private val mongoDriver = AsyncDriver()
 
-  import scala.concurrent.ExecutionContext.Implicits.global
-
+  /** Future che rappresenta la connessione al database. */
   private var database: Option[Future[DB]] = None
 
+  /** Metodo che inizializza la connessione al database.
+    *
+    * @return
+    *   Future di [[DB]] che rappresenta la connessione al database
+    */
   def initiateDatabaseConnection(): Future[DB] =
     logger.info(s"Trying to connect to $databaseName database...")
     val futureDB = for
@@ -37,14 +47,21 @@ object ConnectionMongoDB {
     database = Some(futureDB)
     futureDB
 
+  /** Metodo che restituisce la connessione al database, se presente, altrimenti la inizializza.
+    * @param testMode
+    *   se true imposto il database di test
+    * @return
+    *   Future di [[DB]] che rappresenta la connessione al database
+    */
   def getDatabase(testMode: Boolean = false): Future[DB] = {
-    if testMode then
-      activeTestMode()
+    if testMode then activateDBTestMode()
     database.getOrElse(initiateDatabaseConnection())
   }
 
+  /** Metodo che chiude la connessione al database. */
   def closeConnection(): Unit = mongoDriver.close()
 
-  private def activeTestMode(): Unit = databaseName = "LambdaQuiz-test"
+  /** Metodo per attivare la modalità di test. */
+  private def activateDBTestMode(): Unit = databaseName = "LambdaQuiz-test"
 
 }

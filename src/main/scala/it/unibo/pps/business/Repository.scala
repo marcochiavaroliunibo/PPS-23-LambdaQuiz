@@ -91,8 +91,8 @@ trait Repository[T]:
     * @param reader
     *   implicito che si occupa di deserializzare un [[BSONDocument]] in un oggetto di tipo [[T]]
     * @return
-    *   la lista formata dai [[nDocsToRead]] oggetti letti dal database come [[Future]] di [[Option]]
-    *   di [[List]] di [[T]]
+    *   la lista formata dai [[nDocsToRead]] oggetti letti dal database come [[Future]] di [[Option]] di [[List]] di
+    *   [[T]]
     */
   def readMany(query: BSONDocument, sort: BSONDocument = BSONDocument(), nDocsToRead: Int = -1)(implicit
     reader: BSONDocumentReader[T]

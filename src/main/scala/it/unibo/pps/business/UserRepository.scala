@@ -7,9 +7,22 @@ import reactivemongo.api.bson.collection.BSONCollection
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+/** Classe che rappresenta il repository per l'entità [[User]].
+  *
+  * Fornisce metodi per l'interazione con il database.
+  */
 class UserRepository extends Repository[User]:
   override val collection: Future[BSONCollection] = ConnectionMongoDB.getDatabase().map(_.collection("users"))
-  
+
+  /** Metodo che permette di ottenere un utente dal database in base al suo username e password.
+   * 
+   * Viene utilizzato per effettuare il login.
+   * 
+    * @param user
+    *   utente da cercare di tipo [[User]]
+    * @return
+    *   l'utente trovato nel database come [[Option]] di [[User]]
+    */
   def getUserByLogin(user: User): Future[Option[User]] =
     readOne(
       BSONDocument(
@@ -18,9 +31,17 @@ class UserRepository extends Repository[User]:
       )
     )
 
+  /** Metodo che permette di ottenere un utente dal database in base al suo username.
+    * @param username
+    *   username dell'utente da cercare
+    * @return
+    *   l'utente trovato nel database come [[Option]] di [[User]]
+    */
   def getUserByUsername(username: String): Future[Option[User]] =
-    readOne(BSONDocument(
-      "username" -> username
-    ))
+    readOne(
+      BSONDocument(
+        "username" -> username
+      )
+    )
 
 end UserRepository
