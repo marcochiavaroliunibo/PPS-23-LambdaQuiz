@@ -68,7 +68,7 @@ object QuestionController:
           round
         } else {
           // Devo creare il game successivo - inizia a giocare firstPlayer
-          this.createRound(game.getID, firstPlayer, round.numberRound + 1)
+          createRound(game.getID, firstPlayer, round.numberRound + 1)
         }
       }
       .getOrElse {
