@@ -12,21 +12,22 @@ class UserControllerTests extends AnyFlatSpec with should.Matchers:
     users.map(UserController.registerUser) shouldBe a[List[Unit]]
   }
 
+  it should "not let users to register if they have an already registered username" in {
+    users.map(u => UserController.isUsernameAlreadyInUse(u.username)).forall(b => b) should be(true)
+  }
+
   it should "not let users to log in if they are both unregistered" in {
     val unregisteredUsers = users.map(u => new User(u.password, u.username))
-    UserController.checkLogin(unregisteredUsers) should be(false)
-    UserController.loggedUsers.nonEmpty should be(false)
+    UserController.authenticateUsers(unregisteredUsers) should be(false)
   }
 
   it should "not let users to log in if one of them is unregistered" in {
     val unregisteredUser = users.map(u => new User(u.password, u.username)).take(1)
-    UserController.checkLogin(users.head :: unregisteredUser) should be(false)
-    UserController.loggedUsers.nonEmpty should be(false)
+    UserController.authenticateUsers(users.head :: unregisteredUser) should be(false)
   }
 
   it should "let registered users to log in" in {
-    UserController.checkLogin(users) should be(true)
-    UserController.loggedUsers.nonEmpty should be(true)
+    UserController.authenticateUsers(users) should be(true)
   }
 
 end UserControllerTests

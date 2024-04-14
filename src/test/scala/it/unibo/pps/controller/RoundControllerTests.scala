@@ -24,7 +24,7 @@ class RoundControllerTests extends AnyFlatSpec with should.Matchers:
   "RoundController" should "be able to create a new round" in {
     userRepository.create(user1)
     userRepository.create(user2)
-    UserController.checkLogin(List(user1, user2))
+    UserController.authenticateUsers(List(user1, user2))
     GameController.createNewGame()
     RoundController.createRound(round)
     roundRepository.readById(round.getID)
