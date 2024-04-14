@@ -3,27 +3,50 @@ package it.unibo.pps.controller
 import it.unibo.pps.business.{GameRepository, RoundRepository, UserRepository}
 import it.unibo.pps.model.{Game, Round, User}
 import reactivemongo.api.bson.BSONDocument
+
 import java.time.LocalDateTime
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.*
 import scala.concurrent.{Await, Future}
 
+/** Controller per la gestione delle partite */
 object GameController:
 
-  private var _gameOfLoggedUsers: Option[Game] = None
   private val gameRepository = new GameRepository
   private val roundRepository = new RoundRepository
   private val userRepository = new UserRepository
-  private val ROUND_FOR_GAME: Int = 3
-  
+
+  /** variabile per la gestione della partita in corso */
+  private var _gameOfLoggedUsers: Option[Game] = None
   def gameOfLoggedUsers: Option[Game] = _gameOfLoggedUsers
-  def gameOfLoggedUsers_=(g: Game): Unit = _gameOfLoggedUsers = Some(g)
-  
-  /** ottiene ultimo round di una partita */
+
+  /** Numero di round per partita. */
+  private val ROUND_FOR_GAME: Int = 3
+
+  /** Numero di partite da restituire. */
+  private val NUMBER_LAST_GAME: Int = 5
+
+  /** Numero di migliori giocatori da includere nella classifica globale. */
+  private val BEST_PLAYERS: Int = 5
+
+  /** Metodo per ottenere l'ultimo round della partita in corso fra gli utenti loggati.
+    * @return
+    *   l'ultimo round della partita in corso
+    */
   def getLastRoundByGame: Option[Round] =
     Await.result(roundRepository.getAllRoundsByGame(gameOfLoggedUsers.get), 5.seconds).map(_.last)
 
-  /** ottiene l'eventuale partita in corso fra due utenti */
+  /** Metodo per ottenere la partita in corso fra gli utenti specificati.
+    *
+    * Nel caso in cui non ci sia una partita in corso salvata in memoria, viene effettuata una query al database e
+    * salvato il risultato localmente.
+    *
+    * @param users
+    *   lista degli utenti che partecipano alla partita
+    * @return
+    *   [[None]] se la lista di utenti è vuota o se non esiste una partita in corso fra gli utenti specificati,
+    *   Altrimenti, la partita in corso
+    */
   def getCurrentGameFromPlayers(users: List[User]): Option[Game] =
     if users.isEmpty then None
     else
@@ -32,22 +55,31 @@ object GameController:
         case None =>
           Await.result(gameRepository.getCurrentGameFromPlayers(users), 5.seconds) match
             case Some(g) =>
-              gameOfLoggedUsers = g.head
+              _gameOfLoggedUsers = Some(g.head)
               Some(g.head)
             case None => None
 
-  /** ottiene tutte le partite in corso di un utente */
+  /** Metodo per ottenere tutte le partite in corso di un utente.
+    * @param user
+    *   utente di cui si vogliono ottenere le partite in corso
+    * @return
+    *   lista delle partite in corso dell'utente specificato
+    */
   def getCurrentGamesFromSinglePlayer(user: User): Option[List[Game]] =
     Await.result(gameRepository.getCurrentGameFromPlayers(List(user)), 5.seconds)
 
-  /** ottiene le ultime partite completate di un utente di default estrae le ultime 5 partite (valore parametrizzabile
-    * da chi esegue la chiamata)
+  /** Metodo per ottenere le ultime partite completate di un utente.
+    * @param user
+    *   utente di cui si vogliono ottenere le partite completate
+    * @param limit
+    *   numero massimo di partite da estrarre
+    * @return
+    *   lista delle ultime partite completate dell'utente specificato
     */
-  private val NUMBER_LAST_GAME: Int = 5
   def getLastGameCompletedByUser(user: User, limit: Int = NUMBER_LAST_GAME): Option[List[Game]] =
     Await.result(gameRepository.getLastGameCompletedByUser(user, NUMBER_LAST_GAME), 5.seconds)
 
-  /** verifica se si è arrivati alla conclusione di una partita eventualmente aggiorna lo stato in completed = true
+  /** Metodo per controllare se la partita in corso è terminata. In caso affermativo, ne aggiorna lo stato sul database.
     */
   def checkFinishGame(): Unit = {
     if (
@@ -59,7 +91,12 @@ object GameController:
       gameRepository.update(gameEdited, gameEdited.getID)
   }
 
-  /** ottiene le partite vinte da un utente */
+  /** Metodo per ottenere le partite vinte da un utente.
+    * @param user
+    *   utente di cui si vogliono ottenere le partite vinte
+    * @return
+    *   lista delle partite vinte dall'utente specificato
+    */
   def getGameWonByUser(user: User): List[Game] =
     val games: List[Game] = getLastGameCompletedByUser(user, Int.MaxValue).getOrElse(List())
     games.filter(game => {
@@ -69,7 +106,12 @@ object GameController:
       )
     })
 
-  /** ottiene le partite perse da un utente */
+  /** Metodo per ottenere le partite perse da un utente.
+    * @param user
+    *   utente di cui si vogliono ottenere le partite perse
+    * @return
+    *   lista delle partite perse dall'utente specificato
+    */
   def getGameLostByUser(user: User): List[Game] =
     val games: List[Game] = getLastGameCompletedByUser(user, Int.MaxValue).getOrElse(List())
     games.filter(game => {
@@ -79,28 +121,37 @@ object GameController:
       )
     })
 
-  /** ottiene la posizione in classifica (per numero di partite vinte) di un utente */
-  def getRankingUser(user: User): Int =
+  /** Metodo per ottenere la posizione in classifica di un utente per il numero di partite vinte.
+    * @param user
+    *   utente di cui si vuole ottenere la posizione in classifica
+    * @return
+    *   posizione in classifica dell'utente specificato
+    */
+  def getUserRanking(user: User): Int =
     val myPoint = getGameWonByUser(user).length
     val otherUsers: List[User] = Await
       .result(userRepository.readMany(BSONDocument("_id" -> BSONDocument("$ne" -> user.getID))), 5.seconds)
       .getOrElse(List())
     otherUsers.count(u => getGameWonByUser(u).length > myPoint) + 1
 
-  /** ottiene la lista degli utenti ordinata partendo da chi ha più vittorie di default estrae i migliori 5 utenti
-    * (valore parametrizzabile da chi esegue la chiamata)
+  /** Metodo per ottenere la classifica globale degli utenti per il numero di partite vinte.
+    * @param rankingLength
+    *   numero dei migliori giocatori da inserire nella classifica
+    * @return
+    *   classifica globale degli utenti, ovvero la lista dei migliori [[rankingLength]] giocatori in termini di partite
+    *   vinte
     */
-  private val BEST_PLAYERS: Int = 5
-  def getGlobalRanking(max: Int = BEST_PLAYERS): Future[List[User]] =
+  def getGlobalRanking(rankingLength: Int = BEST_PLAYERS): Future[List[User]] =
     userRepository
       .readMany(BSONDocument())
       .flatMap(allUsers =>
         Future {
-          allUsers.getOrElse(List.empty).sortBy(getGameWonByUser(_).length).reverse.take(max)
+          allUsers.getOrElse(List.empty).sortBy(getGameWonByUser(_).length).reverse.take(rankingLength)
         }
       )
 
-  /** crea un nuovo game */
+  /** Metodo per creare una nuova partita e salvarla nel database.
+    */
   def createNewGame(): Unit =
     val newGame = new Game(
       UserController.loggedUsers.getOrElse(List.empty),
@@ -110,7 +161,8 @@ object GameController:
     )
     Await.result(gameRepository.create(newGame), 5.seconds)
 
-  /** a fine giocata, resetto le variabili per la prossima giocata */
+  /** Metodo invocato alla fine di ogni partita per resettare la variabile di controllo della partita in corso.
+    */
   def resetVariable(): Unit =
     _gameOfLoggedUsers = None
 

@@ -2,90 +2,115 @@ package it.unibo.pps.controller
 
 import it.unibo.pps.business.QuestionRepository
 import it.unibo.pps.model.*
-import scala.concurrent.duration.*
+
 import scala.concurrent.Await
+import scala.concurrent.duration.*
 import scala.util.Random
 
+/** Controller per la gestione delle domande */
 object QuestionController:
 
   private var _question: Option[Question] = None
   private val questionRepository = new QuestionRepository
   var counterQuestionRound: Int = 0
   val QUESTION_FOR_ROUND: Int = 3
-  
+
   def getQuestion: Option[Question] = _question
-  
-  /** ottiene casualmente una domanda di una categoria specifica */
+
+  /** Metodo per estrarre una domanda casuale appartenente ad una categoria specifica.
+    * @param category
+    *   categoria della domanda da estrarre
+    * @return
+    *   domanda casuale appartenente alla categoria specificata
+    */
   private def getRandomQuestionByCategory(category: Category): Question =
-    val questionResult = Await.result(questionRepository.getQuestionsByCategory(category), 5.seconds).get
-    val randomQuestion = Random.nextInt(questionResult.length)
-    questionResult(randomQuestion)
+    Await
+      .result(questionRepository.getQuestionsByCategory(category), 5.seconds)
+      .map(questions => questions(Random.nextInt(questions.length)))
+      .head
 
-  /** funzione per gestire il numero di domande da visualizzare all'utente, 
-    * basta modificre la costante per cambiare il numero di domande effettuate ad ogni turno */
-  def nextQuestion: Boolean = {
-    counterQuestionRound = counterQuestionRound + 1
-    if counterQuestionRound == QUESTION_FOR_ROUND then
-      counterQuestionRound = 0
-      false
-    else true
-  }
+  /** Metodo per gestire il numero di domande da visualizzare all'utente durante un turno.
+    *
+    * Ad ogni invocazione, si incrementa il contatore delle domande visualizzate durante il turno. Una volta raggiunto
+    * il numero massimo di domande da visualizzare per quel turno, il contatore viene resettato.
+    *
+    * @return
+    *   [[true]] se è possibile visualizzare un'altra domanda, [[false]] altrimenti
+    */
+  def nextQuestion: Boolean =
+    counterQuestionRound = (counterQuestionRound + 1) % QUESTION_FOR_ROUND
+    counterQuestionRound != 0
 
-  /** estraggo la domanda da mostrare */
+  /** Metodo per preparare la domanda da visualizzare all'utente */
   def prepareQuestion(): Unit = {
     var lastRound: Option[Round] = None
-    if counterQuestionRound == 0 then lastRound = Some(setVariableQuestion())
+    if counterQuestionRound == 0 then lastRound = manageNewRound()
     else lastRound = RoundController.round
     lastRound.foreach(r => {
-      val questionCategory: Category = GameController.gameOfLoggedUsers.get.categories(r.numberRound - 1)
-      val newQuestion: Question = QuestionController.getRandomQuestionByCategory(questionCategory)
-      _question = Some(newQuestion)
+      GameController.gameOfLoggedUsers
+        .map(_.categories(r.numberRound - 1))
+        .foreach(category => {
+          QuestionController.getRandomQuestionByCategory(category)
+          _question = Some(QuestionController.getRandomQuestionByCategory(category))
+        })
     })
   }
 
   /** crea una domanda */
+  // TODO: da cancellare
   def createQuestion(question: Question): Unit =
     questionRepository.create(question)
-    
-  /** funzione che si occupa di caricare la domanda da visualizzare all'utente */
-  /** 1) recuperare l'ultimo round
-    * 2a) se non c'è, si inizia da [round 1 - user 1]
-    * 2b) se c'è, vedere se è in corso o completato 
-    * 3a) se è in corso, [round x - user 2] 
-    * 3b) se è completato, [round x + 1 - user 1]
+
+  /** Metodo per gestire la progressione dei round.
+    *
+    * Innanzitutto ottiene l'ultimo relativo al gioco in corso. Se esso non è presente, significa che la partita è
+    * appena iniziata e occorre creare il primo round. Al contrario, se l'ultimo round risulta presente, si verifica se
+    * è in corso o completato. Nel primo caso si passa al secondo giocatore, nel secondo si crea il round successivo.
+    * @return
+    *   round appena iniziato o in corso
     */
-  private def setVariableQuestion(): Round = {
-    val game = GameController.gameOfLoggedUsers.get
-    val firstPlayer = GameController.gameOfLoggedUsers.map(_.players.head)
-    
-    val lastRound = GameController.getLastRoundByGame
+  private def manageNewRound(): Option[Round] = {
+    val game = GameController.gameOfLoggedUsers
+
+    GameController.getLastRoundByGame
       .map { round =>
-        if (round.scores.count(_.score == -1) > 0) {
+        if round.scores.count(_.score == -1) > 0 then
           // Siamo nel mezzo di un round - deve giocare user2
-          val userPlayer = round.scores.find(_.score == -1).get.user
           RoundController.round = round
-          RoundController.player = userPlayer
-          round
-        } else {
-          // Devo creare il game successivo - inizia a giocare firstPlayer
-          createRound(game.getID, firstPlayer, round.numberRound + 1)
-        }
+          round.scores
+            .find(_.score == -1)
+            .map(_.user)
+            .map(nextPlayer => {
+              RoundController.player = nextPlayer
+              round
+            })
+        else
+          // Devo creare il round successivo - inizia a giocare firstPlayer
+          game.map(g => initializeNewRound(g.getID, g.players.head, round.numberRound + 1))
       }
       .getOrElse {
         // Devo creare il primo round - inizia a giocare firstPlayer
-        createRound(game.getID, firstPlayer, 1)
+        game.map(g => initializeNewRound(g.getID, g.players.head))
       }
-    
-    lastRound
   }
 
-  /** costriusce il Round successivo e in seguito lo crea tramite il RoundController */
-  private def createRound(gameId: String, user: Option[User], roundNumber: Int): Round = {
+  /** Metodo per inizializzare un nuovo round, il quale verrà poi effettivamente creato grazie a
+    * [[RoundController.createRound]].
+    * @param gameId
+    *   ID del gioco per il quale creare il nuovo round
+    * @param user
+    *   utente che inizierà a giocare il nuovo round
+    * @param roundNumber
+    *   numero del nuovo round
+    * @return
+    *   round appena inizializzato
+    */
+  private def initializeNewRound(gameId: String, user: User, roundNumber: Int = 1): Round = {
     val newScores = GameController.gameOfLoggedUsers.map(_.players.map(new Score(_))).getOrElse(List.empty)
     val newRound = new Round(gameId, newScores, roundNumber)
     RoundController.createRound(newRound)
     RoundController.round = newRound
-    RoundController.player = user.get
+    RoundController.player = user
     newRound
   }
 
