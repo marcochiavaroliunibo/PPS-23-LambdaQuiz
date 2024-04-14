@@ -6,7 +6,7 @@ import it.unibo.pps.view.components.AnswersSpace
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Scene
 import scalafx.scene.control.Alert.AlertType
-import scalafx.scene.layout.{BorderPane, VBox}
+import scalafx.scene.layout.{BorderPane, HBox, VBox}
 import scalafx.scene.text.{Font, Text, TextAlignment}
 
 /** Componente grafico che rappresenta la schermata di gioco.
@@ -34,11 +34,24 @@ class QuizScene extends Scene:
     wrappingWidth = 500
   }
 
+  private val getInfoText: String => Text = new Text(_) {
+    font = new Font("Roboto", 14)
+    textAlignment = TextAlignment.Center
+  }
+
   root = new BorderPane {
     top = UIUtils.getSceneTitle("Schermata di gioco")
     center = new VBox(10) {
       alignment = Pos.Center
       children = List(questionText, AnswersSpace())
+    }
+    bottom = new HBox {
+      alignment = Pos.Center
+      children = List(
+        getInfoText("Sta giocando: " + RoundController.player.map(_.username).getOrElse("")),
+        getInfoText("Domanda " + (QuestionController.counterQuestionRound + 1) + " di " + QuestionController.QUESTION_FOR_ROUND)
+      )
+      padding = Insets(5)
     }
     background = UIUtils.defaultBackground
   }
