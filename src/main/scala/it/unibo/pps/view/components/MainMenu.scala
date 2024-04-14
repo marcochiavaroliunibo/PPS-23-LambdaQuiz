@@ -23,7 +23,7 @@ private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):
   private val playBtn: Button = craftButton("DASHBOARD")
   playBtn.onAction = _ => {
     LoginComponent().showAndWait() match
-      case Some(List(u1: User, u2: User)) if UserController.checkLogin(List(u1, u2)) =>
+      case Some(List(u1: User, u2: User)) if UserController.authenticateUsers(List(u1, u2)) =>
         changeScene(scene.get(), DashboardScene())
       case Some(_) => // l'utente ha inserito dei dati che non hanno soddisfatto i criteri di verifica
         showSimpleAlert(AlertType.Error, errorMsg)
@@ -34,7 +34,7 @@ private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):
   private val reportBtn: Button = craftButton("STATISTICHE")
   reportBtn.onAction = _ => {
     LoginComponent(true).showAndWait() match
-      case Some(List(u: User)) if UserController.checkLogin(List(u)) =>
+      case Some(List(u: User)) if UserController.authenticateUsers(List(u)) =>
         changeScene(scene.get(), ReportScene())
       case Some(_) => // l'utente ha inserito dei dati che non hanno soddisfatto i criteri di verifica
         showSimpleAlert(AlertType.Error, errorMsg)
@@ -45,7 +45,7 @@ private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):
   private val registerBtn: Button = craftButton("REGISTRATI")
   registerBtn.onAction = _ => {
     NewAccountComponent().showAndWait() match
-      case Some(user: User) if UserController.checkUsername(user.username) =>
+      case Some(user: User) if UserController.isUsernameAlreadyInUse(user.username) =>
         showSimpleAlert(AlertType.Error, "Username già esistente, Riprovare!")
       case Some(user: User) =>
         UserController.registerUser(user)
