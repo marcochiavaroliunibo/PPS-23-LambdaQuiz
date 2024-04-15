@@ -1,20 +1,27 @@
 package it.unibo.pps.model
 
-import it.unibo.pps.business.GameRepository
 import reactivemongo.api.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
-import it.unibo.pps.model.Score
+
 import java.util.UUID
 import scala.util.Try
 
+/** Rappresenta il round di una partita.
+  * @param relatedGameID
+  *   identificativo della partita a cui il round è associato
+  * @param scores
+  *   lista dei punteggi dei giocatori
+  * @param numberRound
+  *   numero del round
+  * @param id
+  *   identificativo del round. Se non specificato, viene generato automaticamente
+  */
 case class Round(
-    _relatedGameID: String,
+    relatedGameID: String,
     scores: List[Score],
     numberRound: Int,
     id: Option[UUID] = None
 ) {
-
   private val _id: UUID = id.getOrElse(UUID.randomUUID())
-
   def getID: String = _id.toString
 
   /** set punteggio di un player -1: non ha mai giocato il round 0: ha giocato il round ma non ha mai indovinato la
@@ -25,11 +32,20 @@ case class Round(
     if point.score == -1 then point.score = 0
     if correct then point.score = point.score + 1
   }
-  
 }
 
+/** Companion object per la classe [[Round]].
+  *
+  * Abilita la conversione da e verso BSONDocument in maniera trasparente, sfruttando il meccanismo degli impliciti.
+  */
 object Round {
   implicit object RoundReader extends BSONDocumentReader[Round]:
+    /** Converte un documento BSON in un oggetto di tipo [[Round]].
+      * @param doc
+      *   il documento BSON da convertire
+      * @return
+      *   l'oggetto di tipo [[Round]] corrispondente al documento BSON
+      */
     def readDocument(doc: BSONDocument): Try[Round] =
       for
         id <- doc.getAsTry[String]("_id")
@@ -39,10 +55,17 @@ object Round {
       yield Round(gameID, scores, numberRound, Some(UUID.fromString(id)))
 
   implicit object RoundWriter extends BSONDocumentWriter[Round]:
+    /** Converte un oggetto di tipo [[Round]] in un documento BSON.
+      *
+      * @param round
+      *   l'oggetto di tipo [[Round]] da convertire
+      * @return
+      *   il documento BSON corrispondente all'oggetto di tipo [[Score]]
+      */
     override def writeTry(round: Round): Try[BSONDocument] =
       for
         id <- Try(round.getID)
-        gameID <- Try(round._relatedGameID)
+        gameID <- Try(round.relatedGameID)
         scores <- Try(round.scores)
         numberRound <- Try(round.numberRound)
       yield BSONDocument(

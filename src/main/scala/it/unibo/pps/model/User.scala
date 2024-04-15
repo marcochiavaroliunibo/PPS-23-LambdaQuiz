@@ -1,18 +1,35 @@
 package it.unibo.pps.model
 
-import reactivemongo.api.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter, BSONObjectID}
+import reactivemongo.api.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
 
 import java.util.UUID
 import scala.util.Try
 
+/** Rappresenta un utente all'interno del sistema.
+  * @param username
+  *   Nome utente
+  * @param password
+  *   Password utente
+  * @param id
+  *   Identificativo univoco dell'utente. Se non specificato, viene generato automaticamente
+  */
 case class User(username: String, password: String, id: Option[UUID] = None) {
   private val _id: UUID = id.getOrElse(UUID.randomUUID())
-
   def getID: String = _id.toString
 }
 
+/** Companion object per la classe [[User]].
+  *
+  * Abilita la conversione da e verso BSONDocument in maniera trasparente, sfruttando il meccanismo degli impliciti.
+  */
 object User {
   implicit object UserReader extends BSONDocumentReader[User]:
+    /** Converte un documento BSON in un oggetto di tipo [[User]].
+      * @param doc
+      *   il documento BSON da convertire
+      * @return
+      *   l'oggetto [[User]] corrispondente al documento BSON
+      */
     def readDocument(doc: BSONDocument): Try[User] =
       for
         id <- doc.getAsTry[String]("_id")
@@ -21,6 +38,12 @@ object User {
       yield User(username, password, Some(UUID.fromString(id)))
 
   implicit object UserWriter extends BSONDocumentWriter[User]:
+    /** Converte un oggetto di tipo [[User]] in un documento BSON.
+      * @param user
+      *   l'oggetto [[User]] da convertire
+      * @return
+      *   il documento BSON corrispondente all'oggetto di tipo [[User]]
+      */
     override def writeTry(user: User): Try[BSONDocument] =
       for
         id <- Try(user.getID)

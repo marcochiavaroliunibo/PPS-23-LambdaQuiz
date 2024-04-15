@@ -5,6 +5,18 @@ import reactivemongo.api.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWri
 import java.util.UUID
 import scala.util.Try
 
+/** Rappresenta una domanda all'interno del gioco.
+  * @param text
+  *   testo della domanda
+  * @param answers
+  *   lista di risposte possibili
+  * @param correctAnswer
+  *   indice della risposta corretta
+  * @param category
+  *   categoria della domanda
+  * @param id
+  *   identificativo univoco della domanda. Se non specificato, viene generato automaticamente.
+  */
 case class Question(
     text: String,
     answers: List[String],
@@ -13,14 +25,23 @@ case class Question(
     id: Option[UUID] = None
 ) {
   private val _id: UUID = id.getOrElse(UUID.randomUUID())
-
   def getID: String = _id.toString
-
 }
 
+/** Companion object per la classe [[Question]].
+  *
+  * Abilita la conversione da e verso BSONDocument in maniera trasparente, sfruttando il meccanismo degli impliciti.
+  */
 object Question {
   implicit object QuestionReader extends BSONDocumentReader[Question]:
-    def readDocument(doc: BSONDocument): Try[Question] = 
+    /** Converte un documento BSON in un oggetto di tipo [[Question]].
+      *
+      * @param doc
+      *   il documento BSON da convertire
+      * @return
+      *   l'oggetto di tipo [[Question]] corrispondente al documento BSON
+      */
+    def readDocument(doc: BSONDocument): Try[Question] =
       for
         id <- doc.getAsTry[String]("_id")
         text <- doc.getAsTry[String]("text")
@@ -30,6 +51,13 @@ object Question {
       yield Question(text, answers, correctAnswer, Category.valueOf(category), Some(UUID.fromString(id)))
 
   implicit object QuestionWriter extends BSONDocumentWriter[Question]:
+    /** Converte un oggetto di tipo [[Question]] in un documento BSON.
+      *
+      * @param question
+      *   l'oggetto di tipo [[Question]] da convertire
+      * @return
+      *   il documento BSON corrispondente all'oggetto di tipo [[Score]]
+      */
     override def writeTry(question: Question): Try[BSONDocument] = for
       id <- Try(question.getID)
       text <- Try(question.text)
