@@ -1,7 +1,7 @@
 package it.unibo.pps.controller
 
 import it.unibo.pps.business.RoundRepository
-import it.unibo.pps.model.{Game, Question, Round, User}
+import it.unibo.pps.model.{Game, Round, User}
 import it.unibo.pps.view.UIUtils
 import scalafx.scene.control.Alert
 import scalafx.scene.control.Alert.AlertType
@@ -23,24 +23,31 @@ object RoundController:
   /** Metodo per salvare un nuovo round nel database */
   def createRound(round: Round): Unit = roundRepository.create(round)
 
-  /** Metodo per giocare un round. Se la risposta è corretta, viene mostrato un alert di conferma, altrimenti uno di
-    * errore.
-    * @param answer
+  /** Metodo invocato dalla View ogni volta che l'utente gioca un round, ovvero risponde a una domanda.
+   * 
+   * In primo luogo, viene controllato se la risposta data dall'utente è corretta o meno, aggiornando il punteggio di conseguenza.
+   * Poi, se non ci sono più domande per il round corrente, viene verificato se la partita è terminata e vengono resettate le variabili di stato relative al round.
+   * 
+    * @param answerIndex
     *   l'indice della risposta scelta dall'utente
     * @return
-    *   [[true]] se la risposta è corretta, [[false]] altrimenti
+    *   [[true]] se ci sono altre domande per il round corrente, [[false]] altrimenti
     */
-  def playRound(answer: Int): Boolean =
-    QuestionController.getQuestion match
-      case Some(q: Question) if q.correctAnswer == answer =>
+  def playRound(answerIndex: Int): Boolean =
+    QuestionController.getQuestion.foreach(question => {
+      if question.correctAnswer == answerIndex then
         updatePoints(true)
         UIUtils.showSimpleAlert(AlertType.Confirmation, "Risposta corretta!")
-        true
-      case Some(q: Question) =>
+      else
         updatePoints(false)
         UIUtils.showSimpleAlert(AlertType.Error, "Risposta sbagliata!")
-        false
-      case None => false
+    })
+
+    val hasNextQuestion = QuestionController.nextQuestion
+    if !hasNextQuestion then
+      GameController.checkFinishGame()
+      RoundController.resetVariable()
+    hasNextQuestion
 
   /** Metodo per aggiornare i punti dell'utente che ha giocato il round corrente sulla base della risposta data.
     * @param correct

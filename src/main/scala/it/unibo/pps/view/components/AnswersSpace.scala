@@ -1,6 +1,6 @@
 package it.unibo.pps.view.components
 
-import it.unibo.pps.controller.{GameController, QuestionController, RoundController}
+import it.unibo.pps.controller.{QuestionController, RoundController}
 import it.unibo.pps.view.UIUtils.*
 import it.unibo.pps.view.scenes.{DashboardScene, QuizScene}
 import scalafx.Includes.*
@@ -20,24 +20,15 @@ private class AnswersSpace extends FlowPane(Orientation.Vertical, 0, 10):
     button
   })
 
-  /** Gestore dell'evento [[scalafx.scene.control.ButtonBase.onAction]] per i bottoni relativi alle risposte della
-    * domanda corrente.
-    *
-    * Scatena la procedura di gioco del round corrente, la quale gestisce anche il cambio della domanda a cui rispondere
-    * ed il ritorno alla dashboard.
-    *
+  /** Metodo che sfrutta il controller per effettuare la giocacata e passare alla prossima domanda. Nel caso in cui non
+    * ci siano più domande, il metodo riporta il giocatore alla dashboard.
     * @param answerIndex
-    *   il numero della risposta selezionata dall'utente in fase di gioco
+    *   indice della risposta selezionata
     */
-  private def answerQuestion(answerIndex: Int): Unit = {
-    RoundController.playRound(answerIndex)
-    // TODO: spostare questa logica in Round Controller
-    if QuestionController.nextQuestion then changeScene(scene.get(), QuizScene())
-    else
-      GameController.checkFinishGame()
-      RoundController.resetVariable()
-      changeScene(scene.get(), DashboardScene())
-  }
+  private def answerQuestion(answerIndex: Int): Unit =
+    val roundHasNextQuestion = RoundController.playRound(answerIndex)
+    if roundHasNextQuestion then changeScene(this.scene.get, QuizScene())
+    else changeScene(this.scene.get, DashboardScene())
 
   alignment = Pos.Center
   children = answersButtons.getOrElse(List.empty)
