@@ -31,10 +31,29 @@ object UserController:
     */
   def authenticateUsers(users: List[User]): Boolean =
     val foundUsers = users.map(u => Await.result(userRepository.getUserByLogin(u), 5.seconds))
-    _loggedUsers = foundUsers.count(_.isEmpty) match
-      case 0 => Some(foundUsers.map(_.get))
-      case _ => None
+    _loggedUsers = sequence(foundUsers)
     _loggedUsers.nonEmpty
+
+  /** Metodo che trasforma una lista di Option in un'Option di lista.
+    *
+    * In particolare, se tutti gli elementi della lista di partenza sono definiti, restituisce [[Some]] della lista di
+    * questi elementi. Se, invece, almauno degli elementi è [[None]], restituisce [[None]].
+    *
+    * @param l
+    *   lista di Option da trasformare
+    * @tparam A
+    *   tipo degli elementi della lista
+    * @return
+    *   [[Option]] di [[List]] di [[A]], se tutti gli elementi di [[l]] sono definiti, [[None]] altrimenti
+    */
+  private def sequence[A](l: List[Option[A]]): Option[List[A]] = {
+    l.foldRight[Option[List[A]]](Some(Nil))((opt, acc) =>
+      for {
+        x <- opt
+        xs <- acc
+      } yield x :: xs
+    )
+  }
 
   /** Metodo bloccante che verifica se l'username è già in uso.
     * @param username
