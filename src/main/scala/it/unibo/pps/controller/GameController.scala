@@ -81,15 +81,15 @@ object GameController:
 
   /** Metodo per controllare se la partita in corso è terminata. In caso affermativo, ne aggiorna lo stato sul database.
     */
-  def checkFinishGame(): Unit = {
-    if (
-      RoundController.round.get.numberRound == ROUND_FOR_GAME && RoundController.round.get.scores.forall(_.score != -1)
-    )
-      val gameEdited: Game = gameOfLoggedUsers.get
-      gameEdited.completed = true
-      gameEdited.lastUpdate = LocalDateTime.now()
-      gameRepository.update(gameEdited, gameEdited.getID)
-  }
+  def verifyGameEnd(): Unit =
+    RoundController.round.foreach(round => {
+      if round.numberRound == ROUND_FOR_GAME && round.scores.forall(_.score != -1) then
+        gameOfLoggedUsers.foreach(game => {
+          game.completed = true
+          game.lastUpdate = LocalDateTime.now()
+          gameRepository.update(game, game.getID)
+        })
+    })
 
   /** Metodo per ottenere le partite vinte da un utente.
     * @param user

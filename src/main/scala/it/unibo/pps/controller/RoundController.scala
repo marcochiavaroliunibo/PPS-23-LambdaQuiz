@@ -45,7 +45,7 @@ object RoundController:
 
     val hasNextQuestion = QuestionController.nextQuestion
     if !hasNextQuestion then
-      GameController.checkFinishGame()
+      GameController.verifyGameEnd()
       RoundController.resetVariable()
     hasNextQuestion
 
