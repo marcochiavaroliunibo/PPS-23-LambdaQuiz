@@ -45,7 +45,7 @@ class QuizScene extends Scene:
       alignment = Pos.Center
       children = List(questionText, AnswersSpace())
     }
-    bottom = new HBox {
+    bottom = new HBox(50) {
       alignment = Pos.Center
       children = List(
         getInfoText("Sta giocando: " + RoundController.player.map(_.username).getOrElse("")),

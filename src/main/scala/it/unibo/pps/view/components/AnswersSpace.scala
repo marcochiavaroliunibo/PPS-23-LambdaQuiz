@@ -16,7 +16,7 @@ private class AnswersSpace extends FlowPane(Orientation.Vertical, 0, 10):
   private val answersButtons = QuestionController.getQuestion.map(_.answers.zipWithIndex.map { case (answer, index) =>
     val btnColors = getAnswerBtnColor(index)
     val button = craftButton(answer, btnColors)
-    button.onAction = e => answerQuestion(index + 1)
+    button.onAction = e => answerQuestion(index)
     button
   })
 
