@@ -63,7 +63,7 @@ class ReportScene extends Scene:
     user =>
       ObservableBuffer(
         games.map(g =>
-          val adversary: User = g.players.filter(_.getID != user.getID).head
+          val adversary: User = g.players.filter(_.id != user.id).head
           val userPoints: Int = RoundController.computePartialPointsOfUser(user, g)
           val adversaryPoints: Int = RoundController.computePartialPointsOfUser(adversary, g)
           Ranking(adversary.username, userPoints, adversaryPoints)

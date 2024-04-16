@@ -57,7 +57,7 @@ object RoundController:
     player.flatMap(p =>
       round.map(r => {
         r.setPoint(p, correct)
-        roundRepository.update(r, r.getID)
+        roundRepository.update(r, r.id)
       })
     )
 

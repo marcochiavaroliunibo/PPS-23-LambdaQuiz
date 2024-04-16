@@ -17,24 +17,30 @@ import scala.util.Try
   * @param categories
   *   lista delle categorie di domande che verranno utilizzate nella partita
   * @param id
-  *   identificativo univoco della partita. Se non specificato, viene generato automaticamente
+  *   identificativo univoco della partita
   */
 case class Game(
     players: List[User],
     var completed: Boolean,
     var lastUpdate: LocalDateTime,
     categories: List[Category],
-    id: Option[UUID] = None
-) {
-  private val _id: UUID = id.getOrElse(UUID.randomUUID())
-  def getID: String = _id.toString
-}
+    id: String
+)
 
 /** Companion object per la classe [[Game]].
   *
   * Abilita la conversione da e verso BSONDocument in maniera trasparente, sfruttando il meccanismo degli impliciti.
   */
 object Game {
+  def apply(
+    players: List[User],
+    completed: Boolean,
+    lastUpdate: LocalDateTime,
+    categories: List[Category],
+    id: Option[String] = None
+  ): Game =
+    Game(players, completed, lastUpdate, categories, id.getOrElse(UUID.randomUUID().toString))
+
   implicit object GameReader extends BSONDocumentReader[Game]:
     /** Converte un documento BSON in un oggetto di tipo [[Game]].
       *
@@ -50,7 +56,7 @@ object Game {
         completed <- doc.getAsTry[Boolean]("completed")
         lastUpdate <- doc.getAsTry[LocalDateTime]("lastUpdate")
         categories <- doc.getAsTry[List[String]]("categories")
-      yield Game(players, completed, lastUpdate, categories.map(Category.valueOf), Some(UUID.fromString(id)))
+      yield Game(players, completed, lastUpdate, categories.map(Category.valueOf), id)
 
   implicit object GameWriter extends BSONDocumentWriter[Game]:
     /** Converte un oggetto di tipo [[Game]] in un documento BSON.
@@ -62,7 +68,7 @@ object Game {
       */
     override def writeTry(game: Game): Try[BSONDocument] =
       for
-        id <- Try(game.getID)
+        id <- Try(game.id)
         players <- Try(game.players)
         completed <- Try(game.completed)
         lastUpdate <- Try(game.lastUpdate)

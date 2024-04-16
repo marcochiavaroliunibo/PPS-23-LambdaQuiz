@@ -11,18 +11,18 @@ import scala.util.Try
   * @param password
   *   Password utente
   * @param id
-  *   Identificativo univoco dell'utente. Se non specificato, viene generato automaticamente
+  *   Identificativo univoco dell'utente
   */
-case class User(username: String, password: String, id: Option[UUID] = None) {
-  private val _id: UUID = id.getOrElse(UUID.randomUUID())
-  def getID: String = _id.toString
-}
+case class User(username: String, password: String, id: String)
 
 /** Companion object per la classe [[User]].
   *
   * Abilita la conversione da e verso BSONDocument in maniera trasparente, sfruttando il meccanismo degli impliciti.
   */
 object User {
+  def apply(username: String, password: String, id: Option[String] = None): User =
+    User(username, password, id.getOrElse(UUID.randomUUID().toString))
+
   implicit object UserReader extends BSONDocumentReader[User]:
     /** Converte un documento BSON in un oggetto di tipo [[User]].
       * @param doc
@@ -35,7 +35,7 @@ object User {
         id <- doc.getAsTry[String]("_id")
         username <- doc.getAsTry[String]("username")
         password <- doc.getAsTry[String]("password")
-      yield User(username, password, Some(UUID.fromString(id)))
+      yield User(username, password, id)
 
   implicit object UserWriter extends BSONDocumentWriter[User]:
     /** Converte un oggetto di tipo [[User]] in un documento BSON.
@@ -46,7 +46,7 @@ object User {
       */
     override def writeTry(user: User): Try[BSONDocument] =
       for
-        id <- Try(user.getID)
+        id <- Try(user.id)
         username <- Try(user.username)
         password <- Try(user.password)
       yield BSONDocument("_id" -> id, "username" -> username, "password" -> password)

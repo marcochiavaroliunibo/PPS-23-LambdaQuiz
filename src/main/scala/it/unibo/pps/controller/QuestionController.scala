@@ -86,11 +86,11 @@ object QuestionController:
             })
         else
           // Devo creare il round successivo - inizia a giocare firstPlayer
-          game.map(g => initializeNewRound(g.getID, g.players.head, round.numberRound + 1))
+          game.map(g => initializeNewRound(g.id, g.players.head, round.numberRound + 1))
       }
       .getOrElse {
         // Devo creare il primo round - inizia a giocare firstPlayer
-        game.map(g => initializeNewRound(g.getID, g.players.head))
+        game.map(g => initializeNewRound(g.id, g.players.head))
       }
   }
 
@@ -106,8 +106,8 @@ object QuestionController:
     *   round appena inizializzato
     */
   private def initializeNewRound(gameId: String, user: User, roundNumber: Int = 1): Round = {
-    val newScores = GameController.gameOfLoggedUsers.map(_.players.map(new Score(_))).getOrElse(List.empty)
-    val newRound = new Round(gameId, newScores, roundNumber)
+    val newScores = GameController.gameOfLoggedUsers.map(_.players.map(Score(_))).getOrElse(List.empty)
+    val newRound = Round(gameId, newScores, roundNumber)
     RoundController.createRound(newRound)
     RoundController.round = newRound
     RoundController.player = user

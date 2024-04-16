@@ -54,7 +54,7 @@ private class NewAccountComponent extends Dialog[User]:
   resultConverter = {
     case buttonPressedType if buttonPressedType == accountButtonType =>
       if areRegistrationInputsValid(username)(password, confirmPassword)
-      then new User(username.getText, password.getText)
+      then User(username.getText, password.getText)
       else
         showSimpleAlert(AlertType.Error, errorMsg)
         null

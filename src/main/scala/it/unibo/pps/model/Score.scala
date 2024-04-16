@@ -10,13 +10,15 @@ import scala.util.Try
   * @param score
   *   il punteggio ottenuto
   */
-case class Score(user: User, var score: Int = -1)
+case class Score(user: User, var score: Int, id: String)
 
 /** Companion object per la classe [[Score]].
   *
   * Abilita la conversione da e verso BSONDocument in maniera trasparente, sfruttando il meccanismo degli impliciti.
   */
 object Score:
+  def apply(user: User, score: Int = -1): Score = Score(user, score, "")
+
   implicit object ScoreReader extends BSONDocumentReader[Score]:
     /** Converte un documento BSON in un oggetto di tipo [[Score]].
       * @param doc

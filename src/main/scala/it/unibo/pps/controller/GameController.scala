@@ -87,7 +87,7 @@ object GameController:
         gameOfLoggedUsers.foreach(game => {
           game.completed = true
           game.lastUpdate = LocalDateTime.now()
-          gameRepository.update(game, game.getID)
+          gameRepository.update(game, game.id)
         })
     })
 
@@ -130,7 +130,7 @@ object GameController:
   def getUserRanking(user: User): Int =
     val myPoint = getGameWonByUser(user).length
     val otherUsers: List[User] = Await
-      .result(userRepository.readMany(BSONDocument("_id" -> BSONDocument("$ne" -> user.getID))), 5.seconds)
+      .result(userRepository.readMany(BSONDocument("_id" -> BSONDocument("$ne" -> user.id))), 5.seconds)
       .getOrElse(List())
     otherUsers.count(u => getGameWonByUser(u).length > myPoint) + 1
 
@@ -153,7 +153,7 @@ object GameController:
   /** Metodo per creare una nuova partita e salvarla nel database.
     */
   def createNewGame(): Unit =
-    val newGame = new Game(
+    val newGame = Game(
       UserController.loggedUsers.getOrElse(List.empty),
       false,
       LocalDateTime.now(),

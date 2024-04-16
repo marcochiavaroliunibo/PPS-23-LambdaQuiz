@@ -13,19 +13,24 @@ import scala.util.Try
   * @param numberRound
   *   numero del round
   * @param id
-  *   identificativo del round. Se non specificato, viene generato automaticamente
+  *   identificativo del round
   */
-case class Round(
-    relatedGameID: String,
-    scores: List[Score],
-    numberRound: Int,
-    id: Option[UUID] = None
-) {
-  private val _id: UUID = id.getOrElse(UUID.randomUUID())
-  def getID: String = _id.toString
+case class Round(relatedGameID: String, scores: List[Score], numberRound: Int, id: String) {
 
   /** set punteggio di un player -1: non ha mai giocato il round 0: ha giocato il round ma non ha mai indovinato la
     * risposta 1+ ha giocato il round e indovinato 1+ risposte:
+    */
+
+  /** Aggiorna il punteggio di un giocatore.
+    *
+    * In particolare, se il giocatore non ha ancora giocato il round, il suo punteggio è -1. Se ha giocato il round
+    * rispondendo in maniera errata, il suo punteggio è 0. Se, invece, ha giocato rispondendo correttamente, il
+    * punteggio sarà pari al numero di domande corrette.
+    *
+    * @param player
+    *   il giocatore a cui aggiornare il punteggio
+    * @param correct
+    *   booleano che indica se il giocatore ha risposto correttamente
     */
   def setPoint(player: User, correct: Boolean): Unit = {
     val point = scores.filter(_.user.username == player.username).head
@@ -39,6 +44,9 @@ case class Round(
   * Abilita la conversione da e verso BSONDocument in maniera trasparente, sfruttando il meccanismo degli impliciti.
   */
 object Round {
+  def apply(relatedGameID: String, scores: List[Score], numberRound: Int, id: Option[String] = None): Round =
+    Round(relatedGameID, scores, numberRound, id.getOrElse(UUID.randomUUID().toString))
+
   implicit object RoundReader extends BSONDocumentReader[Round]:
     /** Converte un documento BSON in un oggetto di tipo [[Round]].
       * @param doc
@@ -49,10 +57,10 @@ object Round {
     def readDocument(doc: BSONDocument): Try[Round] =
       for
         id <- doc.getAsTry[String]("_id")
-        gameID <- doc.getAsTry[String]("gameID")
+        gameID <- doc.getAsTry[String]("relatedGameID")
         scores <- doc.getAsTry[List[Score]]("scores")
         numberRound <- doc.getAsTry[Int]("numberRound")
-      yield Round(gameID, scores, numberRound, Some(UUID.fromString(id)))
+      yield Round(gameID, scores, numberRound, id)
 
   implicit object RoundWriter extends BSONDocumentWriter[Round]:
     /** Converte un oggetto di tipo [[Round]] in un documento BSON.
@@ -64,13 +72,13 @@ object Round {
       */
     override def writeTry(round: Round): Try[BSONDocument] =
       for
-        id <- Try(round.getID)
+        id <- Try(round.id)
         gameID <- Try(round.relatedGameID)
         scores <- Try(round.scores)
         numberRound <- Try(round.numberRound)
       yield BSONDocument(
         "_id" -> id,
-        "gameID" -> gameID,
+        "relatedGameID" -> gameID,
         "scores" -> scores,
         "numberRound" -> numberRound
       )

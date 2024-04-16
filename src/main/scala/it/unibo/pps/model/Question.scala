@@ -15,24 +15,30 @@ import scala.util.Try
   * @param category
   *   categoria della domanda
   * @param id
-  *   identificativo univoco della domanda. Se non specificato, viene generato automaticamente.
+  *   identificativo univoco della domanda
   */
 case class Question(
     text: String,
     answers: List[String],
     correctAnswer: Int,
     category: Category,
-    id: Option[UUID] = None
-) {
-  private val _id: UUID = id.getOrElse(UUID.randomUUID())
-  def getID: String = _id.toString
-}
+    id: String
+)
 
 /** Companion object per la classe [[Question]].
   *
   * Abilita la conversione da e verso BSONDocument in maniera trasparente, sfruttando il meccanismo degli impliciti.
   */
 object Question {
+  def apply(
+    text: String,
+    answers: List[String],
+    correctAnswer: Int,
+    category: Category,
+    id: Option[UUID] = None
+  ): Question =
+    Question(text, answers, correctAnswer, category, id.getOrElse(UUID.randomUUID()).toString)
+
   implicit object QuestionReader extends BSONDocumentReader[Question]:
     /** Converte un documento BSON in un oggetto di tipo [[Question]].
       *
@@ -48,7 +54,7 @@ object Question {
         answers <- doc.getAsTry[List[String]]("answers")
         category <- doc.getAsTry[String]("category")
         correctAnswer <- doc.getAsTry[Int]("correctAnswer")
-      yield Question(text, answers, correctAnswer, Category.valueOf(category), Some(UUID.fromString(id)))
+      yield Question(text, answers, correctAnswer, Category.valueOf(category), id)
 
   implicit object QuestionWriter extends BSONDocumentWriter[Question]:
     /** Converte un oggetto di tipo [[Question]] in un documento BSON.
@@ -59,7 +65,7 @@ object Question {
       *   il documento BSON corrispondente all'oggetto di tipo [[Score]]
       */
     override def writeTry(question: Question): Try[BSONDocument] = for
-      id <- Try(question.getID)
+      id <- Try(question.id)
       text <- Try(question.text)
       answers <- Try(question.answers)
       correctAnswer <- Try(question.correctAnswer)
