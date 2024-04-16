@@ -15,15 +15,11 @@ object CategoryController:
     *   lista delle categorie estreatte
     */
   def getRandomCategories(roundForGame: Int): List[Category] =
-    var listCategories: List[Category] = List()
-    val sizeCategory: Int = Category.values.length
-    val listNumber = List()
-    for (i <- 1 to roundForGame) {
-      var random: Int = Random.nextInt(sizeCategory)
-      while (listNumber.contains(random))
-        random = Random.nextInt(sizeCategory)
-      listCategories = Category.values(random) :: listCategories
-    }
-    listCategories
+    Iterator
+      .continually(Random.nextInt(Category.values.length))
+      .distinct
+      .take(roundForGame)
+      .map(Category.values)
+      .toList
 
 end CategoryController
