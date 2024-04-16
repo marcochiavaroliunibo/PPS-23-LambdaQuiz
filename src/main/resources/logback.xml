@@ -6,7 +6,7 @@
     </appender>
 
     <logger name="it.unibo.pps" level="INFO" />
-    <logger name="reactivemongo" level="INFO" />
+    <logger name="reactivemongo" level="WARN" />
     <logger name="ch.qos.logback" level="WARN" />
 
     <root level="WARN">

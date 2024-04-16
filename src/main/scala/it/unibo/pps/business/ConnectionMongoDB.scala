@@ -59,9 +59,9 @@ object ConnectionMongoDB {
   }
 
   /** Metodo che chiude la connessione al database. */
-  def closeConnection(): Unit = mongoDriver.close()
+  def closeConnection(): Future[Unit] = mongoDriver.close()
 
   /** Metodo per attivare la modalità di test. */
-  private def activateDBTestMode(): Unit = databaseName = "LambdaQuiz-test"
+  def activateDBTestMode(): Unit = databaseName = "LambdaQuiz-test"
 
 }

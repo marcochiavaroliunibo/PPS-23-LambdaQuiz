@@ -15,11 +15,13 @@ class GameRepository extends Repository[Game]:
 
   override val collection: Future[BSONCollection] = ConnectionMongoDB.getDatabase().map(_.collection("games"))
 
-    /** Metodo che permette di ottenere una partita in corso a partire dalla lista dei suoi giocatori.
-        *
-        * @param players lista di giocatori
-        * @return una lista di partite in corso
-        */
+  /** Metodo che permette di ottenere una partita in corso a partire dalla lista dei suoi giocatori.
+    *
+    * @param players
+    *   lista di giocatori
+    * @return
+    *   una lista di partite in corso
+    */
   def getCurrentGameFromPlayers(players: List[User]): Future[Option[List[Game]]] =
     val query = BSONDocument(
       "completed" -> false,
@@ -28,12 +30,14 @@ class GameRepository extends Repository[Game]:
     val sort = BSONDocument("lastUpdate" -> -1)
     readMany(query, sort)
 
-  /**
-   * Metodo che permette di ottenere l'ultima partita completata da un utente.
-   * @param user utente
-   * @param maxDocs numero massimo di documenti da restituire
-   * @return una lista di partite completate
-   */
+  /** Metodo che permette di ottenere l'ultima partita completata da un utente.
+    * @param user
+    *   utente
+    * @param maxDocs
+    *   numero massimo di documenti da restituire
+    * @return
+    *   una lista di partite completate
+    */
   def getLastGameCompletedByUser(user: User, maxDocs: Int): Future[Option[List[Game]]] =
     val query = BSONDocument(
       "completed" -> true,

@@ -8,7 +8,7 @@ import scala.concurrent.Future
 
 /** Trait che rappresenta un repository generico che definisce le operazioni CRUD di base su un database MongoDB.
   * @tparam T
-  *   tipo dell'oggetto da salvare nel database, sottoclasse di [[it.unibo.pps.model.GameEntity]]
+  *   tipo dell'oggetto da salvare nel database
   */
 trait Repository[T]:
   /** Metodo che restituisce la collezione su cui effettuare le operazioni CRUD.
