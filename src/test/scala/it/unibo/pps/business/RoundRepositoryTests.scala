@@ -1,31 +1,17 @@
 package it.unibo.pps.business
 
-import it.unibo.pps.model.{Category, Game, Round, Score, User}
+import it.unibo.pps.TestDataInitializer.{game, round, roundRepository}
+import it.unibo.pps.model.Round
 import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.*
-
-import java.time.LocalDateTime
+import reactivemongo.api.bson.BSONDocument
 
 class RoundRepositoryTests extends AsyncFlatSpec with should.Matchers:
-  private val roundRepository = new RoundRepository
-  private val player1: User = new User("user1", "pwd")
-  private val player2: User = new User("user2", "pwd")
-  private val game = new Game(
-    List(player1,player2),
-    true,
-    LocalDateTime.now(),
-    List(Category.Scienze, Category.Storia, Category.Geografia)
-  )
-  private val round = new Round(game.getID, List(new Score(player1, 3), new Score(player2, 3)), 2)
 
-  "A round" should "eventually be inserted in the database" in {
+  "A round" should "be read from the database by its related game's ID" in {
     roundRepository
-      .create(round)
-      .map(_ shouldBe a[Unit])
-  }
-
-  it should "be read from the database" in {
-    roundRepository.readById(round.getID).map(_.exists(_.getID == round.getID) should be(true))
+      .readOne(BSONDocument("relatedGameID" -> game.id))
+      .map(_.exists(_.id == round.id) should be(true))
   }
 
 end RoundRepositoryTests
