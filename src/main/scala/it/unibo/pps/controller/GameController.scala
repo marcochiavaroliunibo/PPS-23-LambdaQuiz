@@ -98,7 +98,7 @@ object GameController:
     *   lista delle partite vinte dall'utente specificato
     */
   def getGameWonByUser(user: User): List[Game] =
-    val games: List[Game] = getLastGameCompletedByUser(user, Int.MaxValue).getOrElse(List())
+    val games: List[Game] = getLastGameCompletedByUser(user, -1).getOrElse(List.empty)
     games.filter(game => {
       RoundController.computePartialPointsOfUser(user, game) > RoundController.computePartialPointsOfUser(
         game.players.filter(u => u.username != user.username).head,
@@ -113,7 +113,7 @@ object GameController:
     *   lista delle partite perse dall'utente specificato
     */
   def getGameLostByUser(user: User): List[Game] =
-    val games: List[Game] = getLastGameCompletedByUser(user, Int.MaxValue).getOrElse(List())
+    val games: List[Game] = getLastGameCompletedByUser(user, -1).getOrElse(List.empty)
     games.filter(game => {
       RoundController.computePartialPointsOfUser(user, game) < RoundController.computePartialPointsOfUser(
         game.players.filter(u => u.username != user.username).head,
