@@ -1,7 +1,7 @@
 package it.unibo.pps.view.scenes
 
-import it.unibo.pps.controller.{GameController, RoundController, UserController}
-import it.unibo.pps.model.{Game, User}
+import it.unibo.pps.controller.{ReportController, UserController}
+import it.unibo.pps.model.Report
 import it.unibo.pps.view.UIUtils.*
 import scalafx.Includes.*
 import scalafx.application.Platform
@@ -16,7 +16,6 @@ import scalafx.scene.shape.Circle
 import scalafx.scene.text.{Text, TextAlignment}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
 /** Componente grafico che rappresenta la schermata relativa alle statistiche di un particolare giocatore.
@@ -39,69 +38,21 @@ class ReportScene extends Scene:
   private val goToGlobalRankingBtn = craftButton("Classifica globale")
   goToGlobalRankingBtn.onAction = _ => changeScene(this.window.get().getScene, GlobalRankingScene())
 
-  // TODO: si potrebbe pensare di aggiungere al modello la case class Ranking e creare dei controllers
-  //  che contengono i metodi per il calcolo delle classifiche. Forse separeremmo meglio la logica dalla view
-  private case class Ranking(playerName: String, playerPoints: Int, adversaryPoints: Int)
-
-  /** Higher-order function che restituisce una lista di [[Ranking]] a partire da una lista di [[Game]] e da uno
-    * [[User]].
-    *
-    * In particolare, consente di calcolare le statistiche partendo dalla lista delle partite di interesse e dall'utente
-    * per il quale si vogliono mostrare i risultati.
-    *
-    * Per specificare entrambi i paarmetri, bisogna usare il currying. Esempi di utilizzo:
-    * {{{
-    *   // Utilizzo completo con il currying
-    *   val rankings: ObservableBuffer[Ranking] = getRankings(lastFiveCompletedGames)(loggedUser)
-    *
-    *   // Utilizzo parziale, specificando solo il primo parametro.
-    *   val showStatsForUser: User => ObservableBuffer[Ranking] = getRankings(lastFiveCompletedGames)
-    *   val statsOfMario: Text = showStatsForUser(mario)
-    * }}}
-    */
-  private val getRankings: List[Game] => User => ObservableBuffer[Ranking] = games =>
-    user =>
-      ObservableBuffer(
-        games.map(g =>
-          val adversary: User = g.players.filter(_.id != user.id).head
-          val userPoints: Int = RoundController.computePartialPointsOfUser(user, g)
-          val adversaryPoints: Int = RoundController.computePartialPointsOfUser(adversary, g)
-          Ranking(adversary.username, userPoints, adversaryPoints)
-        )*
-      )
-
-  /** [[Future]] per calcolare in maniera asincrona i dati delle statistiche da mostrare.
-    */
-  private val computeRanking = Future {
-    UserController.loggedUsers
-      .map(_.head)
-      .map(user =>
-        val currentGame: List[Game] = GameController.getCurrentGamesFromSinglePlayer(user).getOrElse(List())
-        val completedGame: List[Game] = GameController.getLastGameCompletedByUser(user).getOrElse(List())
-        val gamesWon: Int = GameController.getGameWonByUser(user).length
-        val gamesLost: Int = GameController.getGameLostByUser(user).length
-        val currentMatchRanking = getRankings(currentGame)(user)
-        val completedMatchesRanking = getRankings(completedGame)(user)
-        (gamesWon, gamesLost, currentMatchRanking, completedMatchesRanking)
-      )
-      .getOrElse((0, 0, ObservableBuffer.empty, ObservableBuffer.empty))
-  }
-
   /** Genera una tabella che contiene i dati relativi alle statistiche di gioco per l'utente selezionato.
     *
     * In particolare, essa è formata da tre colonne: nome dell'avversario, punteggio dell'utente nella partita contro
     * quell'avversario e punteggio dell'avversario.
     *
     * @param b
-    *   lista dei dati da visualizzare, di tipo [[Ranking]]
+    *   lista dei dati da visualizzare, di tipo [[Report]]
     * @return
     *   un'istanza della classe [[TableView]], contenente i dati passati in input
     */
-  private def rankingTable(b: ObservableBuffer[Ranking]): TableView[Ranking] = {
+  private def rankingTable(b: ObservableBuffer[Report]): TableView[Report] = {
     val cellStyle = "-fx-font: normal normal 18px sans-serif"
-    val playerNameColumn: TableColumn[Ranking, String] = new TableColumn[Ranking, String] {
+    val playerNameColumn: TableColumn[Report, String] = new TableColumn[Report, String] {
       text = "Nome avversario"
-      var ranking: Option[Ranking] = None
+      var ranking: Option[Report] = None
       cellValueFactory = d =>
         ranking = Some(d.value)
         ObjectProperty(d.value.playerName)
@@ -113,8 +64,8 @@ class ReportScene extends Scene:
           .map(r =>
             new Circle {
               fill = r match
-                case Ranking(_, up, ap) if up > ap => Color.MediumSeaGreen
-                case Ranking(_, up, ap) if up < ap => Color.LightCoral
+                case Report(_, up, ap) if up > ap => Color.MediumSeaGreen
+                case Report(_, up, ap) if up < ap => Color.LightCoral
                 case _ => Color.Orange
               radius = 10
             }
@@ -123,7 +74,7 @@ class ReportScene extends Scene:
       }
     }
 
-    val playerPointsColumn = new TableColumn[Ranking, Int] {
+    val playerPointsColumn = new TableColumn[Report, Int] {
       text = "Punteggio utente"
       cellValueFactory = d => ObjectProperty(d.value.playerPoints)
       sortable = false
@@ -132,7 +83,7 @@ class ReportScene extends Scene:
         cell.style = cellStyle
     }
 
-    val adversaryPointsColumn = new TableColumn[Ranking, String] {
+    val adversaryPointsColumn = new TableColumn[Report, String] {
       text = "Punteggio avversario"
       cellValueFactory = d => ObjectProperty(d.value.adversaryPoints.toString)
       sortable = false
@@ -141,7 +92,7 @@ class ReportScene extends Scene:
         cell.style = cellStyle
     }
 
-    new TableView[Ranking](b) {
+    new TableView[Report](b) {
       maxWidth = 400
       maxHeight = 350
       columns ++= Seq(playerNameColumn, playerPointsColumn, adversaryPointsColumn)
@@ -172,31 +123,32 @@ class ReportScene extends Scene:
 
   private val rankingScreen = getLoadingScreen
 
-  computeRanking.onComplete {
-    case Success(result) =>
-      // creazione delle tabelle con i dati delle statistiche
-      val currentMatchRankingTable = rankingTable(result._3)
-      val completedMatchesRankingTable = rankingTable(result._4)
-      val updatedRankingScene = new VBox(5) {
-        alignment = Pos.Center
-        children = List(
-          getTextWithSize(
-            s"Ciao ${UserController.loggedUsers.map(_.head.username).getOrElse("")}, fino ad ora hai vinto ${result._1} partite e ne hai perse ${result._2}"
-          )(22),
-          getTextWithSize("Statistiche relative alla partita in corso")(18),
-          currentMatchRankingTable,
-          getTextWithSize("Statistiche relative alle partite concluse")(18),
-          completedMatchesRankingTable
-        )
-      }
-      Platform.runLater {
-        rankingScreen.children = updatedRankingScene
-      }
-    case Failure(_) =>
-      Platform.runLater {
-        rankingScreen.children = new Text("Errore durante il calcolo della classifica. Riprovare!")
-      }
-  }
+  ReportController.getUserReport
+    .onComplete {
+      case Success(result) =>
+        // Creazione delle tabelle con i dati delle statistiche
+        val currentMatchRankingTable = rankingTable(ObservableBuffer(result._3*))
+        val completedMatchesRankingTable = rankingTable(ObservableBuffer(result._4*))
+        val updatedRankingScene = new VBox(5) {
+          alignment = Pos.Center
+          children = List(
+            getTextWithSize(
+              s"Ciao ${UserController.loggedUsers.map(_.head.username).getOrElse("")}, fino ad ora hai vinto ${result._1} partite e ne hai perse ${result._2}"
+            )(22),
+            getTextWithSize("Statistiche relative alla partita in corso")(18),
+            currentMatchRankingTable,
+            getTextWithSize("Statistiche relative alle partite concluse")(18),
+            completedMatchesRankingTable
+          )
+        }
+        Platform.runLater {
+          rankingScreen.children = updatedRankingScene
+        }
+      case Failure(_) =>
+        Platform.runLater {
+          rankingScreen.children = new Text("Errore durante il calcolo della classifica. Riprovare!")
+        }
+    }
 
   root = new BorderPane {
     top = getSceneTitle("Statistiche giocatore")
