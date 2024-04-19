@@ -9,7 +9,7 @@ import org.scalatest.DoNotDiscover
 class RoundControllerTests extends AnyFlatSpec with should.Matchers:
 
   private val randomGame = games.last
-  private val allRoundOfAGame = rounds.filter(_.relatedGameID == randomGame.id)
+  private val allRoundOfAGame = rounds.filter(_.gameId == randomGame.id)
 
   "RoundController" should "be able to compute the points correctly" in {
     val computedScore = allRoundOfAGame

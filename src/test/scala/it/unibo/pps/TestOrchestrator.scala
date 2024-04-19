@@ -8,7 +8,6 @@ import org.slf4j.{Logger, LoggerFactory}
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, Future}
 
-@DoNotDiscover
 class TestOrchestrator extends Suite with BeforeAndAfterAll:
   val logger: Logger = LoggerFactory.getLogger(this.getClass)
 
