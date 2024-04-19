@@ -1,31 +1,49 @@
 package it.unibo.pps
 
 import it.unibo.pps.business.*
-import org.scalatest.{BeforeAndAfterAll, Suite}
+import it.unibo.pps.controller.{GameControllerTests, RoundControllerTests, UserControllerTests}
+import org.scalatest.{BeforeAndAfterAll, DoNotDiscover, Suite}
 import org.slf4j.{Logger, LoggerFactory}
 
-import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
+import scala.concurrent.{Await, Future}
 
+@DoNotDiscover
 class TestOrchestrator extends Suite with BeforeAndAfterAll:
   val logger: Logger = LoggerFactory.getLogger(this.getClass)
+
+  private val businessSuites = IndexedSeq(
+    new UserRepositoryTests,
+    new GameRepositoryTests,
+    new QuestionRepositoryTests,
+    new RoundRepositoryTests
+  )
+
+  private val controllerSuites = IndexedSeq(
+    new UserControllerTests,
+    new GameControllerTests,
+    new RoundControllerTests
+    /*, new QuestionControllerTests */
+  )
 
   override def beforeAll(): Unit =
     logger.info("ACTIVATING TEST MODE FOR THE DATABASE...")
     ConnectionMongoDB.activateDBTestMode()
     logger.info("CONNECTING TO THE TEST DATABASE...")
-    Await.result(ConnectionMongoDB.initiateDatabaseConnection(), 5.seconds)
+    wait(ConnectionMongoDB.initiateDatabaseConnection())
     logger.info("CLEANING UP THE DATABASE...")
-    Await.result(TestDataInitializer.cleanData(), 5.seconds)
+    wait(TestDataInitializer.cleanData)
     logger.info("INITIALIZING DATA FOR TESTS...")
-    Await.result(TestDataInitializer.initData, 5.seconds)
+    wait(TestDataInitializer.initData)
 
   override def nestedSuites: IndexedSeq[Suite] =
     logger.info("EXECUTING ALL TESTS...")
-    IndexedSeq(new UserRepositoryTests, new GameRepositoryTests, new RoundRepositoryTests, new QuestionRepositoryTests)
+    businessSuites ++ controllerSuites
 
   override def afterAll(): Unit =
     logger.info("CLOSING THE CONNECTION TO THE DATABASE...")
-    Await.result(ConnectionMongoDB.closeConnection(), 5.seconds)
+    wait(ConnectionMongoDB.closeConnection())
+
+  private def wait[T](f: => Future[T]): Unit = Await.result(f, 5.seconds)
 
 end TestOrchestrator

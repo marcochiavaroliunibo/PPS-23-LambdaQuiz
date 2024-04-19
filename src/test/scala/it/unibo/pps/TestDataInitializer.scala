@@ -6,7 +6,7 @@ import it.unibo.pps.model.*
 import it.unibo.pps.model.Category.Storia
 import reactivemongo.api.bson.BSONDocument
 
-import java.time.{LocalDateTime, Month}
+import java.time.LocalDateTime
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.Random
@@ -45,7 +45,7 @@ object TestDataInitializer:
     games.flatMap { game =>
       (1 to 3).map { i =>
         val scoreList = game.players.zipWithIndex.map { case (user, index) =>
-          Score(user, Random.between(0, 3))
+          Score(user, index + 1)
         }
         Round(game.id, scoreList, i)
       }
@@ -59,20 +59,22 @@ object TestDataInitializer:
     val minute = Random.between(0, 59)
     LocalDateTime.of(year, month, day, hour, minute)
 
+  private val WAITING_MILLIS = 120
+
   def initData: Future[Unit] =
     Future
       .sequence(players.map(userRepository.create))
       .flatMap(_ => Future.sequence(games.map(gameRepository.create)))
       .flatMap(_ => Future.sequence(rounds.map(roundRepository.create)))
+      .andThen(_ => Thread.sleep(WAITING_MILLIS)) // Wait a little bit in order to finalise database operations
       .map(_ => {})
 
-  def cleanData(): Future[Unit] =
+  def cleanData: Future[Unit] =
     val selectAll = BSONDocument()
-    userRepository
-      .delete(selectAll)
-      .andThen(_ => gameRepository.delete(selectAll))
-      .andThen(_ => roundRepository.delete(selectAll))
-//    .andThen(_ => questionRepository.delete(selectAll))
-      .andThen(_ => Thread.sleep(10))
+    execAndWait(userRepository.delete(selectAll))
+      .andThen(_ => execAndWait(gameRepository.delete(selectAll)))
+      .andThen(_ => execAndWait(roundRepository.delete(selectAll)))
+  
+  def execAndWait(future: Future[Unit]): Future[Unit] = future.andThen(_ => Thread.sleep(10))
 
 end TestDataInitializer
