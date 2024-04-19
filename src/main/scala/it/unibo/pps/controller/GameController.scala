@@ -97,9 +97,9 @@ object GameController:
     * @return
     *   lista delle partite vinte dall'utente specificato
     */
-  def getGameWonByUser(user: User): List[Game] =
+  def getGameWonByUser(user: User): Int =
     val games: List[Game] = getLastGameCompletedByUser(user, -1).getOrElse(List.empty)
-    games.filter(game => {
+    games.count(game => {
       RoundController.computePartialPointsOfUser(user, game) > RoundController.computePartialPointsOfUser(
         game.players.filter(u => u.username != user.username).head,
         game
@@ -112,9 +112,9 @@ object GameController:
     * @return
     *   lista delle partite perse dall'utente specificato
     */
-  def getGameLostByUser(user: User): List[Game] =
+  def getGameLostByUser(user: User): Int =
     val games: List[Game] = getLastGameCompletedByUser(user, -1).getOrElse(List.empty)
-    games.filter(game => {
+    games.count(game => {
       RoundController.computePartialPointsOfUser(user, game) < RoundController.computePartialPointsOfUser(
         game.players.filter(u => u.username != user.username).head,
         game
@@ -128,11 +128,11 @@ object GameController:
     *   posizione in classifica dell'utente specificato
     */
   def getUserRanking(user: User): Int =
-    val myPoint = getGameWonByUser(user).length
+    val myPoint = getGameWonByUser(user)
     val otherUsers: List[User] = Await
       .result(userRepository.readMany(BSONDocument("_id" -> BSONDocument("$ne" -> user.id))), 5.seconds)
       .getOrElse(List())
-    otherUsers.count(u => getGameWonByUser(u).length > myPoint) + 1
+    otherUsers.count(u => getGameWonByUser(u) > myPoint) + 1
 
   /** Metodo per ottenere la classifica globale degli utenti per il numero di partite vinte.
     * @param rankingLength
@@ -146,7 +146,7 @@ object GameController:
       .readMany(BSONDocument())
       .flatMap(allUsers =>
         Future {
-          allUsers.getOrElse(List.empty).sortBy(getGameWonByUser(_).length).reverse.take(rankingLength)
+          allUsers.getOrElse(List.empty).sortBy(getGameWonByUser).reverse.take(rankingLength)
         }
       )
 
