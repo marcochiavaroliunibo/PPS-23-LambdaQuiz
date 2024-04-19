@@ -183,15 +183,18 @@ object UIUtils:
       alignmentInParent = Pos.Center
     }
 
+  private val FIELD_MINIMUM_LENGTH = 5
+
   /** verifica che i campi in input siano conformi. In particolare, verifica che non ci siano campi vuoti e che abbiano
     * una lunghezza maggiore o uguale di 6 caratteri .
+ *
     * @param textFields
     *   i [[TextField]] contenenti i campi da verificare
     * @return
     *   [[true]] se i campi sono conformi, [[false]] altrimenti
     */
   private def fieldsAreCompliant(textFields: Seq[TextField]): Boolean =
-    textFields.map(_.getText).forall(s => s.nonEmpty && s.length >= 6)
+    textFields.map(_.getText).forall(s => s.nonEmpty && s.length >= FIELD_MINIMUM_LENGTH)
 
   /** Verifica che i campi in input no siano uguali.
     * @param textFields
