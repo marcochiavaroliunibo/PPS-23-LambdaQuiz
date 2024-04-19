@@ -20,7 +20,7 @@ class RoundRepository extends Repository[Round]:
         * @return una lista di round appartenenti al gioco specificato
         */
   def getAllRoundsByGame(game: Game): Future[Option[List[Round]]] =
-    val query = BSONDocument("relatedGameID" -> game.id)
+    val query = BSONDocument("gameId" -> game.id)
     val sort = BSONDocument("numberRound" -> 1)
     readMany(query, sort)
 

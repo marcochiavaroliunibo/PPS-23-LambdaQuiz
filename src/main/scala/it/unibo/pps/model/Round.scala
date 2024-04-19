@@ -6,7 +6,7 @@ import java.util.UUID
 import scala.util.Try
 
 /** Rappresenta il round di una partita.
-  * @param relatedGameID
+  * @param gameId
   *   identificativo della partita a cui il round è associato
   * @param scores
   *   lista dei punteggi dei giocatori
@@ -15,7 +15,7 @@ import scala.util.Try
   * @param id
   *   identificativo del round
   */
-case class Round(relatedGameID: String, scores: List[Score], numberRound: Int, id: String) {
+case class Round(gameId: String, scores: List[Score], numberRound: Int, id: String) {
 
   /** set punteggio di un player -1: non ha mai giocato il round 0: ha giocato il round ma non ha mai indovinato la
     * risposta 1+ ha giocato il round e indovinato 1+ risposte:
@@ -44,8 +44,8 @@ case class Round(relatedGameID: String, scores: List[Score], numberRound: Int, i
   * Abilita la conversione da e verso BSONDocument in maniera trasparente, sfruttando il meccanismo degli impliciti.
   */
 object Round {
-  def apply(relatedGameID: String, scores: List[Score], numberRound: Int, id: Option[String] = None): Round =
-    Round(relatedGameID, scores, numberRound, id.getOrElse(UUID.randomUUID().toString))
+  def apply(gameId: String, scores: List[Score], numberRound: Int, id: Option[String] = None): Round =
+    Round(gameId, scores, numberRound, id.getOrElse(UUID.randomUUID().toString))
 
   implicit object RoundReader extends BSONDocumentReader[Round]:
     /** Converte un documento BSON in un oggetto di tipo [[Round]].
@@ -57,7 +57,7 @@ object Round {
     def readDocument(doc: BSONDocument): Try[Round] =
       for
         id <- doc.getAsTry[String]("_id")
-        gameID <- doc.getAsTry[String]("relatedGameID")
+        gameID <- doc.getAsTry[String]("gameId")
         scores <- doc.getAsTry[List[Score]]("scores")
         numberRound <- doc.getAsTry[Int]("numberRound")
       yield Round(gameID, scores, numberRound, id)
@@ -73,12 +73,12 @@ object Round {
     override def writeTry(round: Round): Try[BSONDocument] =
       for
         id <- Try(round.id)
-        gameID <- Try(round.relatedGameID)
+        gameID <- Try(round.gameId)
         scores <- Try(round.scores)
         numberRound <- Try(round.numberRound)
       yield BSONDocument(
         "_id" -> id,
-        "relatedGameID" -> gameID,
+        "gameId" -> gameID,
         "scores" -> scores,
         "numberRound" -> numberRound
       )
