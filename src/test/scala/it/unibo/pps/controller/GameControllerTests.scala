@@ -1,48 +1,41 @@
 package it.unibo.pps.controller
 
-import it.unibo.pps.business.{GameRepository, UserRepository}
-import it.unibo.pps.model.Category.{Geografia, Scienze, Storia}
+import it.unibo.pps.TestDataInitializer.{games, players, rounds}
 import it.unibo.pps.model.{Game, User}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.*
+import org.scalatest.DoNotDiscover
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import java.time.LocalDateTime
-
+@DoNotDiscover
 class GameControllerTests extends AnyFlatSpec with should.Matchers:
 
-  private val user1 = new User("user1", "PASSWORDDD")
-  private val user2 = new User("user2", "PASSWORDDD")
-  private val game = new Game(List(user1, user2),
-    false, LocalDateTime.now(), List(Storia, Geografia, Scienze))
-  
-  private val gameRepository = new GameRepository
-  private val userRepository = new UserRepository
-
-  "GameController" should "be able to create a new game" in {
-    userRepository.create(user1)
-    userRepository.create(user2)
-    UserController.authenticateUsers(List(user1, user2))
-    GameController.createNewGame()
-    gameRepository.readById(game.getID)
-      .map(_.exists(_.getID == game.getID) should be(true))
-  }
-
   "GameController" should "be able to read games of a user" in {
-    val games = GameController.getCurrentGamesFromSinglePlayer(user1)
-    games.isDefined && games.exists(_.nonEmpty) should be(true)
+    val games = GameController.getCurrentGamesFromSinglePlayer(players.head)
+    games.exists(_.nonEmpty) should be(true)
   }
 
-  "GameController" should "be able to read a current game" in {
-    val game = GameController.getCurrentGameFromPlayers(List(user1, user2))
-    game.isDefined should be(true)
+  it should "be able to read the current game" in {
+    val currentGame = GameController.getCurrentGameFromPlayers(players)
+    currentGame.exists(_.id == games.filterNot(_.completed).head.id) should be(true)
   }
-  
-  "GameController" should "be able to calculate ranking position" in {
-    val position1 = GameController.getUserRanking(user1)
-    val position2 = GameController.getUserRanking(user2)
-    position1 == position2 should be(true)
+
+  it should "be able to calculate ranking positions" in {
+    val user = players.head
+    val otherUser = players.filterNot(_ == user).head
+    val computePointsOfUser: User => Game => Int = u => g => rounds.filter(_.relatedGameID == g.id).flatMap(_.scores).filter(_.user == u).map(_.score).sum
+    
+    val allCompletedGames = games.filter(_.completed)
+    val wonGamesByUser = allCompletedGames.count(g => computePointsOfUser(user)(g) > computePointsOfUser(otherUser)(g))
+    val wonGamesByOtherUser = allCompletedGames.count(g => computePointsOfUser(user)(g) < computePointsOfUser(otherUser)(g))
+
+    val computedUserRanking = List(otherUser).count(_ => wonGamesByOtherUser > wonGamesByUser) + 1
+    val computedOtherUserRanking = List(user).count(_ => wonGamesByUser > wonGamesByOtherUser) + 1
+    val userRanking = GameController.getUserRanking(user)
+    val otherUserRanking = GameController.getUserRanking(otherUser)
+    
+    // Per come sono stati generati i dati, tutte le partite sono state vinte da otherUser.
+    // Quindi, la sua posizione in classifica sarà migliore.
+    (userRanking == computedUserRanking && otherUserRanking == computedOtherUserRanking) should be(true)
   }
-  
 
 end GameControllerTests
