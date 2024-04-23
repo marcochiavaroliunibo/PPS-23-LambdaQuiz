@@ -56,11 +56,6 @@ object QuestionController:
     })
   }
 
-  /** crea una domanda */
-  // TODO: da cancellare
-  def createQuestion(question: Question): Unit =
-    questionRepository.create(question)
-
   /** Metodo per gestire la progressione dei round.
     *
     * Innanzitutto ottiene l'ultimo relativo al gioco in corso. Se esso non è presente, significa che la partita è
@@ -75,7 +70,7 @@ object QuestionController:
     GameController.getLastRoundByGame
       .map { round =>
         if round.scores.count(_.score == -1) > 0 then
-          // Siamo nel mezzo di un round - deve giocare user2
+          // Gestione del round corrente
           RoundController.round = round
           round.scores
             .find(_.score == -1)
@@ -85,11 +80,11 @@ object QuestionController:
               round
             })
         else
-          // Devo creare il round successivo - inizia a giocare firstPlayer
+          // Creazione del round successivo
           game.map(g => initializeNewRound(g.id, g.players.head, round.numberRound + 1))
       }
       .getOrElse {
-        // Devo creare il primo round - inizia a giocare firstPlayer
+        // Creazione del primo round del gioco
         game.map(g => initializeNewRound(g.id, g.players.head))
       }
   }
