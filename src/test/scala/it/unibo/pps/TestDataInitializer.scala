@@ -7,12 +7,12 @@ import it.unibo.pps.model.Category.{Geografia, Storia}
 import reactivemongo.api.bson.BSONDocument
 
 import java.time.LocalDateTime
+import java.util.concurrent.Executors.newSingleThreadExecutor
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Random
 
 object TestDataInitializer:
-  given ExecutionContext =
-    scala.concurrent.ExecutionContext.fromExecutor(java.util.concurrent.Executors.newSingleThreadExecutor())
+
   val gameRepository = new GameRepository
   val userRepository = new UserRepository
   val roundRepository = new RoundRepository
@@ -60,6 +60,7 @@ object TestDataInitializer:
       .map(i => Question("text", (1 to 4).map(i => s"answer $i").toList, 1, if i % 2 == 0 then Storia else Geografia))
       .toList
 
+  given ExecutionContext = ExecutionContext.fromExecutor(newSingleThreadExecutor())
   def initData: Future[Unit] =
     Future
       .sequence(players.map(userRepository.create))

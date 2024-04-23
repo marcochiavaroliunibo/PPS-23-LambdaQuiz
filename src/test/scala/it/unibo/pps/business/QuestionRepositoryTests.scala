@@ -1,10 +1,10 @@
 package it.unibo.pps.business
 
-import it.unibo.pps.TestDataInitializer.{questions, questionRepository}
+import it.unibo.pps.TestDataInitializer.{questionRepository, questions}
 import it.unibo.pps.model.Category.{Geografia, Storia}
+import org.scalatest.DoNotDiscover
 import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.*
-import org.scalatest.DoNotDiscover
 
 @DoNotDiscover
 class QuestionRepositoryTests extends AsyncFlatSpec with should.Matchers:
@@ -22,7 +22,5 @@ class QuestionRepositoryTests extends AsyncFlatSpec with should.Matchers:
       .getQuestionsByCategory(Storia)
       .map(_.map(_ should contain(historyQuestion)).getOrElse(fail("No questions found")))
   }
-
-
 
 end QuestionRepositoryTests

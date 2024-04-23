@@ -18,7 +18,8 @@ class RoundRepositoryTests extends AsyncFlatSpec with should.Matchers:
   }
 
   "Rounds of a game" should "be read from the database by the belonging game" in {
-    roundRepository.getAllRoundsByGame(game)
+    roundRepository
+      .getAllRoundsByGame(game)
       .map(
         _.map(_ should contain theSameElementsAs allRounds)
           .getOrElse(fail("No rounds found"))

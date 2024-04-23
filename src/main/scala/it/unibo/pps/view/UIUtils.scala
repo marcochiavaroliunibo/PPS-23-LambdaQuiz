@@ -187,7 +187,7 @@ object UIUtils:
 
   /** verifica che i campi in input siano conformi. In particolare, verifica che non ci siano campi vuoti e che abbiano
     * una lunghezza maggiore o uguale di 6 caratteri .
- *
+    *
     * @param textFields
     *   i [[TextField]] contenenti i campi da verificare
     * @return

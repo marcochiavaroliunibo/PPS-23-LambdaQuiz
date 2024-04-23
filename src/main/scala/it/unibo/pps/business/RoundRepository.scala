@@ -14,11 +14,13 @@ import scala.concurrent.Future
 class RoundRepository extends Repository[Round]:
   protected val collection: Future[BSONCollection] = ConnectionMongoDB.getDatabase().map(_.collection("rounds"))
 
-    /** Metodo che restituisce tutti i round appartenenti ad un determinato gioco.
-        *
-        * @param game il gioco di cui si vogliono recuperare i round
-        * @return una lista di round appartenenti al gioco specificato
-        */
+  /** Metodo che restituisce tutti i round appartenenti ad un determinato gioco.
+    *
+    * @param game
+    *   il gioco di cui si vogliono recuperare i round
+    * @return
+    *   una lista di round appartenenti al gioco specificato
+    */
   def getAllRoundsByGame(game: Game): Future[Option[List[Round]]] =
     val query = BSONDocument("gameId" -> game.id)
     val sort = BSONDocument("numberRound" -> 1)
