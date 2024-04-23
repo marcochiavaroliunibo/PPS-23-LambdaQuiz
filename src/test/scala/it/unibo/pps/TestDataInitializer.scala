@@ -3,15 +3,16 @@ package it.unibo.pps
 import it.unibo.pps.business.{GameRepository, QuestionRepository, RoundRepository, UserRepository}
 import it.unibo.pps.controller.CategoryController
 import it.unibo.pps.model.*
-import it.unibo.pps.model.Category.Storia
+import it.unibo.pps.model.Category.{Geografia, Storia}
 import reactivemongo.api.bson.BSONDocument
 
 import java.time.LocalDateTime
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Random
 
 object TestDataInitializer:
+  given ExecutionContext =
+    scala.concurrent.ExecutionContext.fromExecutor(java.util.concurrent.Executors.newSingleThreadExecutor())
   val gameRepository = new GameRepository
   val userRepository = new UserRepository
   val roundRepository = new RoundRepository
@@ -21,12 +22,7 @@ object TestDataInitializer:
   val players: List[User] = (1 to 2).map(i => User(s"User$i", s"passwd${i + 1}")).toList
   val games: List[Game] = generateGames
   val rounds: List[Round] = generateRounds
-  val question: Question = Question(
-    "Chi è stato il primo presidente degli Stati Uniti?",
-    List("Thomas Jefferson", "Abraham Lincoln", "John Adams", "George Washington"),
-    3,
-    Storia
-  )
+  val questions: List[Question] = generateQuestions
 
   private def generateGames: List[Game] =
     val currentGame: Game = Game(
@@ -59,22 +55,25 @@ object TestDataInitializer:
     val minute = Random.between(0, 59)
     LocalDateTime.of(year, month, day, hour, minute)
 
-  private val WAITING_MILLIS = 120
+  private def generateQuestions: List[Question] =
+    (1 to 6)
+      .map(i => Question("text", (1 to 4).map(i => s"answer $i").toList, 1, if i % 2 == 0 then Storia else Geografia))
+      .toList
 
   def initData: Future[Unit] =
     Future
       .sequence(players.map(userRepository.create))
       .flatMap(_ => Future.sequence(games.map(gameRepository.create)))
       .flatMap(_ => Future.sequence(rounds.map(roundRepository.create)))
-      .andThen(_ => Thread.sleep(WAITING_MILLIS)) // Wait a little bit in order to finalise database operations
+      .flatMap(_ => Future.sequence(questions.map(questionRepository.create)))
       .map(_ => {})
 
   def cleanData: Future[Unit] =
     val selectAll = BSONDocument()
-    execAndWait(userRepository.delete(selectAll))
-      .andThen(_ => execAndWait(gameRepository.delete(selectAll)))
-      .andThen(_ => execAndWait(roundRepository.delete(selectAll)))
-  
-  def execAndWait(future: Future[Unit]): Future[Unit] = future.andThen(_ => Thread.sleep(10))
+    userRepository
+      .delete(selectAll)
+      .andThen(_ => gameRepository.delete(selectAll))
+      .andThen(_ => roundRepository.delete(selectAll))
+      .andThen(_ => questionRepository.delete(selectAll))
 
 end TestDataInitializer
