@@ -12,7 +12,7 @@ import scala.util.Random
 @DoNotDiscover
 class GameRepositoryTests extends AsyncFlatSpec with should.Matchers with ScalaFutures:
 
-  val game: Game = games.filter(_.completed)(Random.between(0, games.size - 1))
+  val game: Game = games.filter(_.completed).head
 
   "A game" should "be read from the database" in {
     gameRepository.readById(game.id)

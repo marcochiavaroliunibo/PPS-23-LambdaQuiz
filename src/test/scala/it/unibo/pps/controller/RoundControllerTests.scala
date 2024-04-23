@@ -11,13 +11,15 @@ class RoundControllerTests extends AnyFlatSpec with should.Matchers:
   private val randomGame = games.last
   private val allRoundOfAGame = rounds.filter(_.gameId == randomGame.id)
 
-  "RoundController" should "be able to compute the points correctly" in {
+  private val statsOfUser = randomGame.players.last
+  
+  "RoundController" should "be able to compute points correctly" in {
     val computedScore = allRoundOfAGame
       .flatMap(_.scores)
-      .filter(_.user == randomGame.players.last)
+      .filter(_.user == statsOfUser)
       .map(_.score)
       .sum
-    RoundController.computePartialPointsOfUser(randomGame.players.last, randomGame) should be(computedScore)
+    RoundController.computePartialPointsOfUser(statsOfUser, randomGame) should be(computedScore)
   }
 
 end RoundControllerTests

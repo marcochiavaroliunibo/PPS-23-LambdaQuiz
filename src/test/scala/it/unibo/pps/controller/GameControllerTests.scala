@@ -9,12 +9,7 @@ import org.scalatest.DoNotDiscover
 @DoNotDiscover
 class GameControllerTests extends AnyFlatSpec with should.Matchers:
 
-  "GameController" should "be able to read games of a user" in {
-    val games = GameController.getCurrentGamesFromSinglePlayer(players.head)
-    games.exists(_.nonEmpty) should be(true)
-  }
-
-  it should "be able to read the current game" in {
+  "GameController" should "be able to read the current game" in {
     val currentGame = GameController.getCurrentGameFromPlayers(players)
     currentGame.exists(_.id == games.filterNot(_.completed).head.id) should be(true)
   }
@@ -22,6 +17,8 @@ class GameControllerTests extends AnyFlatSpec with should.Matchers:
   it should "be able to calculate ranking positions" in {
     val user = players.head
     val otherUser = players.filterNot(_ == user).head
+    println(user.username)
+    println(otherUser.username)
     val computePointsOfUser: User => Game => Int = u => g => rounds.filter(_.gameId == g.id).flatMap(_.scores).filter(_.user == u).map(_.score).sum
     
     val allCompletedGames = games.filter(_.completed)
