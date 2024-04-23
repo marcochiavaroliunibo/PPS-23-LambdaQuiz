@@ -2,7 +2,7 @@ package it.unibo.pps
 
 import it.unibo.pps.business.*
 import it.unibo.pps.controller.{GameControllerTests, RoundControllerTests, UserControllerTests}
-import org.scalatest.{BeforeAndAfterAll, DoNotDiscover, Suite}
+import org.scalatest.{BeforeAndAfterAll, Suite}
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.concurrent.duration.DurationInt
@@ -22,7 +22,6 @@ class TestOrchestrator extends Suite with BeforeAndAfterAll:
     new UserControllerTests,
     new GameControllerTests,
     new RoundControllerTests
-    /*, new QuestionControllerTests */
   )
 
   override def beforeAll(): Unit =
