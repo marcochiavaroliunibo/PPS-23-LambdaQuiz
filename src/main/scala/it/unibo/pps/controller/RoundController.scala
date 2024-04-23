@@ -24,10 +24,11 @@ object RoundController:
   def createRound(round: Round): Unit = roundRepository.create(round)
 
   /** Metodo invocato dalla View ogni volta che l'utente gioca un round, ovvero risponde a una domanda.
-   * 
-   * In primo luogo, viene controllato se la risposta data dall'utente è corretta o meno, aggiornando il punteggio di conseguenza.
-   * Poi, se non ci sono più domande per il round corrente, viene verificato se la partita è terminata e vengono resettate le variabili di stato relative al round.
-   * 
+    *
+    * In primo luogo, viene controllato se la risposta data dall'utente è corretta o meno, aggiornando il punteggio di
+    * conseguenza. Poi, se non ci sono più domande per il round corrente, viene verificato se la partita è terminata e
+    * vengono resettate le variabili di stato relative al round.
+    *
     * @param answerIndex
     *   l'indice della risposta scelta dall'utente
     * @return

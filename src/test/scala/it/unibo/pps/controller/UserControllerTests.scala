@@ -1,10 +1,10 @@
 package it.unibo.pps.controller
 
+import it.unibo.pps.TestDataInitializer.players
 import it.unibo.pps.model.User
+import org.scalatest.DoNotDiscover
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.*
-import org.scalatest.DoNotDiscover
-import it.unibo.pps.TestDataInitializer.players
 
 @DoNotDiscover
 class UserControllerTests extends AnyFlatSpec with should.Matchers:
