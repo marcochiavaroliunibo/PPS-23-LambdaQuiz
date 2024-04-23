@@ -27,7 +27,9 @@ trait Repository[T]:
     */
   def create(t: T)(implicit writer: BSONDocumentWriter[T]): Future[Unit] =
     this.collection
-      .map(_.insert.one(t))
+      .flatMap(_.insert.one(t))
+      .recover { case f: Throwable => f.printStackTrace() }
+      .map(_ => ())
 
   /** Metodo che permette di aggiornare un oggetto di tipo [[T]] nel database.
     * @param t
@@ -41,7 +43,7 @@ trait Repository[T]:
     */
   def update(t: T, id: String)(implicit writer: BSONDocumentWriter[T]): Future[Unit] =
     this.collection
-      .map(
+      .flatMap(
         _.findAndUpdate(
           BSONDocument(
             "_id" -> id
@@ -49,6 +51,8 @@ trait Repository[T]:
           t
         )
       )
+      .recover { case f: Throwable => f.printStackTrace() }
+      .map(_ => ())
 
   /** Metodo che permette di leggere un singolo oggetto di tipo [[T]] dal database.
     * @param query
@@ -116,6 +120,8 @@ trait Repository[T]:
     */
   def delete(selector: BSONDocument): Future[Unit] =
     this.collection
-      .map(_.delete.one(selector))
+      .flatMap(_.delete.one(selector))
+      .recover { case f: Throwable => f.printStackTrace() }
+      .map(_ => ())
 
 end Repository
