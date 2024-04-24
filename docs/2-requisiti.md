@@ -55,7 +55,7 @@ I requisiti funzionali sono quelli che descrivono le funzionalità del sistema d
 
 ## Requisiti di implementazione
 - **Linguaggio di programmazione**: Il sistema deve essere sviluppato interamente in Scala 3;
-- **Interfaccia grafica**: Il sistema deve utilizzare JavaFX 21 per la creazione dell'interfaccia grafica;
+- **Interfaccia grafica**: Il sistema deve utilizzare ScalaFX 21 per la creazione dell'interfaccia grafica;
 - **Persistenza dei dati**: Il sistema deve utilizzare un database MongoDB per la memorizzazione dei dati degli utenti e delle partite giocate;
 - **Gestione delle dipendenze**: Il sistema deve utilizzare SBT come strumento di build automation e gestione delle dipendenze;
 - **Testing**: Il sistema deve essere testato mediante l'utilizzo di test di unità e di integrazione con ScalaTest;
