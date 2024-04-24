@@ -17,8 +17,6 @@ class GameControllerTests extends AnyFlatSpec with should.Matchers:
   it should "be able to calculate ranking positions" in {
     val user = players.head
     val otherUser = players.filterNot(_ == user).head
-    println(user.username)
-    println(otherUser.username)
     val computePointsOfUser: User => Game => Int =
       u => g => rounds.filter(_.gameId == g.id).flatMap(_.scores).filter(_.user == u).map(_.score).sum
 

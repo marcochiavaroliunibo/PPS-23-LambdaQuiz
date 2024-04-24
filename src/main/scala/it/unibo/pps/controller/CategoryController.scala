@@ -9,16 +9,16 @@ import scala.util.Random
 object CategoryController:
 
   /** Metodo che restituisce una lista di categorie casuali senza ripetizioni.
-    * @param roundForGame
+    * @param nCategories
     *   numero di categorie da estrarre. Equivale al numero di round giocati per ogni partita
     * @return
     *   lista delle categorie estreatte
     */
-  def getRandomCategories(roundForGame: Int): List[Category] =
+  def getRandomCategories(nCategories: Int): List[Category] =
     Iterator
       .continually(Random.nextInt(Category.values.length))
       .distinct
-      .take(roundForGame)
+      .take(nCategories)
       .map(Category.values)
       .toList
 
