@@ -1,6 +1,6 @@
 package it.unibo.pps
 
-import it.unibo.pps.business.{GameRepository, QuestionRepository, RoundRepository, UserRepository}
+import it.unibo.pps.business.{ConnectionMongoDB, GameRepository, QuestionRepository, RoundRepository, UserRepository}
 import it.unibo.pps.controller.CategoryController
 import it.unibo.pps.model.*
 import it.unibo.pps.model.Category.{Geografia, Storia}
@@ -13,6 +13,9 @@ import scala.util.Random
 
 object TestDataInitializer:
 
+  // Attivazione del database di test
+  ConnectionMongoDB.activateDBTestMode()
+  
   val gameRepository = new GameRepository
   val userRepository = new UserRepository
   val roundRepository = new RoundRepository
