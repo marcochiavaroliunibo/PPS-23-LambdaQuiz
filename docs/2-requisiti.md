@@ -27,12 +27,12 @@ I requisiti funzionali sono quelli che descrivono le funzionalità del sistema d
 - Gli utenti devono poter interagire con il gioco mediante un'interfaccia grafica;
 - Gli utenti devono poter avviare il gioco con pochi clic, senza dover affrontare procedure complesse di accesso o registrazione;
 - Gli utenti devono poter giocare contro un amico sulla stessa piattaforma, utilizzando la modalità "hot seat";
-- Gli utenti devono poter creare un nuovo account, che consentirà loro di giocare e visualizzare le proprie statistiche;
+- Gli utenti devono poter creare un nuovo account in maniera semplice, fornendo un nome utente e una password;
 - Gli utenti devono poter effettuare il login al sistema, che deve fallire se le credenziali inserite non sono corrette;
 - Nella dashboard, gli utenti devono poter visualizzare una panoramica dell'eventuale partita in corso, che comprende l'esito dei round precedenti e il punteggio attuale dei giocatori;
 - Gli utenti devono poter rispondere alle domande proposte durante una partita, scegliendo tra le quattro opzioni di risposta;
 - Gli utenti devono poter interrompere temporaneamente il gioco e riprenderlo in un secondo momento dallo stesso punto in cui lo hanno lasciato;
-- Ogni utente deve poter visualizzare una statistica personale e la classifica globale degli utenti.
+- Ogni utente deve poter visualizzare una statistica personale e la classifica globale dei giocatori con più partite vinte.
 
 ### Requisiti di sistema
 - Il sistema deve offrire un processo di registrazione semplice e veloce per permettere ai giocatori di iniziare a giocare rapidamente;
