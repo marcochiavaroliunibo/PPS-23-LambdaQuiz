@@ -63,4 +63,4 @@ I requisiti funzionali sono quelli che descrivono le funzionalità del sistema d
 - **Documentazione**: Il codice sorgente deve essere adeguatamente documentato, seguendo le linee guida di Scaladoc;
 - **Continuous Integration**: Il sistema deve essere integrato con un servizio di Continuous Integration (CI) per garantire l'esecuzione della build e dei test ad ogni modifica caricata sul repository.
 
-[Indietro](README.md) | [Torna alla Home](README.md) | [Avanti](3-design_architetturale.md)
+[Indietro](index.md) | [Torna alla Home](index.md) | [Avanti](3-design_architetturale.md)
