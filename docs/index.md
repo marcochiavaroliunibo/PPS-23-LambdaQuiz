@@ -1,4 +1,3 @@
-# PPS-23: LambdaQuiz
 ## Indice:
 1. [Descrizione del sistema](0-descrizione_sistema.md)
 2. [Processo di sviluppo](1-processo_di_sviluppo.md)

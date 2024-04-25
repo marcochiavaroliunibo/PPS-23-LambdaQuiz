@@ -1,4 +1,4 @@
-# Requisiti
+# Descrizione del sistema
 Il sistema è un'applicazione sviluppata in Scala che simula un gioco di quiz multiplayer.
 L'applicativo consente a due concorrenti di sfidarsi in una serie di round, ciascuno composto da tre domande, selezionate casualmente da una gamma di categorie. L'obiettivo principale del gioco è accumulare il maggior numero possibile di punti, ottenendo risposte corrette alle domande proposte.
 
