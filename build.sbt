@@ -1,28 +1,31 @@
 val scala3Version = "3.4.0"
 
-// Determine OS version for JavaFX binaries
+// Rilevamento del sistema operativo
 lazy val osName = System.getProperty("os.name") match {
-  case n if n.startsWith("Linux")   => "linux"
-  case n if n.startsWith("Mac")     => "mac"
+  case n if n.startsWith("Linux") => "linux"
+  case n if n.startsWith("Mac") => "mac"
   case n if n.startsWith("Windows") => "win"
-  case _                            => throw new Exception("Unknown platform!")
+  case _ => throw new Exception("Unknown platform!")
 }
 
 val javaFXVersion = "21.0.2"
+// Lista delle dipendenze di JavaFX
 val javafxBinaries = {
   Seq("base", "controls", "fxml", "graphics", "media", "swing", "web")
     .map(m => "org.openjfx" % s"javafx-$m" % javaFXVersion classifier osName)
 }
 
 import scala.sys.process.*
+// Rilevamento dell'architettura del sistema
 val architecture = "uname -m".!!.trim match {
   case "arm64" => "aarch"
-  case _       => "x86"
+  case _ => "x86"
 }
 val reactiveMongoNativePartial: String => String = os => s"1.1.0-RC6-$os-$architecture-64"
+// Versione di ReactiveMongo per il sistema operativo corrente
 val reactiveMongoNativeVersion = osName match {
   case "linux" => reactiveMongoNativePartial(osName)
-  case "mac"   => reactiveMongoNativePartial("osx")
+  case "mac" => reactiveMongoNativePartial("osx")
 }
 
 lazy val root = project
@@ -31,9 +34,12 @@ lazy val root = project
     name := "PPS-23-LambdaQuiz",
     version := "0.1",
     scalaVersion := scala3Version,
+    // scalacOptions ++= Seq("-P:scoverage:excludedPackages:it\.unibo\.pps\.view\.*"),
+    // coverageExcludedPackages := "it\\.unibo\\.pps\\.view\\..*",
+    wartremoverErrors ++= Warts.unsafe,
     libraryDependencies ++= Seq(
       "org.scalafx" %% "scalafx" % "21.0.0-R32",
-      "ch.qos.logback" % "logback-classic" % "1.5.3",
+      "ch.qos.logback" % "logback-classic" % "1.5.6",
       "org.reactivemongo" %% "reactivemongo" % "1.1.0-RC12",
       "org.reactivemongo" % "reactivemongo-shaded-native" % reactiveMongoNativeVersion,
       "org.scalactic" %% "scalactic" % "3.2.18",
