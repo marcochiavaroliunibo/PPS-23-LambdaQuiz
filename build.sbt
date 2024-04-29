@@ -34,8 +34,6 @@ lazy val root = project
     name := "PPS-23-LambdaQuiz",
     version := "0.1",
     scalaVersion := scala3Version,
-    // scalacOptions ++= Seq("-P:scoverage:excludedPackages:it\.unibo\.pps\.view\.*"),
-    // coverageExcludedPackages := "it\\.unibo\\.pps\\.view\\..*",
     wartremoverErrors ++= Warts.unsafe,
     libraryDependencies ++= Seq(
       "org.scalafx" %% "scalafx" % "21.0.0-R32",
