@@ -76,7 +76,7 @@ private class CurrentGameStatus(currentGame: Option[Game]) extends HBox(10):
       )
     )
     .getOrElse(List(new Text("Non c'è alcuna partita in corso al momento!") {
-      style = "-fx-font: normal bold 22px sans-serif"
+      style = "-fx-font: normal normal 22px sans-serif"
       margin = Insets(10)
     }))
 end CurrentGameStatus

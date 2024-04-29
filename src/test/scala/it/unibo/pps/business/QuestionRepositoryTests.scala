@@ -9,6 +9,7 @@ import org.scalatest.matchers.*
 @DoNotDiscover
 class QuestionRepositoryTests extends AsyncFlatSpec with should.Matchers:
 
+  @SuppressWarnings(Array("org.wartremover.warts.IterableOps"))
   private val historyQuestion = questions.filter(_.category == Storia).head
 
   "QuestionRepository" should "be able to read all questions belonging to a category" in {

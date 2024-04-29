@@ -19,6 +19,7 @@ import scala.util.Try
   * @param id
   *   identificativo univoco della partita
   */
+@SuppressWarnings(Array("org.wartremover.warts.Var"))
 case class Game(
     players: List[User],
     var completed: Boolean,
@@ -32,6 +33,7 @@ case class Game(
   * Abilita la conversione da e verso BSONDocument in maniera trasparente, sfruttando il meccanismo degli impliciti.
   */
 object Game {
+  @SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))
   def apply(
     players: List[User],
     completed: Boolean,

@@ -14,6 +14,7 @@ import scalafx.scene.text.{Font, Text}
 
 /** Contiene una serie di metodi statici che supportano ed organizzano le procedure della View.
   */
+@SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))
 object UIUtils:
 
   /** Restituisce uno sfondo a partire da un [[Paint]], come ad esempio un colore
@@ -33,6 +34,7 @@ object UIUtils:
     * @param newScene
     *   schermata che si vuole visualizzare
     */
+  @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
   def changeScene(currentScene: Scene, newScene: => Scene): Unit =
     currentScene.window.value.asInstanceOf[Stage].scene = newScene
 
@@ -203,7 +205,7 @@ object UIUtils:
     *   [[true]] se i campi sono tutti diversi, [[false]] altrimenti
     */
   private def fieldsAreDistinct(textFields: Seq[TextField]): Boolean =
-    textFields.distinct.length == textFields.length
+    textFields.distinct.lengthIs == textFields.length
 
   /** Verifica che le password in input siano uguali.
     * @param passwordFields

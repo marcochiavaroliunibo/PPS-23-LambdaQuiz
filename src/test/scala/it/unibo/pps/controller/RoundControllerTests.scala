@@ -6,11 +6,11 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.*
 
 @DoNotDiscover
+@SuppressWarnings(Array("org.wartremover.warts.IterableOps"))
 class RoundControllerTests extends AnyFlatSpec with should.Matchers:
 
   private val randomGame = games.last
   private val allRoundOfAGame = rounds.filter(_.gameId == randomGame.id)
-
   private val statsOfUser = randomGame.players.last
 
   "RoundController" should "be able to compute points correctly" in {
@@ -19,7 +19,7 @@ class RoundControllerTests extends AnyFlatSpec with should.Matchers:
       .filter(_.user == statsOfUser)
       .map(_.score)
       .sum
-    RoundController.computePartialPointsOfUser(statsOfUser, randomGame) should be(computedScore)
+    RoundController.computePartialPointsOfUser(statsOfUser, Some(randomGame)) should be(computedScore)
   }
 
 end RoundControllerTests

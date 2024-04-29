@@ -10,6 +10,7 @@ import org.scalatest.matchers.*
 @DoNotDiscover
 class GameRepositoryTests extends AsyncFlatSpec with should.Matchers with ScalaFutures:
 
+  @SuppressWarnings(Array("org.wartremover.warts.IterableOps"))
   val game: Game = games.filter(_.completed).head
 
   "A game" should "be read from the database" in {

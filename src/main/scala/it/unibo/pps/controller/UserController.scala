@@ -12,6 +12,7 @@ object UserController:
   private val userRepository = new UserRepository
 
   /** listra di utenti autenticati */
+  @SuppressWarnings(Array("org.wartremover.warts.Var"))
   private var _loggedUsers: Option[List[User]] = None
 
   def loggedUsers: Option[List[User]] = _loggedUsers

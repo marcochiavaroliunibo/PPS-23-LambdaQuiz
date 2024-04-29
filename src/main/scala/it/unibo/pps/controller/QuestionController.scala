@@ -8,6 +8,7 @@ import scala.concurrent.duration.*
 import scala.util.Random
 
 /** Controller per la gestione delle domande */
+@SuppressWarnings(Array("org.wartremover.warts.Var", "org.wartremover.warts.DefaultArguments"))
 object QuestionController:
 
   private var _question: Option[Question] = None
@@ -23,11 +24,14 @@ object QuestionController:
     * @return
     *   domanda casuale appartenente alla categoria specificata
     */
-  private def getRandomQuestionByCategory(category: Category): Question =
-    Await
-      .result(questionRepository.getQuestionsByCategory(category), 5.seconds)
-      .map(questions => questions(Random.nextInt(questions.length)))
-      .head
+  private def getRandomQuestionByCategory(category: Category): Option[Question] =
+    try {
+      val a = Await.result(questionRepository.getQuestionsByCategory(category), 5.seconds)
+      a.map(questions => questions(Random.nextInt(questions.length)))
+    } catch {
+        case e: Exception => e.printStackTrace()
+        None
+    }
 
   /** Metodo per gestire il numero di domande da visualizzare all'utente durante un turno.
     *
@@ -50,8 +54,12 @@ object QuestionController:
       GameController.gameOfLoggedUsers
         .map(_.categories(r.numberRound - 1))
         .foreach(category => {
-          QuestionController.getRandomQuestionByCategory(category)
-          _question = Some(QuestionController.getRandomQuestionByCategory(category))
+          try {
+            val q = getRandomQuestionByCategory(category)
+            _question = q
+          } catch {
+            case e: Exception => e.printStackTrace()
+          }
         })
     })
   }
@@ -81,11 +89,11 @@ object QuestionController:
             })
         else
           // Creazione del round successivo
-          game.map(g => initializeNewRound(g.id, g.players.head, round.numberRound + 1))
+          game.map(g => initializeNewRound(g.id, g.players.headOption, round.numberRound + 1))
       }
       .getOrElse {
         // Creazione del primo round del gioco
-        game.map(g => initializeNewRound(g.id, g.players.head))
+        game.map(g => initializeNewRound(g.id, g.players.headOption))
       }
   }
 
@@ -100,12 +108,12 @@ object QuestionController:
     * @return
     *   round appena inizializzato
     */
-  private def initializeNewRound(gameId: String, user: User, roundNumber: Int = 1): Round = {
-    val newScores = GameController.gameOfLoggedUsers.map(_.players.map(Score(_))).getOrElse(List.empty)
+  private def initializeNewRound(gameId: String, user: Option[User], roundNumber: Int = 1): Round = {
+    val newScores = GameController.gameOfLoggedUsers.map(_.players.map(Score(_))).getOrElse(List.empty[Score])
     val newRound = Round(gameId, newScores, roundNumber)
     RoundController.createRound(newRound)
     RoundController.round = newRound
-    RoundController.player = user
+    user.foreach(RoundController.player = _)
     newRound
   }
 

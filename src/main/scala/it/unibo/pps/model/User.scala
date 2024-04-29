@@ -20,6 +20,7 @@ case class User(username: String, password: String, id: String)
   * Abilita la conversione da e verso BSONDocument in maniera trasparente, sfruttando il meccanismo degli impliciti.
   */
 object User {
+  @SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))
   def apply(username: String, password: String, id: Option[String] = None): User =
     User(username, password, id.getOrElse(UUID.randomUUID().toString))
 

@@ -1,6 +1,7 @@
 package it.unibo.pps.view.scenes
 
 import it.unibo.pps.controller.{GameController, UserController}
+import it.unibo.pps.model.User
 import it.unibo.pps.view.UIUtils
 import it.unibo.pps.view.UIUtils.*
 import it.unibo.pps.view.components.CurrentGameStatus
@@ -16,7 +17,7 @@ import scalafx.scene.layout.*
   * ed i pulsanti per creare una nuova partita e per accedere alla schermata di gioco.
   */
 class DashboardScene extends Scene:
-  private val loggedUsers = UserController.loggedUsers.getOrElse(List.empty)
+  private val loggedUsers = UserController.loggedUsers.getOrElse(List.empty[User])
   private val currentGame = GameController.getCurrentGameFromPlayers(loggedUsers)
 
   private val goBackBtn = craftButton("Indietro")

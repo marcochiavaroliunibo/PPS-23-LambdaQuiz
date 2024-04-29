@@ -1,15 +1,17 @@
 package it.unibo.pps.controller
 
+import it.unibo.pps.ECHandler
 import it.unibo.pps.business.{GameRepository, RoundRepository, UserRepository}
 import it.unibo.pps.model.{Game, Round, User}
 import reactivemongo.api.bson.BSONDocument
 
 import java.time.LocalDateTime
-import scala.concurrent.ExecutionContext.Implicits.global
+import java.util.concurrent.Executors.{newFixedThreadPool, newSingleThreadExecutor}
 import scala.concurrent.duration.*
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{Await, ExecutionContext, Future}
 
 /** Controller per la gestione delle partite */
+@SuppressWarnings(Array("org.wartremover.warts.Var", "org.wartremover.warts.IterableOps", "org.wartremover.warts.DefaultArguments"))
 object GameController:
 
   private val gameRepository = new GameRepository
@@ -34,7 +36,9 @@ object GameController:
     *   l'ultimo round della partita in corso
     */
   def getLastRoundByGame: Option[Round] =
-    Await.result(roundRepository.getAllRoundsByGame(gameOfLoggedUsers.get), 5.seconds).map(_.last)
+    gameOfLoggedUsers.flatMap(game =>
+      Await.result(roundRepository.getAllRoundsByGame(game), 5.seconds).getOrElse(List.empty[Round]).lastOption
+    )
 
   /** Metodo per ottenere la partita in corso fra gli utenti specificati.
     *
@@ -55,8 +59,8 @@ object GameController:
         case None =>
           Await.result(gameRepository.getCurrentGameFromPlayers(users), 5.seconds) match
             case Some(g) =>
-              _gameOfLoggedUsers = Some(g.head)
-              Some(g.head)
+              _gameOfLoggedUsers = g.headOption
+              g.headOption
             case None => None
 
   /** Metodo per ottenere tutte le partite in corso di un utente.
@@ -100,9 +104,9 @@ object GameController:
   def getGameWonByUser(user: User): Int =
     val games: List[Game] = getLastGameCompletedByUser(user, -1).getOrElse(List.empty)
     games.count(game => {
-      RoundController.computePartialPointsOfUser(user, game) > RoundController.computePartialPointsOfUser(
+      RoundController.computePartialPointsOfUser(user, Some(game)) > RoundController.computePartialPointsOfUser(
         game.players.filter(u => u.username != user.username).head,
-        game
+        Some(game)
       )
     })
 
@@ -115,9 +119,9 @@ object GameController:
   def getGameLostByUser(user: User): Int =
     val games: List[Game] = getLastGameCompletedByUser(user, -1).getOrElse(List.empty)
     games.count(game => {
-      RoundController.computePartialPointsOfUser(user, game) < RoundController.computePartialPointsOfUser(
+      RoundController.computePartialPointsOfUser(user, Some(game)) < RoundController.computePartialPointsOfUser(
         game.players.filter(u => u.username != user.username).head,
-        game
+        Some(game)
       )
     })
 
@@ -131,7 +135,7 @@ object GameController:
     val myPoint = getGameWonByUser(user)
     val otherUsers: List[User] = Await
       .result(userRepository.readMany(BSONDocument("_id" -> BSONDocument("$ne" -> user.id))), 5.seconds)
-      .getOrElse(List())
+      .getOrElse(List.empty[User])
     otherUsers.count(u => getGameWonByUser(u) > myPoint) + 1
 
   /** Metodo per ottenere la classifica globale degli utenti per il numero di partite vinte.
@@ -142,11 +146,12 @@ object GameController:
     *   vinte
     */
   def getGlobalRanking(rankingLength: Int = BEST_PLAYERS): Future[List[User]] =
+    given ExecutionContext = ECHandler.createExecutor
     userRepository
       .readMany(BSONDocument())
       .flatMap(allUsers =>
         Future {
-          allUsers.getOrElse(List.empty).sortBy(getGameWonByUser).reverse.take(rankingLength)
+          allUsers.getOrElse(List.empty[User]).sortBy(getGameWonByUser).reverse.take(rankingLength)
         }
       )
 
@@ -154,7 +159,7 @@ object GameController:
     */
   def createNewGame(): Unit =
     val newGame = Game(
-      UserController.loggedUsers.getOrElse(List.empty),
+      UserController.loggedUsers.getOrElse(List.empty[User]),
       false,
       LocalDateTime.now(),
       CategoryController.getRandomCategories(ROUND_FOR_GAME)

@@ -1,5 +1,6 @@
 package it.unibo.pps.view.scenes
 
+import it.unibo.pps.ECHandler
 import it.unibo.pps.controller.{ReportController, UserController}
 import it.unibo.pps.model.Report
 import it.unibo.pps.view.UIUtils.*
@@ -15,7 +16,8 @@ import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
 import scalafx.scene.text.{Text, TextAlignment}
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import java.util.concurrent.Executors.newSingleThreadExecutor
+import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
 /** Componente grafico che rappresenta la schermata relativa alle statistiche di un particolare giocatore.
@@ -52,6 +54,7 @@ class ReportScene extends Scene:
     val cellStyle = "-fx-font: normal normal 18px sans-serif"
     val playerNameColumn: TableColumn[Report, String] = new TableColumn[Report, String] {
       text = "Nome avversario"
+      @SuppressWarnings(Array("org.wartremover.warts.Var"))
       var ranking: Option[Report] = None
       cellValueFactory = d =>
         ranking = Some(d.value)
@@ -69,8 +72,7 @@ class ReportScene extends Scene:
                 case _ => Color.Orange
               radius = 10
             }
-          )
-          .orNull
+          ).getOrElse(new Circle)
       }
     }
 
@@ -123,6 +125,7 @@ class ReportScene extends Scene:
 
   private val rankingScreen = getLoadingScreen
 
+  given ExecutionContext = ECHandler.createExecutor
   ReportController.getUserReport
     .onComplete {
       case Success(result) =>

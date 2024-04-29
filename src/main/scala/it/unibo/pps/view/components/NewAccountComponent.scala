@@ -15,6 +15,7 @@ import scalafx.scene.layout.GridPane
   * Consiste in un [[Dialog]] che mostra un form da compilare con le informazioni necessarie alla creazione di un nuovo
   * account.
   */
+@SuppressWarnings(Array("org.wartremover.warts.Null"))
 private class NewAccountComponent extends Dialog[User]:
   title = "Finestra di registrazione"
   headerText = "Inserire il nome utente e la password desiderata"

@@ -32,11 +32,12 @@ case class Round(gameId: String, scores: List[Score], numberRound: Int, id: Stri
     * @param correct
     *   booleano che indica se il giocatore ha risposto correttamente
     */
-  def setPoint(player: User, correct: Boolean): Unit = {
-    val point = scores.filter(_.user.username == player.username).head
-    if point.score == -1 then point.score = 0
-    if correct then point.score = point.score + 1
-  }
+  def setPoint(player: User, correct: Boolean): Unit =
+    val points = scores.find(_.user.username == player.username)
+    points.foreach(p => {
+      if p.score == -1 then p.score = 0
+      if correct then p.score = p.score + 1
+    })
 }
 
 /** Companion object per la classe [[Round]].
@@ -44,6 +45,7 @@ case class Round(gameId: String, scores: List[Score], numberRound: Int, id: Stri
   * Abilita la conversione da e verso BSONDocument in maniera trasparente, sfruttando il meccanismo degli impliciti.
   */
 object Round {
+  @SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))
   def apply(gameId: String, scores: List[Score], numberRound: Int, id: Option[String] = None): Round =
     Round(gameId, scores, numberRound, id.getOrElse(UUID.randomUUID().toString))
 

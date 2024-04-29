@@ -1,16 +1,18 @@
 package it.unibo.pps.business
 
+import it.unibo.pps.ECHandler
 import reactivemongo.api.bson.collection.BSONCollection
 import reactivemongo.api.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import java.util.concurrent.Executors.{newFixedThreadPool, newSingleThreadExecutor}
+import scala.concurrent.{ExecutionContext, Future}
 
 /** Trait che rappresenta un repository generico che definisce le operazioni CRUD di base su un database MongoDB.
   * @tparam T
   *   tipo dell'oggetto da salvare nel database
   */
 trait Repository[T]:
+  given ExecutionContext = ECHandler.createExecutor
   /** Metodo che restituisce la collezione su cui effettuare le operazioni CRUD.
     * @return
     *   collezione su cui effettuare le operazioni CRUD come [[Future]] di [[BSONCollection]]
@@ -98,6 +100,7 @@ trait Repository[T]:
     *   la lista formata dai [[nDocsToRead]] oggetti letti dal database come [[Future]] di [[Option]] di [[List]] di
     *   [[T]]
     */
+  @SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))
   def readMany(query: BSONDocument, sort: BSONDocument = BSONDocument(), nDocsToRead: Int = -1)(implicit
     reader: BSONDocumentReader[T]
   ): Future[Option[List[T]]] =
@@ -118,6 +121,7 @@ trait Repository[T]:
     * @return
     *   l'esito dell'operazione di eliminazione come [[Future]] di Unit
     */
+  @SuppressWarnings(Array("org.wartremover.warts.Any"))
   def delete(selector: BSONDocument): Future[Unit] =
     this.collection
       .flatMap(_.delete.one(selector))

@@ -10,13 +10,14 @@ import scala.util.Try
   * @param score
   *   il punteggio ottenuto
   */
-case class Score(user: User, var score: Int, id: String)
+case class Score(user: User, @SuppressWarnings(Array("org.wartremover.warts.Var")) var score: Int, id: String)
 
 /** Companion object per la classe [[Score]].
   *
   * Abilita la conversione da e verso BSONDocument in maniera trasparente, sfruttando il meccanismo degli impliciti.
   */
 object Score:
+  @SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))
   def apply(user: User, score: Int = -1): Score = Score(user, score, "")
 
   implicit object ScoreReader extends BSONDocumentReader[Score]:

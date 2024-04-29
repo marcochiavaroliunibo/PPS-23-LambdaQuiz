@@ -20,7 +20,9 @@ class UserControllerTests extends AnyFlatSpec with should.Matchers:
   }
 
   it should "not let users to log in if one of them is unregistered" in {
-    UserController.authenticateUsers(players.head :: unregisteredUsers.take(1)) should be(false)
+    @SuppressWarnings(Array("org.wartremover.warts.IterableOps"))
+    val notAllRegisteredUsers = players.head :: unregisteredUsers.take(1)
+    UserController.authenticateUsers(notAllRegisteredUsers) should be(false)
   }
 
   it should "let registered users to log in" in {

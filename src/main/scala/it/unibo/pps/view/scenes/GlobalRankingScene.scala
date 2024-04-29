@@ -1,5 +1,6 @@
 package it.unibo.pps.view.scenes
 
+import it.unibo.pps.ECHandler
 import it.unibo.pps.controller.GameController
 import it.unibo.pps.model.User
 import it.unibo.pps.view.UIUtils
@@ -13,7 +14,8 @@ import scalafx.scene.control.{Button, ListView}
 import scalafx.scene.layout.*
 import scalafx.scene.text.Text
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import java.util.concurrent.Executors.newSingleThreadExecutor
+import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
 /** Componente grafico che rappresenta la classifica globale di tutti i giocatori.
@@ -41,6 +43,7 @@ class GlobalRankingScene extends Scene:
   // Schermata di caricamento
   private val rankingScreen = getLoadingScreen
 
+  given ExecutionContext = ECHandler.createExecutor
   GameController
     .getGlobalRanking()
     .onComplete {

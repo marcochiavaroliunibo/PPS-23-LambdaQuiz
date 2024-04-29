@@ -7,11 +7,13 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.*
 
 @DoNotDiscover
+@SuppressWarnings(Array("org.wartremover.warts.IterableOps"))
 class GameControllerTests extends AnyFlatSpec with should.Matchers:
-
+  
   "GameController" should "be able to read the current game" in {
     val currentGame = GameController.getCurrentGameFromPlayers(players)
-    currentGame.exists(_.id == games.filterNot(_.completed).head.id) should be(true)
+    val notCompletedGame = games.filterNot(_.completed).head
+    currentGame.exists(_.id == notCompletedGame.id) should be(true)
   }
 
   it should "be able to calculate ranking positions" in {

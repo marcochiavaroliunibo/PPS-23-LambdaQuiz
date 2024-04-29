@@ -10,6 +10,7 @@ import reactivemongo.api.bson.BSONDocument
 @DoNotDiscover
 class RoundRepositoryTests extends AsyncFlatSpec with should.Matchers:
 
+  @SuppressWarnings(Array("org.wartremover.warts.IterableOps"))
   val game: Game = games.last
   val allRounds: List[Round] = rounds.filter(_.gameId == game.id)
 

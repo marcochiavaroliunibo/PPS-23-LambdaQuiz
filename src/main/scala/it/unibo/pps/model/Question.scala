@@ -30,6 +30,7 @@ case class Question(
   * Abilita la conversione da e verso BSONDocument in maniera trasparente, sfruttando il meccanismo degli impliciti.
   */
 object Question {
+  @SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))
   def apply(
     text: String,
     answers: List[String],

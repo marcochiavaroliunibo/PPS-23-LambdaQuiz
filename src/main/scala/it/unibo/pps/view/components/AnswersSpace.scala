@@ -1,10 +1,12 @@
 package it.unibo.pps.view.components
 
 import it.unibo.pps.controller.{QuestionController, RoundController}
+import it.unibo.pps.model.User
 import it.unibo.pps.view.UIUtils.*
 import it.unibo.pps.view.scenes.{DashboardScene, QuizScene}
 import scalafx.Includes.*
 import scalafx.geometry.{Orientation, Pos}
+import scalafx.scene.control.Button
 import scalafx.scene.layout.*
 
 /** Componente grafico per la visualizzazione della schermata di gioco. Esso è composto dal testo della domanda a cui
@@ -31,7 +33,7 @@ private class AnswersSpace extends FlowPane(Orientation.Vertical, 0, 10):
     else changeScene(this.scene.get, DashboardScene())
 
   alignment = Pos.Center
-  children = answersButtons.getOrElse(List.empty)
+  children = answersButtons.getOrElse(List.empty[Button])
 end AnswersSpace
 
 /** Factory per le istanze di [[AnswersSpace]]. */

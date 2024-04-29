@@ -11,6 +11,7 @@ import scala.language.postfixOps
 @DoNotDiscover
 class UserRepositoryTests extends AsyncFlatSpec with should.Matchers:
 
+  @SuppressWarnings(Array("org.wartremover.warts.IterableOps"))
   private val user = players.head
 
   "A user" should "be read from the database by its id" in {

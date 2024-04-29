@@ -3,12 +3,14 @@ package it.unibo.pps.controller
 import it.unibo.pps.business.RoundRepository
 import it.unibo.pps.model.{Game, Round, User}
 import it.unibo.pps.view.UIUtils
+import org.scalactic.TypeCheckedTripleEquals.convertToCheckingEqualizer
 import scalafx.scene.control.Alert
 import scalafx.scene.control.Alert.AlertType
 
 import scala.concurrent.Await
 import scala.concurrent.duration.*
 
+@SuppressWarnings(Array("org.wartremover.warts.Var", "org.wartremover.warts.DefaultArguments"))
 object RoundController:
 
   private var _round: Option[Round] = None
@@ -71,13 +73,12 @@ object RoundController:
     * @return
     *   il punteggio parziale dell'utente. Se non ci sono round giocati, ritorna [[0]]
     */
-  def computePartialPointsOfUser(user: User, game: Game = null): Int =
-    val allRounds = game match
-      case null => Await.result(roundRepository.getAllRoundsByGame(GameController.gameOfLoggedUsers.orNull), 5.seconds)
-      case _ => Await.result(roundRepository.getAllRoundsByGame(game), 5.seconds)
-
+  def computePartialPointsOfUser(user: User, game: Option[Game] = None): Int =
+    val g = game.orElse(GameController.gameOfLoggedUsers)
+    val allRounds = g.flatMap(gm => Await.result(roundRepository.getAllRoundsByGame(gm), 5.seconds))
+    
     allRounds
-      .getOrElse(List.empty)
+      .getOrElse(List.empty[Round])
       .flatMap(_.scores)                        // trasforma la lista di Round in lista di Score
       .filter(_.user.username == user.username) // filtra solo le Score dell'utente in input
       .filter(_.score != -1)                    // esclude i valori -1 (round non ancora giocato dall'utente)
