@@ -29,7 +29,8 @@ object QuestionController:
       val a = Await.result(questionRepository.getQuestionsByCategory(category), 5.seconds)
       a.map(questions => questions(Random.nextInt(questions.length)))
     } catch {
-        case e: Exception => e.printStackTrace()
+      case e: Exception =>
+        e.printStackTrace()
         None
     }
 

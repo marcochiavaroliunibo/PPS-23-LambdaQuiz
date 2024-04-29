@@ -12,7 +12,7 @@ import scala.concurrent.{ExecutionContext, Future}
   * Fornisce metodi più specifici per l'interazione con il database.
   */
 class RoundRepository extends Repository[Round]:
-  
+
   protected val collection: Future[BSONCollection] = ConnectionMongoDB.getDatabase().map(_.collection("rounds"))
 
   /** Metodo che restituisce tutti i round appartenenti ad un determinato gioco.

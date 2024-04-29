@@ -1,7 +1,7 @@
 package it.unibo.pps
 
-import java.util.concurrent.{ExecutorService, Executors}
 import java.util.concurrent.Executors.newFixedThreadPool
+import java.util.concurrent.{ExecutorService, Executors}
 import scala.concurrent.ExecutionContext
 
 object ECHandler:
@@ -16,4 +16,3 @@ object ECHandler:
   def closeAll(): Unit =
     executors.foreach(_.shutdown())
 end ECHandler
-

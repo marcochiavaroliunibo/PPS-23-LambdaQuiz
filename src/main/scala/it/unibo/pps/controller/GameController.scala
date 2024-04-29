@@ -6,12 +6,13 @@ import it.unibo.pps.model.{Game, Round, User}
 import reactivemongo.api.bson.BSONDocument
 
 import java.time.LocalDateTime
-import java.util.concurrent.Executors.{newFixedThreadPool, newSingleThreadExecutor}
 import scala.concurrent.duration.*
 import scala.concurrent.{Await, ExecutionContext, Future}
 
 /** Controller per la gestione delle partite */
-@SuppressWarnings(Array("org.wartremover.warts.Var", "org.wartremover.warts.IterableOps", "org.wartremover.warts.DefaultArguments"))
+@SuppressWarnings(
+  Array("org.wartremover.warts.Var", "org.wartremover.warts.IterableOps", "org.wartremover.warts.DefaultArguments")
+)
 object GameController:
 
   private val gameRepository = new GameRepository

@@ -4,7 +4,7 @@ import it.unibo.pps.ECHandler
 import reactivemongo.api.bson.collection.BSONCollection
 import reactivemongo.api.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
 
-import java.util.concurrent.Executors.{newFixedThreadPool, newSingleThreadExecutor}
+import java.util.concurrent.Executors.newFixedThreadPool
 import scala.concurrent.{ExecutionContext, Future}
 
 /** Trait che rappresenta un repository generico che definisce le operazioni CRUD di base su un database MongoDB.
@@ -13,6 +13,7 @@ import scala.concurrent.{ExecutionContext, Future}
   */
 trait Repository[T]:
   given ExecutionContext = ECHandler.createExecutor
+
   /** Metodo che restituisce la collezione su cui effettuare le operazioni CRUD.
     * @return
     *   collezione su cui effettuare le operazioni CRUD come [[Future]] di [[BSONCollection]]

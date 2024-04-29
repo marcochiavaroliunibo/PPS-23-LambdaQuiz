@@ -6,9 +6,8 @@ import it.unibo.pps.view.scenes.MenuScene
 import scalafx.application.JFXApp3
 import scalafx.application.JFXApp3.PrimaryStage
 
-import scala.concurrent.duration.DurationInt
-
 import scala.concurrent.Await
+import scala.concurrent.duration.DurationInt
 
 /** Componente grafico che rappresenta il punto di ingresso dell'aplicazione.
   *

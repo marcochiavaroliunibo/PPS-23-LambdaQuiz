@@ -16,7 +16,6 @@ import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
 import scalafx.scene.text.{Text, TextAlignment}
 
-import java.util.concurrent.Executors.newSingleThreadExecutor
 import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
@@ -72,7 +71,8 @@ class ReportScene extends Scene:
                 case _ => Color.Orange
               radius = 10
             }
-          ).getOrElse(new Circle)
+          )
+          .getOrElse(new Circle)
       }
     }
 

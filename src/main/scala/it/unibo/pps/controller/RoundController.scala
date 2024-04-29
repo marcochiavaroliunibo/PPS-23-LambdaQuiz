@@ -76,7 +76,7 @@ object RoundController:
   def computePartialPointsOfUser(user: User, game: Option[Game] = None): Int =
     val g = game.orElse(GameController.gameOfLoggedUsers)
     val allRounds = g.flatMap(gm => Await.result(roundRepository.getAllRoundsByGame(gm), 5.seconds))
-    
+
     allRounds
       .getOrElse(List.empty[Round])
       .flatMap(_.scores)                        // trasforma la lista di Round in lista di Score

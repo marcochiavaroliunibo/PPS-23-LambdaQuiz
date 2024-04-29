@@ -4,7 +4,6 @@ import it.unibo.pps.ECHandler
 import org.slf4j.{Logger, LoggerFactory}
 import reactivemongo.api.{AsyncDriver, DB, MongoConnection}
 
-import java.util.concurrent.Executors.newSingleThreadExecutor
 import scala.concurrent.{ExecutionContext, Future}
 
 /** Oggetto che si occupa di gestire la connessione al database MongoDB.
@@ -19,7 +18,7 @@ object ConnectionMongoDB {
     "mongodb+srv://user-login:marco1234@cluster0.9jwsjr8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
   /** Nome del database. */
-  
+
   private var databaseName = "LambdaQuiz"
 
   /** Driver asincrono per la connessione al database. */

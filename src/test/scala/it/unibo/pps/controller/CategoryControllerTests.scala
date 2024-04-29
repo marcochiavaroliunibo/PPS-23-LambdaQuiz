@@ -15,13 +15,13 @@ class CategoryControllerTests extends AnyFlatSpec with should.Matchers:
 
   "CategoryController" should "be able to generate a specific number of random categories" in {
     randomCategories.map { (n, categories) =>
-      categories.size should be (n)
+      categories.size should be(n)
     }
   }
 
   it should "generate categories without repetitions" in {
     randomCategories.map { (_, categories) =>
-      categories.distinct.size should be (categories.size)
+      categories.distinct.size should be(categories.size)
     }
   }
 

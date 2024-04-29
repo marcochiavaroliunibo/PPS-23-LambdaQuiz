@@ -12,7 +12,7 @@ import scala.concurrent.{ExecutionContext, Future}
   * Fornisce metodi più specifici per l'interazione con il database.
   */
 class QuestionRepository extends Repository[Question]:
-  
+
   protected val collection: Future[BSONCollection] = ConnectionMongoDB.getDatabase().map(_.collection("questions"))
 
   /** Metodo che permette di ottenere tutte le domande di una determinata categoria

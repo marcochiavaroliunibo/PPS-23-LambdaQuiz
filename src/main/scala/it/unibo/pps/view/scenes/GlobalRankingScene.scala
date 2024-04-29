@@ -14,7 +14,6 @@ import scalafx.scene.control.{Button, ListView}
 import scalafx.scene.layout.*
 import scalafx.scene.text.Text
 
-import java.util.concurrent.Executors.newSingleThreadExecutor
 import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 

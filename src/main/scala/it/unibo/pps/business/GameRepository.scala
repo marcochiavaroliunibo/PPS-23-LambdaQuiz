@@ -4,15 +4,14 @@ import it.unibo.pps.model.{Game, User}
 import reactivemongo.api.bson.BSONDocument
 import reactivemongo.api.bson.collection.BSONCollection
 
-import java.util.concurrent.Executors.newSingleThreadExecutor
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 /** Classe che rappresenta il repository per l'entità [[Game]].
   *
   * Fornisce metodi più specifici per l'interazione con il database.
   */
 class GameRepository extends Repository[Game]:
-  
+
   override val collection: Future[BSONCollection] = ConnectionMongoDB.getDatabase().map(_.collection("games"))
 
   /** Metodo che permette di ottenere una partita in corso a partire dalla lista dei suoi giocatori.

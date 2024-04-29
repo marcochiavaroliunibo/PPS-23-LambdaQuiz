@@ -12,7 +12,7 @@ import scala.concurrent.{ExecutionContext, Future}
   * Fornisce metodi per l'interazione con il database.
   */
 class UserRepository extends Repository[User]:
-  
+
   override val collection: Future[BSONCollection] = ConnectionMongoDB.getDatabase().map(_.collection("users"))
 
   /** Metodo che permette di ottenere un utente dal database in base al suo username e password.
