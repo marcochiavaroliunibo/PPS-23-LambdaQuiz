@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   setup:
-    uses: .github/workflows/setup-jdk.yml
+    uses: ./.github/workflows/setup-jdk.yml
     with:
       os: ${{ matrix.os }}
 
