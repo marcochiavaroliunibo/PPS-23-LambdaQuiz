@@ -22,7 +22,7 @@ jobs:
   tests:
     needs: [setup, quality]
     runs-on: ubuntu-la:test
-    steps
+    steps:
       - name: Run tests
         run: sbt test
 
