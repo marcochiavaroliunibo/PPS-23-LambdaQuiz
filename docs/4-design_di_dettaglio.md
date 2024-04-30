@@ -57,12 +57,16 @@ Le classi `Game`, `Round`, `Question` e `User` possiedono un ulteriore attributo
 ![Diagramma delle classi del package model](assets/diagramma-classi-model.png)
 
 ## Controller
-Seguendo la logica descritta nei paragrafi precedenti, anche i controller sono stati creati in base ai componenti del sistema, nel rispetto delle regole della tecnica MVC:
-- GameController: si occupa di gestire tutte le azioni effettuate dall'utente (tramite l'interfaccia di gioco) che impattano sui dati del Game. Quindi si occupa anche di far uso delle funzioni messe a disposizione dalla logica di business, oltre che modificare glo oggetti del modello corriposndente.
-- QuestionController: si occupa di gestire le interazioni con le domande (come estrazione casuale in base alla categoria o gestione della risposta dell'utente).
-- RoundController: si occupa di gestire il corretto funzionamento del round, rispettando quindi le logiche di gioco e permettendo così l'alternanza dei round e, nel singolo turno, della mano di gioco tra i due utenti.
-- UserController: si occupa di registrazione e login degli utenti tramite l'interfaccia di gioco.
-- ReportController: si occupa del calcolo delle statistiche da mostrare all'utente quando questo le richiede tramite l'interfaccia, sia i report globali che i report variabili in base all'utente che ha effettuato il login.
+In questo package sono presenti le classi che si occupano di gestire le interazioni tra l'utente e il sistema, in modo da garantire la corretta esecuzione delle operazioni richieste. Nel rispetto del pattern architetturale MVC, i controller sono stati progettati per reagire alle interazioni dell'utente con l'interfaccia grafica, per poi richiamare le opportune funzioni della logica di business. 
+
+I controllers relativi agli utenti, alle partite, ai rounds e alle domande, presentano una struttura ben precisa. Innanzitutto sono rappresentati da `object`, il che consente di avere un'unica istanza per ciascun controller, evitando duplicazioni e garantendo la coerenza dei dati. Inoltre, ogni controller è dotato di un attributo che contiene l'oggetto corrente relativo all'entità che gestisce. Questo attributo è inizializzato a `None` e viene popolato solo quando il gioco giunge in una fase in cui è necessario accedere a tale entità. Ad esempio, il controller degli utenti, conterrà gli oggetti degli utenti attualmente autenticati solo quando essi effettuano il login. Una tale struttura, facilita la visualizzazione e la gestione del modello in quanto si ha sempre a disposizione l'entità corrente nell'apposito controller.
+
+Di seguito, vengono descritti i controller presenti in questo package:
+- **GameController**: si occupa di gestire tutte le azioni effettuate dall'utente che impattano sui dati del Game. In particolare, implementa la logica relativa alle partite, come la creazione, la verifica della loro terminazione e altri metodi utili per il calcolo della classifica globale.
+- **QuestionController**: si occupa di gestire la logica relativa alle domande. Più nel dettaglio, si occupa di gestire la giocata di un round, ovvero il momento in cui l'utente seleziona una risposta alla domanda corrente. Inoltre, si occupa di caricare le domande dal database e di filtrare quelle relative alle categorie scelte per la partita.
+- **RoundController**: si occupa di gestire il corretto funzionamento del round, rispettando quindi le logiche di gioco e permettendo così l'alternanza dei round e, nel singolo turno, della mano di gioco tra i due utenti.
+- **UserController**: si occupa di implementare le procedure di registrazione e autenticazione degli utenti, dialogando con il database per verificare la correttezza delle credenziali inserite e se il nome utente da registrare è già in uso.
+- **ReportController**: si occupa di calcolare le statistiche per l'utente che lo richiede, strutturando i risultati in modo che la View possa visualizzarli in maniera rapida ed efficace. 
 
 ## View
 Si occupa di gestire l'interfaccia utente. In particolare, mette a disposizione una serie di utility presenti nel file "UIUtilis", utilizzate per caricare le relative pagine grafiche costuite tramite i due sottopackages descritti di seguito.
