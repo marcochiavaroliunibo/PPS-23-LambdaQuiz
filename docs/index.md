@@ -1,6 +1,6 @@
 # PPS-23: LambdaQuiz
 ## Indice:
-1. [Descrizione del sistema](0-descrizione_sistema.md)
+1. [Introduzione](0-introduzione.md)
 2. [Processo di sviluppo](1-processo_di_sviluppo.md)
 3. [Requisiti](2-requisiti.md)
 4. [Design architetturale](3-design_architetturale.md)

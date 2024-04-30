@@ -44,4 +44,4 @@ Nel caso specifico del progetto, è stato definito un flusso di lavoro per esegu
 
 In entrambe le operazioni appena citate, Github Action esegue prima di tutto la compilazione del codice sorgente e la build dell'intero progetto. In questo frangente, il tool WartRemover verifica la presenza di eventuali warning o errori nel codice, facendo fallire il processo in caso di problemi;
 
-[Indietro](0-descrizione_sistema.md) | [Torna alla Home](index.md) | [Avanti](2-requisiti.md)
+[Indietro](0-introduzione.md) | [Torna alla Home](index.md) | [Avanti](2-requisiti.md)
