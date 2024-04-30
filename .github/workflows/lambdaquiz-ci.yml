@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 jobs:
-  setup:
+  setup-jdk:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,7 +20,7 @@ jobs:
           cache: 'sbt'
 
   tests:
-    needs: [setup, quality]
+    needs: [setup-jdk, quality]
     runs-on: ubuntu-la:test
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +28,7 @@ jobs:
         run: sbt test
 
   quality:
-    needs: setup
+    needs: setup-jdk
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
