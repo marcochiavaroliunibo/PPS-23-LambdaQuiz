@@ -1,20 +1,60 @@
 # Design di dettaglio
-Il sistema si divide in 4 package che presentiamo nel dettaglio nei paragrafi che seguono:
+Questo capitolo illustra nel dettaglio il design del sistema LambdaQuiz, approfondendo tutti i componenti dell'architettura citati in precedenza. Il sistema si compone di 4 package i quali vengono discussi nei paragrafi che seguono:
 
 ## Business
-Contiene i componenti che si occupano di gestire connessione e chiusura delle connessioni verso il database Mongo utilizzato come appoggio dati per l'applicativo.
-Ogni collezione dati del database è gestita da una classe (ad esempio GameRepository) che si occupa di implementare tutte le chiamate necessarie per estrarre dati, scrivere o modificare.
-Inoltre, è implementato il trait Repository, esteso da tutte le classi prima descritte, allo scopo di generalizzare su tutte l'uso delle funzioni chiave (come query per l'inserimento di un nuovo documento al DB, e la ricerca per ID).
+Coincide con il package che implementa tutta la logica di interazione con il database, in modo da garantire la persistenza dei dati. 
+
+Prima di tutto, esso contiene il componente che si occupa di gestire la connessione e disconnessione con il database Mongo utilizzato. Tale componente fornisce i metodi per inizializzare la connessione, chiuderla e ottenere il riferimento al database. Inoltre, consente anche di abilitare la modalità di test, che utilizza un database a parte per evitare di sovrascrivere i dati di produzione in fase di testing.
+
+Si è deciso di mappare le entità del modello con le collezioni del database, pertanto sono presenti tante collezioni quanti sono gli elementi del dominio. Dal momento che questi ultimi condividono le stesse operazioni CRUD base, si è optato per la definizione di un'interfaccia che fungesse da contratto per tutte le collezioni. Questa interfaccia, implementata mediante un trait e denominata `Repository`, definisce le operazioni di base per la gestione delle entità, come l'inserimento, la ricerca per ID, la ricerca per attributi e la cancellazione.
+
+Ogni collezione è gestita da una particolare classe, denominata posponendo il termine "*repository*" al nome dell'entità che viene gestita. Tali classi, si occupano di implementare le specifiche operazioni necessarie per la porzione di dominio relativa, riutilizzando le procedure base presenti in `Repository`.
+
+Nella figura seguente è mostrato il diagramma delle classi del package `business`:
+![Diagramma delle classi del package business](assets/diagramma-classi-business.png)
 
 ## Model
-Contiene le classi che rappresentano la logica di business, rispettando quindi la rappresentazione effettuata nel package descritto precedentemente.
-Il modello è composto da 6 componenti:
-- User: rappresenta il singolo utente registrato al gioco.
-- Round: rappresenta un singolo round di gioco, composto da _n_ domande e un punteggio per ognuno dei due giocatori.
-- Game: rappresenta la partita creata da due utenti, che decidono di sfidarsi. Il Game è composto da più round di gioco.
-- Score: rappresenta il punteggio di un utente, effettuato durante il gioco di un round.
-- Question: rappresenta una domanda, contenente testo, risposte (di cui solo una esatta) e categoria di appartenenza.
-- Category: lista delle categorie create (ogni round e domanda fanno parte di una singola categoria).
+Questo package contiene le classi che rappresentano le entità del gioco LambdaQuiz, le quali rispecchiano il modello di dominio definito in fase di raccolta dei requisiti.
+
+Ogni entità è definita per mezzo di una `case class`, la quale fornisce tutti gli attributi e le operazioni su di essi. Vi è poi il relativo companion-object che si occupa prima di tutto di istanziare le classi sfruttando il pattern Factory Method. Un'altra importante funzione di quest'ultimo è quella di ospitare la logica per la conversione da e verso il formato JSON in maniera trasparente. A tal scopo e in accordo con la libreria `reactivemongo` utilizzata per l'interfacciamento con MongoDB, sono stati definiti due `implicit object`s all'interno del companion-object: uno per la lettura e uno per la scrittura dei dati nel database. Più nel dettaglio, tali oggetti impliciti implementano due specifici metodi della libreria suddetta che si occupano di gestire il processo di serializzazione e deserializzazione specifico sul dato in questione. Il fatto di definire questi oggetti come impliciti consente di avere un processo di conversione automatico e trasparente.
+
+Di seguito, la descrizione dettagliata delle classi presenti nel package `model`, visionabili anche nel diagramma sottostante:
+- **User**: rappresenta il singolo utente registrato al gioco  ed è caratterizzato da:
+  - _username_ - nome utente dell'utente
+  - _password_ - password dell'utente
+- **Game**: rappresenta la partita creata a partire dai due utenti che decidono di sfidarsi. È composta da:
+  - _players_ - lista dei due utenti che partecipano al gioco
+  - _completed_ - flag che indica se la partita è stata completata
+  - _lastUpdate_ - data e ora dell'ultimo aggiornamento della partita
+  - _categories_ - lista delle categorie di domande scelte per il gioco
+- **Round**: rappresenta un singolo round di gioco, composto da:
+  - _gameId_ - identificativo del gioco a cui il round fa riferimento
+  - _roundNumber_ - numero del round
+  - _scores_ - lista di punteggi ottenuti dai giocatori in quel round
+- **Question**: rappresenta una domanda a risposta multipla, formata da:
+  - _text_ - testo della domanda
+  - _answers_ - lista delle risposte possibili
+  - _correctAnswer_- indice della risposta corretta
+  - _category_ - categoria a cui appartiene la domanda
+- **Score**: rappresenta il punteggio di un utente ed è caratterizzato da:
+  - _user_ - l'utente a cui il punteggio fa riferimento
+  - _score_ - valore numerico del punteggio
+- **Report**: rappresenta le statistiche di un utente, in termini di punti che esso ha accumulato rispetto all'avversario per ogni partita giocata. Questa entità è composta da:
+  - _playerName_ - nome dell'utente a cui il report fa riferimento
+  - _playerPoints_ - punteggio dell'utente che ha richiesto la statistica
+  - _adversaryPoints_ - punteggio dell'avversario
+- **Category**: rappresenta le categorie di appartenenza delle domande. A differenza delle entità precedenti, la presente è modellata usando un `enum` di Scala 3. Le possibili categorie previste dal gioco sono:
+  - CulturaGenerale
+  - Geografia
+  - Politica
+  - Psicologia
+  - Scienze
+  - Sport
+  - Storia
+
+Le classi `Game`, `Round`, `Question` e `User` possiedono un ulteriore attributo _id_ che funge da identificativo univoco per la rispettiva entità all'interno del database. Esso viene generato casualmente utilizzando la classe `UUID` di Java per poi andare a sostituire quello assegnato in automatico da mongoDB a tutti i documenti inseriti. Questa scelta è stata presa per avere l'id sempre a disposizione, evitando ulteriori query al database per recuperarlo. 
+
+![Diagramma delle classi del package model](assets/diagramma-classi-model.png)
 
 ## Controller
 Seguendo la logica descritta nei paragrafi precedenti, anche i controller sono stati creati in base ai componenti del sistema, nel rispetto delle regole della tecnica MVC:
@@ -22,7 +62,7 @@ Seguendo la logica descritta nei paragrafi precedenti, anche i controller sono s
 - QuestionController: si occupa di gestire le interazioni con le domande (come estrazione casuale in base alla categoria o gestione della risposta dell'utente).
 - RoundController: si occupa di gestire il corretto funzionamento del round, rispettando quindi le logiche di gioco e permettendo così l'alternanza dei round e, nel singolo turno, della mano di gioco tra i due utenti.
 - UserController: si occupa di registrazione e login degli utenti tramite l'interfaccia di gioco.
-- ReportController: si occupa del calcolo delle statisticge da mostrare all'utente quando questo le richiede tramite l'interfaccia, sia i report globali che i report variabili in base all'utente che ha effettuato il login.
+- ReportController: si occupa del calcolo delle statistiche da mostrare all'utente quando questo le richiede tramite l'interfaccia, sia i report globali che i report variabili in base all'utente che ha effettuato il login.
 
 ## View
 Si occupa di gestire l'interfaccia utente. In particolare, mette a disposizione una serie di utility presenti nel file "UIUtilis", utilizzate per caricare le relative pagine grafiche costuite tramite i due sottopackages descritti di seguito.
@@ -37,7 +77,7 @@ Contiene le pagine visualizzate dall'utente, caricando i componenti grafici da v
 
 ### Components
 Costituiscono i sotto elementi delle scene e sono usati per comporre in maniera ordinata le stesse.
-A titolo di esempio, la pagina di gioco (QuizScene) è stata divisa da una parte alta della pagina in cui viene visualizzata la domanda a cui rispondere ed una parte centrale con le risposte possibile. Quest'ultime sono state separate e implementate in AnswerSpace per gestire in modo più efficace il suo corretto funzionamento.
+A titolo di esempio, la pagina di gioco (QuizScene) è stata divisa da una parte alta della pagina in cui viene visualizzata la domanda a cui rispondere e una parte centrale con le risposte possibile. Quest'ultime sono state separate e implementate in AnswerSpace per gestire in modo più efficace il suo corretto funzionamento.
 La stessa cosa è stata svolta anche per la gestione delle popup di registrazione e login degli utenti.
 
 [Indietro](3-design_architetturale.md) | [Torna alla Home](index.md) | [Avanti](5-tecnologie.md)
