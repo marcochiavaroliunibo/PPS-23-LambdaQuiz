@@ -23,6 +23,7 @@ jobs:
     needs: [setup, quality]
     runs-on: ubuntu-la:test
     steps:
+      - uses: actions/checkout@v4
       - name: Run tests
         run: sbt test
 
@@ -30,5 +31,6 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Check code quality
         run: sbt scalafmtCheckAll
