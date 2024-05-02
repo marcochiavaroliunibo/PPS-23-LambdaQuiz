@@ -1,3 +1,5 @@
+import wartremover.WartRemover.autoImport.wartremoverErrors
+
 val scala3Version = "3.4.0"
 
 // Rilevamento del sistema operativo
@@ -34,6 +36,7 @@ lazy val root = project
     name := "PPS-23-LambdaQuiz",
     version := "0.1",
     scalaVersion := scala3Version,
+    Compile / run / mainClass := Some("it.unibo.pps.start"),
     wartremoverErrors ++= Warts.unsafe,
     libraryDependencies ++= Seq(
       "org.scalafx" %% "scalafx" % "21.0.0-R32",
