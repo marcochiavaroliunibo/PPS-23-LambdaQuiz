@@ -19,7 +19,7 @@ object GameController:
   private val roundRepository = new RoundRepository
   private val userRepository = new UserRepository
 
-  /** variabile per la gestione della partita in corso */
+  /** Variabile per la gestione della partita in corso */
   private var _gameOfLoggedUsers: Option[Game] = None
   def gameOfLoggedUsers: Option[Game] = _gameOfLoggedUsers
 
@@ -81,8 +81,8 @@ object GameController:
     * @return
     *   lista delle ultime partite completate dell'utente specificato
     */
-  def getLastGameCompletedByUser(user: User, limit: Int = NUMBER_LAST_GAME): Option[List[Game]] =
-    Await.result(gameRepository.getLastGameCompletedByUser(user, NUMBER_LAST_GAME), 5.seconds)
+  def getLastCompletedGamesByUser(user: User, limit: Int = NUMBER_LAST_GAME): Option[List[Game]] =
+    Await.result(gameRepository.getLastCompletedGamesByUser(user, NUMBER_LAST_GAME), 5.seconds)
 
   /** Metodo per controllare se la partita in corso è terminata. In caso affermativo, ne aggiorna lo stato sul database.
     */
@@ -103,7 +103,7 @@ object GameController:
     *   lista delle partite vinte dall'utente specificato
     */
   def getGameWonByUser(user: User): Int =
-    val games: List[Game] = getLastGameCompletedByUser(user, -1).getOrElse(List.empty)
+    val games: List[Game] = getLastCompletedGamesByUser(user, -1).getOrElse(List.empty)
     games.count(game => {
       RoundController.computePartialPointsOfUser(user, Some(game)) > RoundController.computePartialPointsOfUser(
         game.players.filter(u => u.username != user.username).head,
@@ -118,7 +118,7 @@ object GameController:
     *   lista delle partite perse dall'utente specificato
     */
   def getGameLostByUser(user: User): Int =
-    val games: List[Game] = getLastGameCompletedByUser(user, -1).getOrElse(List.empty)
+    val games: List[Game] = getLastCompletedGamesByUser(user, -1).getOrElse(List.empty)
     games.count(game => {
       RoundController.computePartialPointsOfUser(user, Some(game)) < RoundController.computePartialPointsOfUser(
         game.players.filter(u => u.username != user.username).head,

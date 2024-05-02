@@ -29,7 +29,7 @@ class GameRepository extends Repository[Game]:
     val sort = BSONDocument("lastUpdate" -> -1)
     readMany(query, sort)
 
-  /** Metodo che permette di ottenere l'ultima partita completata da un utente.
+  /** Metodo che permette di ottenere le ultime partite completata da un utente.
     * @param user
     *   utente
     * @param maxDocs
@@ -37,7 +37,7 @@ class GameRepository extends Repository[Game]:
     * @return
     *   una lista di partite completate
     */
-  def getLastGameCompletedByUser(user: User, maxDocs: Int): Future[Option[List[Game]]] =
+  def getLastCompletedGamesByUser(user: User, maxDocs: Int): Future[Option[List[Game]]] =
     val query = BSONDocument(
       "completed" -> true,
       "players" -> BSONDocument("$eq" -> user)

@@ -12,9 +12,13 @@ import scala.concurrent.duration.*
 @SuppressWarnings(Array("org.wartremover.warts.Var", "org.wartremover.warts.DefaultArguments"))
 object RoundController:
 
-  private var _round: Option[Round] = None
-  private var _player: Option[User] = None
   private val roundRepository = new RoundRepository
+
+  /** Variabili di stato per il controllo del round corrente */
+  private var _round: Option[Round] = None
+
+  /** Variabili di stato per il controllo del giocatore corrente */
+  private var _player: Option[User] = None
 
   def round_=(newRound: Round): Unit = _round = Some(newRound)
   def round: Option[Round] = _round

@@ -57,10 +57,10 @@ class ReportScene extends Scene:
       var ranking: Option[Report] = None
       cellValueFactory = d =>
         ranking = Some(d.value)
-        ObjectProperty(d.value.playerName)
+        ObjectProperty(d.value.adversaryName)
       sortable = false
       cellFactory = (cell, value) => {
-        cell.text = ranking.map(_.playerName).getOrElse("")
+        cell.text = ranking.map(_.adversaryName).getOrElse("")
         cell.style = cellStyle
         cell.graphic = ranking
           .map(r =>

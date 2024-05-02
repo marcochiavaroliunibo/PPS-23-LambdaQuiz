@@ -11,9 +11,15 @@ import scala.util.Random
 @SuppressWarnings(Array("org.wartremover.warts.Var", "org.wartremover.warts.DefaultArguments"))
 object QuestionController:
 
-  private var _question: Option[Question] = None
   private val questionRepository = new QuestionRepository
+
+  /** Domanda corrente da mostrare all'utente */
+  private var _question: Option[Question] = None
+
+  /** Contatore delle domande visualizzate durante un turno */
   var counterQuestionRound: Int = 0
+
+  /** Numero di domande da visualizzare all'utente durante un turno */
   val QUESTION_FOR_ROUND: Int = 3
 
   def getQuestion: Option[Question] = _question

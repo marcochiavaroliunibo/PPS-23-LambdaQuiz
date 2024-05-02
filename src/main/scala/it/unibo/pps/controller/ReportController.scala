@@ -3,10 +3,14 @@ package it.unibo.pps.controller
 import it.unibo.pps.ECHandler
 import it.unibo.pps.model.{Game, Report, User}
 
-import java.util.concurrent.Executors.newSingleThreadExecutor
 import scala.collection.immutable.List
 import scala.concurrent.{ExecutionContext, Future}
 
+/** Controller che si occupa di gestire la creazione dei report da mostrare all'utente.
+  *
+  * In particolare, permette di calcolare le statistiche relative alle partite giocate dall'utente, mostrando il nome
+  * dell'avversario, i punti ottenuti dall'utente e i punti ottenuti dall'avversario.
+  */
 object ReportController:
   given ExecutionContext = ECHandler.createExecutor
 
@@ -45,7 +49,7 @@ object ReportController:
       .flatMap(_.headOption)
       .map(user =>
         val currentGame: List[Game] = GameController.getCurrentGamesFromSinglePlayer(user).getOrElse(List.empty[Game])
-        val completedGame: List[Game] = GameController.getLastGameCompletedByUser(user).getOrElse(List.empty[Game])
+        val completedGame: List[Game] = GameController.getLastCompletedGamesByUser(user).getOrElse(List.empty[Game])
         val gamesWon: Int = GameController.getGameWonByUser(user)
         val gamesLost: Int = GameController.getGameLostByUser(user)
         val currentMatchRanking = getReport(currentGame)(user)
