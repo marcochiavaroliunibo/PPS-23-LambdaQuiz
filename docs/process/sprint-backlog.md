@@ -12,7 +12,7 @@ Di seguito verranno elencate le diverse iterazioni effettuate, comprese di date 
 ## Sprint 1 
 #### 06-03-2024 - 11-03-2024
 
-| Attività sul branch `report`                                                    | Durata |
+| Attività sul branch `report`                               | Durata |
 |------------------------------------------------------------|--------|
 | Creazione repo e inizializzazione progetto                 | 2h     |
 | Studio approfondito del linguaggio Scala 3                 | 6d     |
@@ -27,7 +27,7 @@ Durante questo sprint ci sono state alcune difficoltà relative alle tecnologie 
 ## Sprint 2
 #### 12-03-2024 - 17-03-2024
 
-| Attività sul branch `report`                                            | Durata |
+| Attività sul branch `report`                       | Durata |
 |----------------------------------------------------|--------|
 | Implementazione della schermata di login nella GUI | 4h     |
 | Implementazione della dashboard                    | 2d     |
@@ -43,7 +43,7 @@ Man mano che la modellazione continuava, ci siamo accorti che l’iniziale strut
 ## Sprint 3
 #### 18-03-2024 - 23-03-2024
 
-| Attività sul branch `report`                                                      | Durata |
+| Attività sul branch `report`                                 | Durata |
 |--------------------------------------------------------------|--------|
 | Refactoring della view                                       | 4h     |
 | Refactoring dei test esistenti                               | 4h     |
@@ -56,7 +56,7 @@ Questo terzo sprint è stato caratterizzato dall’aver raggiunto una versione d
 ## Sprint 4
 #### 24-03-2024 - 29-03-2024
 
-| Attività sul branch `report`                                             | Durata |
+| Attività sul branch `report`                        | Durata |
 |-----------------------------------------------------|--------|
 | Aggiustamenti grafici nella dashboard               | 1d     |
 | Report e Ranking page (prima versione)              | 2d     |
@@ -75,7 +75,7 @@ Le pagine di Report e Ranking mancano di molta ottimizzazione, sia grafica che d
 # DATE DA VERIFICARE (05/04 - 10/04)
 #### 30-03-2024 - 04-04-2024 
 
-| Attività sul branch `report`                                                                                       | Durata |
+| Attività sul branch `report`                                                                  | Durata |
 |-----------------------------------------------------------------------------------------------|--------|
 | Miglioramenti grafici in varie parti dell’app                                                 | 4h     |
 | Gestione del lungo tempo di caricamento delle statistiche e classifica globale                | 6h     |
@@ -91,13 +91,13 @@ Questo sprint si è chiuso con una versione dell’applicazione completa e funzi
 # DATE DA VERIFICARE (11/04 - 16/04)
 #### 05-04-2024 - 10-04-2024
 
-| Attività sul branch `report`                                                                                       | Durata |
-|-----------------------------------------------------------------------------------------------|--------|
-| Refactoring generale di tutti i componenti del package controller                             | 1d     |
-| Refactoring generale di tutti i componenti dei package model e business                       | 1d     |
-| Aggiunta scaladoc in tutto il package controller                                              | 6h     |
-| Aggiunta scaladoc in tutto il package model e business                                        | 1d     |
-| Estrazione domande casuali senza ripetizioni per la stessa partita                            | 2h     |
+| Attività sul branch `report`                                            | Durata |
+|-------------------------------------------------------------------------|--------|
+| Refactoring generale di tutti i componenti del package controller       | 1d     |
+| Refactoring generale di tutti i componenti dei package model e business | 1d     |
+| Aggiunta scaladoc in tutto il package controller                        | 6h     |
+| Aggiunta scaladoc in tutto il package model e business                  | 1d     |
+| Estrazione domande casuali senza ripetizioni per la stessa partita      | 2h     |
 
 ### Retrospettiva
 Questo sprint, come preventivato alla fine del precedente, è stato interamente dedicato al miglioramento del codice già presente. In particolare, si è passati in rassegna ogni singolo file nei package `controller`, `model` e `business`, andando non solo a effettuare un refactoring di tutte le parti che potevano essere migliorate ma andando anche a documentare ogni classe, metodo, object e variabili significative. Il processo di refactoring ci ha aiutato a mettere ancora di più in pratica le potenzialità di Scala. Infatti questa fase ha visto la riscrittura di porzioni di codice in modo che sfruttasse il più possibile la programmazione funzionale e le buone tecniche di programmazione apprese durante il corso.
@@ -108,7 +108,7 @@ Non è stato però possibile mettere mano alla suite di test, come inizialmente 
 # DATE DA VERIFICARE (17/04 - 22/04)
 #### 11-04-2024 - 16-04-2024
 
-| Attività sul branch `report`                                                                    | Durata |
+| Attività sul branch `report`                                               | Durata |
 |----------------------------------------------------------------------------|--------|
 | Refactoring e ampliamento della suite di test                              | 2d     |
 | Risoluzione di alcuni problemi relativi ai test asincroni                  | 2d     |
