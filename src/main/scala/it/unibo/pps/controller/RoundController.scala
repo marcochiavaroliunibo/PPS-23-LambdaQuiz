@@ -1,9 +1,8 @@
 package it.unibo.pps.controller
 
 import it.unibo.pps.business.RoundRepository
-import it.unibo.pps.model.{Game, Round, User}
+import it.unibo.pps.model.{Game, Round, Score, User}
 import it.unibo.pps.view.UIUtils
-import org.scalactic.TypeCheckedTripleEquals.convertToCheckingEqualizer
 import scalafx.scene.control.Alert
 import scalafx.scene.control.Alert.AlertType
 
@@ -23,7 +22,7 @@ object RoundController:
   def player: Option[User] = _player
 
   /** Metodo per salvare un nuovo round nel database */
-  def createRound(round: Round): Unit = roundRepository.create(round)
+  private def createRound(round: Round): Unit = roundRepository.create(round)
 
   /** Metodo invocato dalla View ogni volta che l'utente gioca un round, ovvero risponde a una domanda.
     *
@@ -51,6 +50,61 @@ object RoundController:
       GameController.verifyGameEnd()
       RoundController.resetVariable()
     hasNextQuestion
+
+  /** Metodo per gestire la progressione dei round.
+    *
+    * Innanzitutto ottiene l'ultimo relativo al gioco in corso. Se esso non è presente, significa che la partita è
+    * appena iniziata e occorre creare il primo round. Al contrario, se l'ultimo round risulta presente, si verifica se
+    * è in corso o completato. Nel primo caso si passa al secondo giocatore, nel secondo si crea il round successivo.
+    *
+    * @return
+    *   round appena iniziato o in corso
+    */
+  def manageNewRound: Option[Round] = {
+    val game = GameController.gameOfLoggedUsers
+
+    GameController.getLastRoundByGame
+      .map { round =>
+        if round.scores.count(_.score == -1) > 0 then
+          // Gestione del round corrente
+          RoundController.round = round
+          round.scores
+            .find(_.score == -1)
+            .map(_.user)
+            .map(nextPlayer => {
+              RoundController.player = nextPlayer
+              round
+            })
+        else
+          // Creazione del round successivo
+          game.map(g => initializeNewRound(g.id, g.players.headOption, round.numberRound + 1))
+      }
+      .getOrElse {
+        // Creazione del primo round del gioco
+        game.map(g => initializeNewRound(g.id, g.players.headOption))
+      }
+  }
+
+  /** Metodo per inizializzare un nuovo round, il quale verrà poi effettivamente creato grazie a
+    * [[RoundController.createRound]].
+    *
+    * @param gameId
+    *   ID del gioco per il quale creare il nuovo round
+    * @param user
+    *   utente che inizierà a giocare il nuovo round
+    * @param roundNumber
+    *   numero del nuovo round
+    * @return
+    *   round appena inizializzato
+    */
+  private def initializeNewRound(gameId: String, user: Option[User], roundNumber: Int = 1): Round = {
+    val newScores = GameController.gameOfLoggedUsers.map(_.players.map(Score(_))).getOrElse(List.empty[Score])
+    val newRound = Round(gameId, newScores, roundNumber)
+    RoundController.createRound(newRound)
+    RoundController.round = newRound
+    user.foreach(RoundController.player = _)
+    newRound
+  }
 
   /** Metodo per aggiornare i punti dell'utente che ha giocato il round corrente sulla base della risposta data.
     * @param correct
