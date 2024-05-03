@@ -138,7 +138,9 @@ Infine, si è dovuta impiegare una certa quantità di tempo per risolvere un pro
 | Aggiunta dei plugins `scalafmt` e `wartremover` in sbt per la quality assurance | 6h     |
 
 ### Retrospettiva
-Questo sprint è stato dedicato alla preparazione della relazione finale e alla creazione di una pagina su Github Pages per ospitare la documentazione del progetto. In particolare...
+Questo sprint è stato quasi interamente dedicato alla stesura della relazione, anche se essa non è stata completata in questa iterazione. In particolare, è stato definito lo scheletro dei capitoli e is è predisposta la pagina su Github Pages per ospitare la documentazione e renderla facilmente accessibile. Si è poi proceduto con la vera e propria stesura, che ha visto il completamento dei primi capitoli e la bozza di un altro. 
+
+Parallelamente a questo, si è proceduto con la revisione e il miglioramento del codice, con l’aggiunta di alcuni test e l’introduzione di due plugin per la quality assurance.
 
 ## Sprint 9
 # DATE DA VERIFICARE (29/04 - 04/05)
@@ -146,19 +148,22 @@ Questo sprint è stato dedicato alla preparazione della relazione finale e alla 
 
 | Attività sul branch `report`                            | Durata |
 |---------------------------------------------------------|--------|
-| Revisione capitolo introduttivo                         | 4h     |
-| Revisione capitolo sul processo di sviluppo             | 4h     |
+| Revisione capitolo introduttivo                         | 2h     |
+| Revisione capitolo sul processo di sviluppo             | 2h     |
 | Scrittura capitolo sulle tecnologie                     | 1d     |
 | Revisione completa del capitolo sul design di dettaglio | 2d     |
-| Disegno di alcuni diagrammi per la relazione            | 6h     |
+| Disegno di alcuni diagrammi per la relazione            | 4h     |
 
 | Attività sul branch `main`                                                                      | Durata |
 |-------------------------------------------------------------------------------------------------|--------|
 | Refactoring dell'intera codebase per risolvere gli errori ed i warning sollevati da wartremover | 4h     |
-| Migliorata la gestione degli ExecutorContext impiegati per l'esecuzione delle Futures           | 6h     |
-| CI aggiornata per verificare la qualità dle codice con scalafmt e wartremover                   | 4h     |
+| File workflow della CI ampliato e migliorato                                                    | 1d     |
+| Logica di business meglio separata tra i relativi controllers                                   | 4h     |
 
 ### Retrospettiva
+Anche questo sprint, come il precedente, è stato dedicato quasi interamente al proseguio della relazione. In particolare, si è proceduto con la revisione dei capitoli già scritti e con la stesura di nuovi.
+
+Sulla base delle modifiche fatte al codice nello sprint precedente, si è proceduto con un refactoring generale per risolvere i problemi sollevati da wartremover. Inoltre, si è messo mano al file di Github Actions per la CI, con lo scopo di migliorarlo. A tal proposito sono stati fatti alcuni esperimenti per cercare di incrementare la qualità e l'efficacia dello script ma sfortunatamente non hanno dato esito positivo e per questo non sono stati inclusi nella versione finale. 
 
 ## Sprint 10
 # DATE DA VERIFICARE (05/05 - 10/05)
