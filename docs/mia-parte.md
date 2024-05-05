@@ -34,6 +34,7 @@ Come esempio di quanto appena descritto, riporto il companion object della class
 
 Le caratteristiche di trasparenza ed eleganza di questo approccio possono essere chiaramente apprezzate guardando la prima linea della for comprehension, all'interno del metodo `readDocument`. Qui, è possibile vedere la facilità con la quale si riesce a estrarre l'entità `User` da un documento BSON. Infatti, è necessario semplicemente chiamare il metodo `getAsTry`, specificando il tipo del dato che ci si aspetta. Dal momento che anche la classe `User` contiene lo stesso meccanismo di conversione, il processo di estrazione è completamente trasparente e automatico. Inoltre, è interessante notare come sia stato possibile gestire il caso in cui l'estrazione non vada a buon fine, restituendo un `Try` che rappresenta il fallimento dell'operazione. Questo approccio ha permesso di scrivere codice molto più leggibile e robusto, rispetto a quello che sarebbe stato necessario in Java.
 
+
 ## View
 In generale, quasi tutta la parte relativa all'interfaccia grafica è stata realizzata da me. In particolare, ho interamente provveduto a scegliere il framework da utilizzare (ScalaFX), a definire l'architettura della view e a implementare la maggior parte delle classi all'interno dei package `it.unibo.pps.view.scenes` e `it.unibo.pps.view.components`.
 
@@ -49,18 +50,21 @@ Alcuni aspetti implementativi interessanti, la cui realizzazione è stata grazie
   }
   ```
   Nell'esempio di codice sopra, la classe `GameTitle` estende la classe `Text` di ScalaFX, definendo un titolo di gioco personalizzato. In questo modo, è stato possibile definire un titolo con un aspetto estetico accattivante, andando ad agire solo sugli attributi di interesse.
+
 - **Classi anonime**: in alcuni casi, per definire il comportamento di un componente grafico, è stato necessario creare delle classi anonime. Questa funzionalità di Scala ha permesso di definire il comportamento del componente direttamente all'interno del codice, senza dover creare una classe apposita. Questo ha reso il codice più breve e leggibile, evitando di dover creare classi che sarebbero state utilizzate solo in un contesto specifico.
   ```scala
-  private val getInfoText: String => Text = new Text(_) {
+  /** Lambda per la creazione di un componente grafico di tipo Text con un testo ed un font specifici. */
+  val getInfoText: String => Text = new Text(_) {
     font = new Font("Roboto", 14)
     textAlignment = TextAlignment.Center
   }
   ```
   In questo esempio di codice è possibile vedere due aspetti interessanti del linguaggio. In primo luogo, la definizione di `getInfoText` che mostra molto bene l'uniformità dei tipi di Scala. Infatti, è stato possibile attribuire ad una `val` una funzione lambda in modo molto naturale. In secondo luogo, la definizione di una classe anonima che estende `Text` di ScalaFX. Qui è interessante come sia possibile passare un parametro al costruttore della classe anonima, in modo molto conciso e leggibile.
+
 - **Operatori sulle collezioni**: in svariati punti del codice è stato necessario lavorare con delle collezioni di dati. Scala mette a disposizione una serie di operatori che permettono di manipolare le collezioni in maniera molto più concisa rispetto a Java. Questo ha permesso di scrivere codice più leggibile e di ridurre la quantità di codice necessaria per ottenere lo stesso risultato. Inoltre, in questo modo ci si è potuti attenere al paradigma funzionale, che è uno dei punti di forza di Scala.
   ```scala
   /** Lista dei pulsanti utilizzati per mostrare e selezionare le risposte alle domande */
-  private val answersButtons = QuestionController.getQuestion.map(_.answers.zipWithIndex.map { case (answer, index) =>
+  val answersButtons = QuestionController.getQuestion.map(_.answers.zipWithIndex.map { case (answer, index) =>
     val btnColors = getAnswerBtnColor(index)
     val button = craftButton(answer, btnColors)
     button.onAction = e => answerQuestion(index)
@@ -75,5 +79,24 @@ Sempre in relazione all'interfaccia grafica, ho interamente sviluppato l'object 
 def areLoginInputsValid(usernameFields: TextField*)(passwordFields: TextField*): Boolean =
   fieldsAreCompliant(usernameFields.appendedAll(passwordFields)) && fieldsAreDistinct(usernameFields)
 ```
-Il codice qui sopra mostra come è stato possibile separare i parametri del metodo `areLoginInputsValid` in maniera molto elegante e concisa, grazie all'utilizzo del currying. In questo modo, è stato possibile creare una funzione modulare e flessibile.
+Il codice qui sopra mostra come è stato possibile separare concettualmente i parametri del metodo `areLoginInputsValid` in maniera molto elegante e concisa, grazie all'utilizzo del currying. In particolare, è possibile notare come i parametri relativi agli username e alle password siano stati separati in due gruppi distinti, in modo da poterli passare al metodo in maniera indipendente.
 
+
+## Build Automation
+La scelta di utilizzare SBT come strumento di build automation è stata presa e condivisa da entrambi i membri del team. Io mi sono occupato di scrivere il file di configurazione `build.sbt`, in cui sono state definite le dipendenze del progetto e le regole per determinare la corretta versione delle librerie usate in base al sistema operativo e all'architettura sottostante.
+
+Per quanto riguarda la creazione del _fat JAR_, ho scelto di utilizzare il plugin `sbt-assembly` per creare un eseguibile contenente tutte le dipendenze necessarie per l'esecuzione dell'applicazione.
+
+
+## Continuous Integration
+La configurazione del processo di Continuous Integration è stata anch'essa realizzata da me. In particolare, ho scelto di utilizzare GitHub Actions come servizio di CI/CD, in quanto integrato direttamente con il repository su GitHub e molto semplice da configurare. Il file di definizione del _workflow_ è stato scritto in YAML e si trova nella directory `.github/workflows/lambdaquiz-ci.yml`.
+
+Il processo di CI è stato configurato in modo da eseguire una serie di passaggi automatici a ogni _push_ sul branch `main`. Sono stati definiti due _jobs_ principali: uno per la compilazione e il testing del codice, e uno per la verifica della qualità di esso. L'ordine di esecuzione imposto prevede che prima venga eseguito il _job_ `quality` e successivamente `tests`. Così facendo, la compilazione e il testing del codice avverranno solo ed esclusivamente se lo stesso rispetta i criteri di qualità definiti.
+
+Affinché i _jobs_ riuscissero a portare a termine il loro compito, è stato necessario prevedere una fase di setup di Java 17 e di SBT. Questo è stato possibile grazie all'uso di _actions_ predefinite di GitHub, che permettono di configurare l'ambiente di lavoro in modo molto semplice e veloce. Inoltre, è stato necessario installare il plugin SBT per `scalafmt`, in modo da poter eseguire i test di qualità del codice. Questo plugin è stato installato tramite il file `project/plugins.sbt`, che in generale contiene tutte le definizioni dei plugin necessari per il corretto funzionamento del progetto.
+
+
+## Documentazione
+Abbiamo entrambi contribuito a documentare il progetto, in particolare mediante l'uso di Scaladoc. Durante il processo, si è cercato di documentare il codice in modo esaustivo, con lo scopo di rendere più agevole la comprensione del funzionamento delle classi e dei metodi.
+
+Per quanto riguarda la suddivisione del lavoro, il membro del team Marco ha scritto la documentazione relativa ai package `controllers` e `model`, mentre il membro Alberto si è occupato di documentare tutto il testo, ovvero `view`, `business`,  e tutto ciò che riguarda i test.
