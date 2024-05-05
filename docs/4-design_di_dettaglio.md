@@ -16,7 +16,7 @@ Nella figura seguente è mostrato il diagramma delle classi del package `busines
 ## Model
 Questo package contiene le classi che rappresentano le entità del gioco LambdaQuiz, le quali rispecchiano il modello di dominio definito in fase di raccolta dei requisiti.
 
-Ogni entità è definita per mezzo di una `case class`, la quale fornisce tutti gli attributi e le operazioni su di essi. Vi è poi il relativo companion-object che si occupa prima di tutto di istanziare le classi sfruttando il pattern Factory Method. Un'altra importante funzione di quest'ultimo è quella di ospitare la logica per la conversione da e verso il formato JSON in maniera trasparente. A tal scopo e in accordo con la libreria `reactivemongo` utilizzata per l'interfacciamento con MongoDB, sono stati definiti due `implicit object`s all'interno del companion-object: uno per la lettura e uno per la scrittura dei dati nel database. Più nel dettaglio, tali oggetti impliciti implementano due specifici metodi della libreria suddetta che si occupano di gestire il processo di serializzazione e deserializzazione specifico sul dato in questione. Il fatto di definire questi oggetti come impliciti consente di avere un processo di conversione automatico e trasparente.
+Ogni entità è definita per mezzo di una `case class`, all'interno della quale sono presenti tutti gli attributi e le operazioni su di essi. Vi è poi il relativo companion-object che si occupa di istanziare le classi sfruttando il pattern Factory Method.
 
 Di seguito, la descrizione dettagliata delle classi presenti nel package `model`, visionabili anche nel diagramma sottostante:
 - **User**: rappresenta il singolo utente registrato al gioco  ed è caratterizzato da:
