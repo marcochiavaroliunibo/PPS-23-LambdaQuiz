@@ -82,6 +82,16 @@ def areLoginInputsValid(usernameFields: TextField*)(passwordFields: TextField*):
 Il codice qui sopra mostra come è stato possibile separare concettualmente i parametri del metodo `areLoginInputsValid` in maniera molto elegante e concisa, grazie all'utilizzo del currying. In particolare, è possibile notare come i parametri relativi agli username e alle password siano stati separati in due gruppi distinti, in modo da poterli passare al metodo in maniera indipendente.
 
 
+## Testing
+Al testing dell'applicazione hanno contribuito entrambi i membri del team, man mano che portavano a termine i compiti assegnati. Per quanto riguarda la struttura dei test, essa è stata definita da me, a partire dallo stile di scrittura degli stessi. 
+
+In particolare, ho optato per lo stile di testing _FlatSpec_ di ScalaTest, in quanto ritenuto il più adatto per il tipo di applicazione che stavamo sviluppando. Esso permette di scrivere test in modo intuitivo e idiomatico, sfruttando le funzionalità di Scala per rendere il codice più leggibile e conciso. 
+
+Per quanto riguarda l'architettura dei test, ho messo in piedi una struttura in grado di orchestrare il processo di esecuzione degli stessi. Più nel dettaglio, il punto di ingresso è la classe `TestOrchestrator` che estende il trait `BeforeAndAfterAll`. Ciò, ha permesso di sfruttare il metodo `beforeAll`  per inizializzare il database prima dell'esecuzione dei test, e il metodo `afterAll` per chiudere la connessione alla base dati al termine di tutto. In più, è stato sfruttato il metodo `nestedSuites` per specificare la lista di classi di test da eseguire. Questo approccio ha permesso di avere un controllo molto fine sul processo di esecuzione dei test, garantendo che il contesto di esecuzione fosse sempre lo stesso.
+
+Per consentire alla suddetta architettura di funzionare correttamente, è stato necessario marcare tutte le classi di test con l'annotazione `@DoNotDiscover`. Questo perché, altrimenti, ScalaTest avrebbe cercato di eseguire tutti i test presenti nel progetto, anche se essi venivano già mandati in esecuzione dalla classe orchestratrice.
+
+
 ## Build Automation
 La scelta di utilizzare SBT come strumento di build automation è stata presa e condivisa da entrambi i membri del team. Io mi sono occupato di scrivere il file di configurazione `build.sbt`, in cui sono state definite le dipendenze del progetto e le regole per determinare la corretta versione delle librerie usate in base al sistema operativo e all'architettura sottostante.
 
