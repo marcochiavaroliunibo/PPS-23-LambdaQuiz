@@ -18,8 +18,13 @@ case class Score(user: User, var score: Int)
   * Abilita la conversione da e verso BSONDocument in maniera trasparente, sfruttando il meccanismo degli impliciti.
   */
 object Score:
-  @SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))
-  def apply(user: User, score: Int = -1): Score = Score(user, score)
+  /** Crea un nuovo oggetto di tipo [[Score]] con punteggio iniziale pari a -1.
+    * @param user
+    *   l'utente a cui è associato il punteggio
+    * @return
+    *   il nuovo oggetto di tipo [[Score]]
+    */
+  def apply(user: User): Score = Score(user, -1)
 
   implicit object ScoreReader extends BSONDocumentReader[Score]:
     /** Converte un documento BSON in un oggetto di tipo [[Score]].
