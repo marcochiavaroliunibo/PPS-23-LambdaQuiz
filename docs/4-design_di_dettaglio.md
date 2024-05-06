@@ -90,4 +90,4 @@ Le schermate previste dal sistema sono le seguenti:
 ### Components
 Raccoglie le classi che rappresentano i componenti grafici che compongono le scene. In questo modo è possibile riutilizzarli in più schermate, garantendo una maggiore coerenza e facilitando la manutenzione del codice.
 
-[Indietro](3-design_architetturale.md) | [Torna alla Home](index.md) | [Avanti](5-tecnologie.md)
+[Indietro](3-design_architetturale.md) | [Torna alla Home](index.md) | [Avanti](5-implementazione.md)

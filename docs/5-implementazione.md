@@ -44,4 +44,4 @@ Di seguito, sono riportati i link ai documenti che descrivono il lavoro svolto d
 - [contributo di Marco Chiavaroli](contributions/marco.md),
 - [contributo di Alberto Spadoni](contributions/alberto.md)
 
-[Indietro](5-tecnologie.md) | [Torna alla Home](index.md) | [Avanti](7-conclusioni)
+[Indietro](4-design_di_dettaglio.md) | [Torna alla Home](index.md) | [Avanti](6-conclusioni)
