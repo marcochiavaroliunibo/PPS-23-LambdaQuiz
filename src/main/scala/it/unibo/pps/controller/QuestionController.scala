@@ -63,7 +63,7 @@ object QuestionController:
 
   /** Metodo per gestire la progressione dei round.
     *
-    * Innanzitutto ottiene l'ultimo relativo al gioco in corso. Se esso non è presente, significa che la partita è
+    * Innanzitutto ottiene l'ultimo round relativo al gioco in corso. Se esso non è presente, significa che la partita è
     * appena iniziata e occorre creare il primo round. Al contrario, se l'ultimo round risulta presente, si verifica se
     * è in corso o completato. Nel primo caso si passa al secondo giocatore, nel secondo si crea il round successivo.
     * @return
