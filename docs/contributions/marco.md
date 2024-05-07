@@ -44,7 +44,7 @@ def getCurrentGameFromPlayers(players: List[User]): Future[Option[List[Game]]] =
     val sort = BSONDocument("lastUpdate" -> -1)
     readMany(query, sort)
 ```
-La query filtra l'estrazione dei documenti estraendo i "non completati" che hanno come giocatori quelli passati in input.
+La query filtra i risultati ottenuti dal database, selezionando solo i Game "non completati" che hanno come giocatori quelli passati in input.
 Inoltre, la query presenta una logica di ordinamento decrescente, rispetto alla data del match.
 
 Analogamente alla logica appena vista, si sviluppano tutte le altre query necessarie per lo sviluppo del progetto e specifiche per ogni collezione.
@@ -55,7 +55,7 @@ Seguendo questa divisione, Marco si è occupato prevalentemente della logica di 
 In questa area del progetto, Marco ha lavorato sullo sviluppo degli algoritmi che si attivano in base alle interazioni dell'utente con il sistema (ad esempio la creazione di un nuovo match o la risposta a una domanda del quiz).
 Ogni controller si occupa di un modello identificato nella base dati, gestendo così le interazioni con esso.
 
-Nel codice che segue si riporta uno degli algoritmi più interessanti, sviluppato per la gestione dei round. Come si legge dalla _doc_ appena sopra la funzione, si parte dall'ottenere l'ultimo round giocato del match (se non esiste viene creato) ed in seguito si verifica se:
+Nel codice che segue si riporta uno degli algoritmi più interessanti, sviluppato per la gestione dei round. Come si legge dalla _scaladoc_ appena sopra la funzione, si parte dall'ottenere l'ultimo round giocato del match (se non esiste viene creato) ed in seguito si verifica se:
 - il primo utente deve ancora giocare;
 - il primo utente ha già giocato e si può passare il turno al secondo;
 - entrambi gli utenti hanno giocato e di conseguenza va creato il successivo round di gioco.
@@ -119,10 +119,10 @@ def computePartialPointsOfUser(user: User, game: Game = null): Int =
     .filter(_.score != -1)                    // esclude i valori -1 (round non ancora giocato dall'utente)
     .foldRight(0)(_.score + _)                // calcola il punteggio per accumulazione
 ```
-Si vuole riportare tale implementazione poiché ritenuta interessante, specie per mostrare l'uso di alcune funzionalità avanzate di Scala che hanno permesso di effettuare pattern matching sull'estrazione dei round tramite la logica di business ed inseguito il filtraggio dei dati secondo le regole che seguono:
+Si vuole riportare tale implementazione poiché ritenuta interessante, specie per mostrare l'uso di alcune funzionalità avanzate di Scala che hanno permesso di effettuare pattern matching sull'estrazione dei round tramite la logica di business e in seguito il filtraggio dei dati secondo le regole che seguono:
 - estrazione di una lista di punteggi, partendo dalla lista dei loro relativi round;
 - estrazione dei soli punteggi appartenenti all'utente di interesse;
-- esclusione dei punteggi _"-1"_ poiché hanno significato di _"round non ancora giocato dall'utente"_;
+- esclusione dei punteggi che hanno un valore pari a -1, poiché hanno significato di _"round non ancora giocato dall'utente"_;
 - calcolo del punteggio per accumulazione dei dati rimasti.
 
 ## Uso della logica funzionale di Scala
