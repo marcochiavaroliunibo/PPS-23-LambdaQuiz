@@ -9,6 +9,7 @@ import org.scalatest.matchers.*
 import scala.language.postfixOps
 
 @DoNotDiscover
+/** Classe di test per [[UserRepository]] */
 class UserRepositoryTests extends AsyncFlatSpec with should.Matchers:
 
   @SuppressWarnings(Array("org.wartremover.warts.IterableOps"))

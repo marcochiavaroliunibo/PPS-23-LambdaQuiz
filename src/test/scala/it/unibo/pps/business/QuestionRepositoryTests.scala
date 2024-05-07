@@ -7,6 +7,7 @@ import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.*
 
 @DoNotDiscover
+/** Classe di test per [[QuestionRepository]] */
 class QuestionRepositoryTests extends AsyncFlatSpec with should.Matchers:
 
   @SuppressWarnings(Array("org.wartremover.warts.IterableOps"))

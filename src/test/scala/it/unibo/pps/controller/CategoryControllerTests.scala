@@ -6,6 +6,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
 @DoNotDiscover
+/** Classe di test per [[CategoryController]] */
 class CategoryControllerTests extends AnyFlatSpec with should.Matchers:
 
   private val randomCategories = for {

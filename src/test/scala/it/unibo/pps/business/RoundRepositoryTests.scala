@@ -8,6 +8,7 @@ import org.scalatest.matchers.*
 import reactivemongo.api.bson.BSONDocument
 
 @DoNotDiscover
+/** Classe di test per [[RoundRepository]] */
 class RoundRepositoryTests extends AsyncFlatSpec with should.Matchers:
 
   @SuppressWarnings(Array("org.wartremover.warts.IterableOps"))

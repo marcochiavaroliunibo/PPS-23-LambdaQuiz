@@ -8,6 +8,7 @@ import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.*
 
 @DoNotDiscover
+/** Classe di test per [[GameRepository]] */
 class GameRepositoryTests extends AsyncFlatSpec with should.Matchers with ScalaFutures:
 
   @SuppressWarnings(Array("org.wartremover.warts.IterableOps"))

@@ -8,6 +8,7 @@ import org.scalatest.matchers.*
 
 @DoNotDiscover
 @SuppressWarnings(Array("org.wartremover.warts.IterableOps"))
+/** Classe di test per [[GameController]] */
 class GameControllerTests extends AnyFlatSpec with should.Matchers:
 
   "GameController" should "be able to read the current game" in {

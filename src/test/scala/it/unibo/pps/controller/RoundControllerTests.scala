@@ -7,6 +7,7 @@ import org.scalatest.matchers.*
 
 @DoNotDiscover
 @SuppressWarnings(Array("org.wartremover.warts.IterableOps"))
+/** Classe di test per [[RoundController]] */
 class RoundControllerTests extends AnyFlatSpec with should.Matchers:
 
   private val randomGame = games.last

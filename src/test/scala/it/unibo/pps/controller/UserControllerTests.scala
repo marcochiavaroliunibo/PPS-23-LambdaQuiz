@@ -7,6 +7,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.*
 
 @DoNotDiscover
+/** Classe di test per [[UserController]] */
 class UserControllerTests extends AnyFlatSpec with should.Matchers:
 
   private val unregisteredUsers = players.map(u => User(u.password, u.username))
