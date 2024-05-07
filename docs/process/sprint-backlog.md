@@ -12,7 +12,7 @@ Di seguito verranno elencate le diverse iterazioni effettuate, comprese di date 
 ## Sprint 1 
 #### 06-03-2024 - 11-03-2024
 
-| Attività sul branch `report`                               | Durata |
+| Attività inerenti il codice sorgente                       | Durata |
 |------------------------------------------------------------|--------|
 | Creazione repo e inizializzazione progetto                 | 2h     |
 | Studio approfondito del linguaggio Scala 3                 | 6d     |
@@ -27,7 +27,7 @@ Durante questo sprint ci sono state alcune difficoltà relative alle tecnologie 
 ## Sprint 2
 #### 12-03-2024 - 17-03-2024
 
-| Attività sul branch `report`                       | Durata |
+| Attività inerenti il codice sorgente               | Durata |
 |----------------------------------------------------|--------|
 | Implementazione della schermata di login nella GUI | 4h     |
 | Implementazione della dashboard                    | 2d     |
@@ -43,7 +43,7 @@ Man mano che la modellazione continuava, ci siamo accorti che l’iniziale strut
 ## Sprint 3
 #### 18-03-2024 - 23-03-2024
 
-| Attività sul branch `report`                                 | Durata |
+| Attività inerenti il codice sorgente                         | Durata |
 |--------------------------------------------------------------|--------|
 | Refactoring della view                                       | 4h     |
 | Refactoring dei test esistenti                               | 4h     |
@@ -56,7 +56,7 @@ Questo terzo sprint è stato caratterizzato dall’aver raggiunto una versione d
 ## Sprint 4
 #### 24-03-2024 - 29-03-2024
 
-| Attività sul branch `report`                        | Durata |
+| Attività inerenti il codice sorgente                | Durata |
 |-----------------------------------------------------|--------|
 | Aggiustamenti grafici nella dashboard               | 1d     |
 | Report e Ranking page (prima versione)              | 2d     |
@@ -75,7 +75,7 @@ Le pagine di Report e Ranking mancano di molta ottimizzazione, sia grafica che d
 # DATE DA VERIFICARE (05/04 - 10/04)
 #### 30-03-2024 - 04-04-2024 
 
-| Attività sul branch `report`                                                                  | Durata |
+| Attività inerenti il codice sorgente                                                          | Durata |
 |-----------------------------------------------------------------------------------------------|--------|
 | Miglioramenti grafici in varie parti dell’app                                                 | 4h     |
 | Gestione del lungo tempo di caricamento delle statistiche e classifica globale                | 6h     |
@@ -91,7 +91,7 @@ Questo sprint si è chiuso con una versione dell’applicazione completa e funzi
 # DATE DA VERIFICARE (11/04 - 16/04)
 #### 05-04-2024 - 10-04-2024
 
-| Attività sul branch `report`                                            | Durata |
+| Attività inerenti il codice sorgente                                    | Durata |
 |-------------------------------------------------------------------------|--------|
 | Refactoring generale di tutti i componenti del package controller       | 1d     |
 | Refactoring generale di tutti i componenti dei package model e business | 1d     |
@@ -108,7 +108,7 @@ Non è stato però possibile mettere mano alla suite di test, come inizialmente 
 # DATE DA VERIFICARE (17/04 - 22/04)
 #### 11-04-2024 - 16-04-2024
 
-| Attività sul branch `report`                                               | Durata |
+| Attività inerenti il codice sorgente                                       | Durata |
 |----------------------------------------------------------------------------|--------|
 | Refactoring e ampliamento della suite di test                              | 2d     |
 | Risoluzione di alcuni problemi relativi ai test asincroni                  | 2d     |
@@ -122,7 +122,7 @@ Infine, si è dovuta impiegare una certa quantità di tempo per risolvere un pro
 # DATE DA VERIFICARE (23/04 - 28/04)
 #### 17-04-2024 - 22-04-2024
 
-| Attività sul branch `report`                                                 | Durata |
+| Attività inerenti la documentazione di progetto                              | Durata |
 |------------------------------------------------------------------------------|--------|
 | Creazione dello scheletro della relazione                                    | 2h     |
 | Inizializzazione della pagina su Github Pages per ospitare la documentazione | 1h     |
@@ -132,7 +132,7 @@ Infine, si è dovuta impiegare una certa quantità di tempo per risolvere un pro
 | Scrittura capitolo relativo al design architetturale                         | 4h     |
 | Bozza del capitolo relativo al design di dettaglio                           | 6h     |
 
-| Attività sul branch `main`                                                      | Durata |
+| Attività inerenti il codice sorgente                                            | Durata |
 |---------------------------------------------------------------------------------|--------|
 | Aggiunta di alcuni test per le categorie di domande                             | 4h     |
 | Aggiunta dei plugins `scalafmt` e `wartremover` in sbt per la quality assurance | 6h     |
@@ -146,7 +146,7 @@ Parallelamente a questo, si è proceduto con la revisione e il miglioramento del
 # DATE DA VERIFICARE (29/04 - 04/05)
 #### 23-04-2024 - 28-04-2024
 
-| Attività sul branch `report`                            | Durata |
+| Attività inerenti la documentazione di progetto         | Durata |
 |---------------------------------------------------------|--------|
 | Revisione capitolo introduttivo                         | 2h     |
 | Revisione capitolo sul processo di sviluppo             | 2h     |
@@ -155,7 +155,7 @@ Parallelamente a questo, si è proceduto con la revisione e il miglioramento del
 | Inizio scrittura capitolo sullo sprint backlog          | 4h     |
 | Disegno di alcuni diagrammi per la relazione            | 4h     |
 
-| Attività sul branch `main`                                                                      | Durata |
+| Attività inerenti il codice sorgente                                                            | Durata |
 |-------------------------------------------------------------------------------------------------|--------|
 | Refactoring dell'intera codebase per risolvere gli errori ed i warning sollevati da wartremover | 4h     |
 | File workflow della CI ampliato e migliorato                                                    | 4h     |
@@ -170,12 +170,12 @@ Sulla base delle modifiche fatte al codice nello sprint precedente, si è proced
 # DATE DA VERIFICARE (05/05 - 10/05)
 #### 29-04-2024 - 04-05-2024
 
-| Attività sul branch `report`                                | Durata |
+| Attività inerenti la documentazione di progetto             | Durata |
 |-------------------------------------------------------------|--------|
 | Scrittura capitolo sui dettagli implementativi del progetto | 3d     |
 | Revisione completa del capitolo sul design architetturale   | 2d     |
 
-| Attività sul branch `main`                       | Durata |
+| Attività inerenti il codice sorgente             | Durata |
 |--------------------------------------------------|--------|
 | Piccolo refactoring di alcune entità del modello | 2h     |
 
