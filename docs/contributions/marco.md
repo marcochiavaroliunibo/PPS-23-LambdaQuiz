@@ -59,6 +59,7 @@ Nel codice che segue si riporta uno degli algoritmi più interessanti, sviluppat
 - il primo utente deve ancora giocare;
 - il primo utente ha già giocato e si può passare il turno al secondo;
 - entrambi gli utenti hanno giocato e di conseguenza va creato il successivo round di gioco.
+
 ```scala
 /** Metodo per gestire la progressione dei round.
   *
