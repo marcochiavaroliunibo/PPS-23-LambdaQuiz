@@ -60,6 +60,7 @@ Nel codice che segue si riporta uno degli algoritmi più interessanti, sviluppat
 - il primo utente ha già giocato e si può passare il turno al secondo;
 - entrambi gli utenti hanno giocato e di conseguenza va creato il successivo round di gioco.
 
+Ogni volta che l'utente vuole proseguire il match, questa funzione permette di caricare correttamente il turno successivo, garantendo così la corretta consistenza della sfida.
 ```scala
 /** Metodo per gestire la progressione dei round.
   *
@@ -118,7 +119,7 @@ def computePartialPointsOfUser(user: User, game: Game = null): Int =
     .filter(_.score != -1)                    // esclude i valori -1 (round non ancora giocato dall'utente)
     .foldRight(0)(_.score + _)                // calcola il punteggio per accumulazione
 ```
-Si vuole riportare tale implementazione ritenuta interessante, specie per mostrare l'uso di alcune funzionalità avanzate di Scala che hanno permsso di effettuare pattern matching sull'estrazione dei round tramite la logica di business ed inseguito il filtraggio dei dati secondo le regole che seguono:
+Si vuole riportare tale implementazione poiché ritenuta interessante, specie per mostrare l'uso di alcune funzionalità avanzate di Scala che hanno permesso di effettuare pattern matching sull'estrazione dei round tramite la logica di business ed inseguito il filtraggio dei dati secondo le regole che seguono:
 - estrazione di una lista di punteggi, partendo dalla lista dei loro relativi round;
 - estrazione dei soli punteggi appartenenti all'utente di interesse;
 - esclusione dei punteggi _"-1"_ poiché hanno significato di _"round non ancora giocato dall'utente"_;
@@ -135,6 +136,7 @@ In base al risultato ottenuto, in seguito all'interazione tra utente e finestra 
 - se il valore estratto è una lista contenente i due utenti che stanno provando a fare login, allora quest'ultimo è andato a buon fine si viene reiderizzati alla Dashboard.
 - se si ottiene qualsiasi altro valore, allora le credenziali di login sono errate e viene segnalato all'utente tramite un messaggio.
 - se non si ottiene un risultato, allora l'utente ha chiuso la finestra di login, senza quindi provare ad accedere.
+
 ```scala
 // Gestione pulsante per andare alla dashboard
 private val playBtn: Button = craftButton("DASHBOARD")
