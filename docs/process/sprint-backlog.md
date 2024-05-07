@@ -170,4 +170,13 @@ Sulla base delle modifiche fatte al codice nello sprint precedente, si è proced
 # DATE DA VERIFICARE (05/05 - 10/05)
 #### 29-04-2024 - 04-05-2024
 
+| Attività sul branch `report`                                | Durata |
+|-------------------------------------------------------------|--------|
+| Scrittura capitolo sui dettagli implementativi del progetto | 3d     |
+| Revisione completa del capitolo sul design architetturale   | 2d     |
+
+| Attività sul branch `main`                       | Durata |
+|--------------------------------------------------|--------|
+| Piccolo refactoring di alcune entità del modello | 2h     |
+
 ### Retrospettiva
