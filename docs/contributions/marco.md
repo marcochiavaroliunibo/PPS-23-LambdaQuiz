@@ -146,3 +146,5 @@ playBtn.onAction = _ => {
 
 In conclusione, sfruttando le sintassi del linguaggio funzionale di Scala, è stato possibile creare un progetto scalabile che risponde alle esigenze dei requisiti iniziali in modo efficiente e affidabile.
 L'uso di una corretta logica funzionale ha contribuito alla realizzazione di un codice conciso, modulare e facilmente testabile.
+
+| [Torna all'implementazione](../5-implementazione.md) |

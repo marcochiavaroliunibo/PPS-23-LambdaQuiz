@@ -110,3 +110,5 @@ Affinché i _jobs_ riuscissero a portare a termine il loro compito, è stato nec
 Abbiamo entrambi contribuito a documentare il progetto, in particolare mediante l'uso di Scaladoc. Durante il processo, si è cercato di documentare il codice in modo esaustivo, con lo scopo di rendere più agevole la comprensione del funzionamento delle classi e dei metodi.
 
 Per quanto riguarda la suddivisione del lavoro, il membro del team Marco ha scritto la documentazione relativa ai package `controllers` e `model`, mentre il membro Alberto si è occupato di documentare tutto il testo, ovvero `view`, `business`,  e tutto ciò che riguarda i test.
+
+| [Torna all'implementazione](../5-implementazione.md) |
