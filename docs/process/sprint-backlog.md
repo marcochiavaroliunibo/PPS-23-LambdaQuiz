@@ -152,12 +152,13 @@ Parallelamente a questo, si è proceduto con la revisione e il miglioramento del
 | Revisione capitolo sul processo di sviluppo             | 2h     |
 | Scrittura capitolo sulle tecnologie                     | 1d     |
 | Revisione completa del capitolo sul design di dettaglio | 2d     |
+| Inizio scrittura capitolo sullo sprint backlog          | 4h     |
 | Disegno di alcuni diagrammi per la relazione            | 4h     |
 
 | Attività sul branch `main`                                                                      | Durata |
 |-------------------------------------------------------------------------------------------------|--------|
 | Refactoring dell'intera codebase per risolvere gli errori ed i warning sollevati da wartremover | 4h     |
-| File workflow della CI ampliato e migliorato                                                    | 1d     |
+| File workflow della CI ampliato e migliorato                                                    | 4h     |
 | Logica di business meglio separata tra i relativi controllers                                   | 4h     |
 
 ### Retrospettiva
