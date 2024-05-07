@@ -167,5 +167,6 @@ object RoundController:
   def resetVariable(): Unit =
     _round = None
     _player = None
+    QuestionController.resetQuestions()
 
 end RoundController

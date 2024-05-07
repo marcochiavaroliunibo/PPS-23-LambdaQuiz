@@ -3,6 +3,7 @@ package it.unibo.pps.controller
 import it.unibo.pps.business.QuestionRepository
 import it.unibo.pps.model.*
 
+import scala.collection.mutable.ListBuffer
 import scala.concurrent.Await
 import scala.concurrent.duration.*
 import scala.util.Random
@@ -15,6 +16,7 @@ object QuestionController:
 
   /** Domanda corrente da mostrare all'utente */
   private var _question: Option[Question] = None
+  def getQuestion: Option[Question] = _question
 
   /** Contatore delle domande visualizzate durante un turno */
   var counterQuestionRound: Int = 0
@@ -22,23 +24,31 @@ object QuestionController:
   /** Numero di domande da visualizzare all'utente durante un turno */
   val QUESTION_FOR_ROUND: Int = 3
 
-  def getQuestion: Option[Question] = _question
+  /** lista delle domande di una certa categoria presenti nel database */
+  private var questions: Option[List[Question]] = None
 
-  /** Metodo per estrarre una domanda casuale appartenente ad una categoria specifica.
+  /** lista delle domande già visualizzate, utile per evitare ripetizioni nello stesso round */
+  private val extractedQuestions: ListBuffer[Question] = ListBuffer.empty
+
+  /** Metodo per ottenere la prossima domanda da mostrare all'utente, evitando di ripetere quelle già visualizzate.
+    *
     * @param category
     *   categoria della domanda da estrarre
     * @return
     *   domanda casuale appartenente alla categoria specificata
     */
-  private def getRandomQuestionByCategory(category: Category): Option[Question] =
-    try {
-      val a = Await.result(questionRepository.getQuestionsByCategory(category), 5.seconds)
-      a.map(questions => questions(Random.nextInt(questions.length)))
-    } catch {
-      case e: Exception =>
-        e.printStackTrace()
-        None
-    }
+  private def getNextQuestion(category: Category): Option[Question] =
+    questions
+      .orElse {
+        questions = Await.result(questionRepository.getQuestionsByCategory(category), 5.seconds)
+        questions
+      }
+      .map(_.filterNot(extractedQuestions.contains))
+      .map { qstns =>
+        val question = qstns(Random.nextInt(qstns.size))
+        extractedQuestions += question
+        question
+      }
 
   /** Metodo per gestire il numero di domande da visualizzare all'utente durante un turno.
     *
@@ -50,7 +60,9 @@ object QuestionController:
     */
   def nextQuestion: Boolean =
     counterQuestionRound = (counterQuestionRound + 1) % QUESTION_FOR_ROUND
-    counterQuestionRound != 0
+    val areOtherQuestions = counterQuestionRound != 0
+    if !areOtherQuestions then extractedQuestions.clear()
+    areOtherQuestions
 
   /** Metodo per preparare la domanda da visualizzare all'utente */
   def prepareQuestion(): Unit = {
@@ -62,9 +74,15 @@ object QuestionController:
       GameController.gameOfLoggedUsers
         .map(_.categories(r.numberRound - 1))
         .foreach(category => {
-          _question = getRandomQuestionByCategory(category)
+          _question = getNextQuestion(category)
         })
     })
+  }
+
+  /** Metodo per resettare la lista delle domande già visualizzate */
+  def resetQuestions(): Unit = {
+    extractedQuestions.clear()
+    questions = None
   }
 
 end QuestionController
