@@ -21,7 +21,7 @@ private class AnswersSpace extends VBox(10):
     button
   })
 
-  /** Metodo che sfrutta il controller per effettuare la giocacata e passare alla prossima domanda. Nel caso in cui non
+  /** Metodo che sfrutta il controller per effettuare la giocata e passare alla prossima domanda. Nel caso in cui non
     * ci siano più domande, il metodo riporta il giocatore alla dashboard.
     * @param answerIndex
     *   indice della risposta selezionata

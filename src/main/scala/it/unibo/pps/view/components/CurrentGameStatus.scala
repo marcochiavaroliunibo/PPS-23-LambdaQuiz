@@ -15,7 +15,7 @@ import scalafx.scene.text.Text
   * Visualizza i due giocatori che hanno effettuato l'accesso e i loro punteggi parziali. Inoltre, per ogni round
   * giocato, mostra i risultati ottenuti per ogni utente.
   *
-  * Infone, è presente un footer che contiene i pulsanti per creare una nuova partita o accedere ad una partita in
+  * Infine, è presente un footer che contiene i pulsanti per creare una nuova partita o accedere ad una partita in
   * corso.
   *
   * @param currentGame

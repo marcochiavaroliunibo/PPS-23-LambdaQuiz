@@ -12,7 +12,7 @@ object CategoryController:
     * @param nCategories
     *   numero di categorie da estrarre. Equivale al numero di round giocati per ogni partita
     * @return
-    *   lista delle categorie estreatte
+    *   lista delle categorie estratte
     */
   def getRandomCategories(nCategories: Int): List[Category] =
     Iterator

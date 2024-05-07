@@ -104,7 +104,7 @@ class ReportScene extends Scene:
   /** Higher-order function che restituisce un [[Text]] a partire da una [[String]], che rappresenta il testo, e da un
     * [[Int]], il quale corrisponde alla grandezza dei caratteri.
     *
-    * Per specificare entrambi i paarmetri, bisogna usare il currying. Esempi di utilizzo:
+    * Per specificare entrambi i parametri, bisogna usare il currying. Esempi di utilizzo:
     * {{{
     *   // Utilizzo completo con il currying
     *   val bigText: Text = getTextWithSize("Hello world")(64)

@@ -21,7 +21,7 @@ class TestOrchestrator extends Suite with BeforeAndAfterAll:
     logger.info("INITIALIZING DATA FOR TESTS...")
     wait(TestDataInitializer.initData)
 
-  // Consente di specificare queli classi di test devono essere eseguite per mezzo di una sequenza di Suite
+  // Consente di specificare quelli classi di test devono essere eseguite per mezzo di una sequenza di Suite
   override def nestedSuites: IndexedSeq[Suite] =
     logger.info("EXECUTING ALL TESTS...")
     val businessSuites = IndexedSeq(

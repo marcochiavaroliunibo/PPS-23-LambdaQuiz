@@ -10,6 +10,7 @@ import scala.concurrent.duration.*
 import scala.concurrent.{Await, ExecutionContext, Future}
 
 /** Controller per la gestione delle partite */
+//noinspection SpellCheckingInspection
 @SuppressWarnings(
   Array("org.wartremover.warts.Var", "org.wartremover.warts.IterableOps", "org.wartremover.warts.DefaultArguments")
 )

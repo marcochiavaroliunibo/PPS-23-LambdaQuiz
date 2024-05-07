@@ -9,7 +9,7 @@ import scalafx.application.JFXApp3.PrimaryStage
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
 
-/** Componente grafico che rappresenta il punto di ingresso dell'aplicazione.
+/** Componente grafico che rappresenta il punto di ingresso dell'applicazione.
   *
   * Crea la finestra principale e visualizza la schermata del menu.
   */

@@ -20,7 +20,7 @@ object ReportController:
     * In particolare, consente di calcolare le statistiche partendo dalla lista delle partite di interesse e dall'utente
     * per il quale si vogliono mostrare i risultati.
     *
-    * Per specificare entrambi i paarmetri, bisogna usare il currying. Esempi di utilizzo:
+    * Per specificare entrambi i parametri, bisogna usare il currying. Esempi di utilizzo:
     * {{{
     *   // Utilizzo completo con il currying
     *   val rankings: List[Ranking] = getReport(lastFiveCompletedGames)(loggedUser)

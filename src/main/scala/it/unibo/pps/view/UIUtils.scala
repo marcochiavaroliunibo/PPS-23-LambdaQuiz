@@ -68,7 +68,7 @@ object UIUtils:
     */
   def showSimpleAlert(at: AlertType, m: String): Unit = this.showAlertWithButtons(at, m, ButtonType.Close)
 
-  /** Crea e visualizza una finestra di avviso in sovraimpressione con caratteristiche personalizzabili.
+  /** Crea e visualizza una finestra di avviso in sovra impressione con caratteristiche personalizzabili.
     *
     * In particolare, è possibile scegliere la tipologia di avviso da mostrare, un testo descrittivo dello stesso e una
     * serie di pulsanti.
@@ -163,11 +163,11 @@ object UIUtils:
     )
   }
 
-  /** Funzione per determinare il colore deii pulsanti per le risposte, sulla base dell'indice di quest'ultima.
+  /** Funzione per determinare il colore dei pulsanti per le risposte, sulla base dell'indice di quest'ultima.
     * @param an
     *   indice della risposta dal quale si vuole ricavare il colore del rispettivo bottone
     * @return
-    *   una tupla formata da due elementi di tipo [[Color]], ch everranno utilizzati per dare al pulsante un colore di
+    *   una tupla formata da due elementi di tipo [[Color]], che verranno utilizzati per dare al pulsante un colore di
     *   sfondo a gradiente.
     */
   def getAnswerBtnColor(an: Int): (Color, Color) = an match
