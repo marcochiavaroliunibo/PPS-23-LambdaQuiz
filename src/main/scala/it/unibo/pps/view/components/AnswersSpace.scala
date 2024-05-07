@@ -1,23 +1,22 @@
 package it.unibo.pps.view.components
 
 import it.unibo.pps.controller.{QuestionController, RoundController}
-import it.unibo.pps.model.User
 import it.unibo.pps.view.UIUtils.*
 import it.unibo.pps.view.scenes.{DashboardScene, QuizScene}
 import scalafx.Includes.*
-import scalafx.geometry.{Orientation, Pos}
+import scalafx.geometry.Pos
 import scalafx.scene.control.Button
 import scalafx.scene.layout.*
 
 /** Componente grafico per la visualizzazione della schermata di gioco. Esso è composto dal testo della domanda a cui
   * rispondere e dai 4 bottoni relativi alle risposte.
   */
-private class AnswersSpace extends FlowPane(Orientation.Vertical, 0, 10):
-
+private class AnswersSpace extends VBox(10):
   /** Lista dei 4 pulsanti utilizzati per mostrare e selezionare le risposte alle domande */
   private val answersButtons = QuestionController.getQuestion.map(_.answers.zipWithIndex.map { case (answer, index) =>
     val btnColors = getAnswerBtnColor(index)
     val button = craftButton(answer, btnColors)
+    button.alignmentInParent = Pos.Center
     button.onAction = e => answerQuestion(index)
     button
   })
@@ -42,5 +41,5 @@ object AnswersSpace:
     * @return
     *   una nuova istanza della classe [[AnswersSpace]] sotto forma di un [[FlowPane]]
     */
-  def apply(): FlowPane = new AnswersSpace
+  def apply(): VBox = new AnswersSpace
 end AnswersSpace
