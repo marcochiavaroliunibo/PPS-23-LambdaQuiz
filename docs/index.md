@@ -1,6 +1,9 @@
-Questa pagina contiene la documentazione del progetto LambdaQuiz, un semplice gioco di quiz multi giocatore in modalità _hot seat_. Il suddetto sistema è stato sviluppato in Scala da un gruppo di 2 studenti della Laurea Magistrale in Ingegneria e Scienze Informatiche presso l'Università di Bologna - Campus di Cesena.
+Questa pagina contiene la documentazione del progetto LambdaQuiz, un semplice gioco di quiz multi giocatore in modalità
+_hot seat_. Il suddetto sistema è stato sviluppato in Scala da un gruppo di 2 studenti della Laurea Magistrale in
+Ingegneria e Scienze Informatiche presso l'Università di Bologna - Campus di Cesena.
 
 # Indice
+
 1. [Introduzione](0-introduzione.md)
 2. [Processo di sviluppo](1-processo_di_sviluppo.md)
 3. [Requisiti](2-requisiti.md)
