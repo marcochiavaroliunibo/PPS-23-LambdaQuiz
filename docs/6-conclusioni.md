@@ -76,6 +76,15 @@ Di seguito, alcune considerazioni personali in merito allo strumento di gestione
 > In conclusione, nonostante queste criticità, sono comunque soddisfatto di aver avuto l'opportunità di utilizzare JIRA.
 > Tuttavia, se dovessi tornare indietro, probabilmente sceglierei un altro strumento per la gestione del progetto.
 
+Lavorare in team:
+
+> #### Marco Chiavaroli
+> 
+> Essendo uno studente lavoratore, è per me fondamentale lavorare in un team che possa comprendere le mie esigenze (quali turni, fasce orarie da dedicare al progetto e velocità di sviluppo).
+> Tutto ciò è stato per mia fortuna possibile con Alberto, in quanto fin da subito abbiamo trovato il modo per sentirci in orari di tardo pomeriggio e, quando serviva una videocall, nelle giornate in cui svolgevo l'attività lavorativa in smartworking (in modo da essere subito disponibile a fine turno).
+> Dal primo sprint c'è stata collaborazione nello schedulare gli incontri briefing e nel dividere adeguatamente il lavoro, in modo da poter sviluppare nei propri orari i task a ognuno assegnati.
+> Ho apprezzato tale metodologia di collaborazione e penso che ciò sia fondamentale per rendere più fruibile il lavoro a chi come me si trova nella situazione di studente e lavoratore full time.
+
 ## Sviluppi futuri
 
 Sebbene il progetto sia giunto al termine, ci sono ancora molte possibilità di sviluppo e di miglioramento per il gioco
