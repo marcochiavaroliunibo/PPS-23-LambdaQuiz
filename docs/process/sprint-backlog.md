@@ -10,7 +10,7 @@ Di seguito verranno elencate le diverse iterazioni effettuate, comprese di date 
 - discutere sulle possibili variazioni rispetto al piano iniziale.
 
 ## Sprint 1 
-#### 06-03-2024 - 11-03-2024
+#### 07-03-2024 - 13-03-2024
 
 | Attività inerenti il codice sorgente                       | Durata |
 |------------------------------------------------------------|--------|
@@ -25,7 +25,7 @@ Di seguito verranno elencate le diverse iterazioni effettuate, comprese di date 
 Durante questo sprint ci sono state alcune difficoltà relative alle tecnologie utilizzate, che hanno portato le attività a durare più tempo del previsto. Ad esempio, ci siamo accorti che alcune librerie inizialmente scelte per il progetto, non funzionavano su Scala 3. Abbiamo quindi dovuto trovare delle alternative e riscrivere il codice fino a quel momento sviluppato. Inoltre, ci siamo trovati ancora poco confidenti con Scala, con SBT, e con le librerie utilizzate. Ciò ha impattato sulla produttività in quanto eravamo continuamente costretti a consultare le documentazioni. Auspichiamo che da qui in poi riusciremo a diventare sempre più sciolti e riuscire a massimizzare il lavoro svolto.
 
 ## Sprint 2
-#### 12-03-2024 - 17-03-2024
+#### 14-03-2024 - 19-03-2024
 
 | Attività inerenti il codice sorgente               | Durata |
 |----------------------------------------------------|--------|
@@ -41,7 +41,7 @@ Anche questo secondo sprint è stato caratterizzato da una minore produttività 
 Man mano che la modellazione continuava, ci siamo accorti che l’iniziale struttura del modello non era completa o non rappresentava in maniera appropriata alcune entità. Per questo motivo, l’ultima parte dello sprint ha visto una piccola revisione del modello e la riscrittura del codice che lo sfruttava.
 
 ## Sprint 3
-#### 18-03-2024 - 23-03-2024
+#### 20-03-2024 - 25-03-2024
 
 | Attività inerenti il codice sorgente                         | Durata |
 |--------------------------------------------------------------|--------|
@@ -54,7 +54,7 @@ Man mano che la modellazione continuava, ci siamo accorti che l’iniziale strut
 Questo terzo sprint è stato caratterizzato dall’aver raggiunto una versione del gioco parzialmente funzionante, la quale permetteva di avviare l’applicazione, registrare un utente, effettuare il login di due giocatori e visualizzare l’eventuale partita in corso. Ciò ha consentito di interagire con il sistema in maniera meno banale rispetto al passato e in questo contesto siamo stati in grado di rilevare e correggere alcuni bug in diverse sezioni del sistema.
 
 ## Sprint 4
-#### 24-03-2024 - 29-03-2024
+#### 26-03-2024 - 31-03-2024
 
 | Attività inerenti il codice sorgente                | Durata |
 |-----------------------------------------------------|--------|
@@ -72,8 +72,7 @@ Le pagine di Report e Ranking mancano di molta ottimizzazione, sia grafica che d
 
 
 ## Sprint 5
-# DATE DA VERIFICARE (05/04 - 10/04)
-#### 30-03-2024 - 04-04-2024 
+#### 02-04-2024 - 10-04-2024
 
 | Attività inerenti il codice sorgente                                                          | Durata |
 |-----------------------------------------------------------------------------------------------|--------|
@@ -87,9 +86,10 @@ Le pagine di Report e Ranking mancano di molta ottimizzazione, sia grafica che d
 ### Retrospettiva
 Questo sprint si è chiuso con una versione dell’applicazione completa e funzionante in tutte le sue componenti. Dal momento che tutti i requisiti obbligatori sono stati implementati, si è deciso di fermare il processo di sviluppo con lo scopo di aggiungere nuove funzionalità, per concentrarsi sul refactoring e miglioramento del codice già presente, compresa la suite di test.
 
+Questa iterazione è durata più del previsto, in particolare 3 giorni in più rispetto alle altre. Si è deciso di prolungare lo sprint per recuperare le festività pasquali, che hanno rallentato il lavoro. Inoltre, il team si è dovuto riallineare, visto che uno dei membri era stato assente per malattia.
+
 ## Sprint 6
-# DATE DA VERIFICARE (11/04 - 16/04)
-#### 05-04-2024 - 10-04-2024
+#### 11-04-2024 - 16-04-2024
 
 | Attività inerenti il codice sorgente                                    | Durata |
 |-------------------------------------------------------------------------|--------|
@@ -105,8 +105,7 @@ Questo sprint, come preventivato alla fine del precedente, è stato interamente 
 Non è stato però possibile mettere mano alla suite di test, come inizialmente previsto. Tale attività è stata rimandata al prossimo sprint.
 
 ## Sprint 7
-# DATE DA VERIFICARE (17/04 - 22/04)
-#### 11-04-2024 - 16-04-2024
+#### 17-04-2024 - 22-04-2024
 
 | Attività inerenti il codice sorgente                                       | Durata |
 |----------------------------------------------------------------------------|--------|
@@ -119,8 +118,7 @@ In questo sprint è stato principalmente trattato l’aspetto relativo ai test. 
 Infine, si è dovuta impiegare una certa quantità di tempo per risolvere un problema che causava il fallimento di alcuni test in maniera non deterministica.
 
 ## Sprint 8
-# DATE DA VERIFICARE (23/04 - 28/04)
-#### 17-04-2024 - 22-04-2024
+#### 23-04-2024 - 28-04-2024
 
 | Attività inerenti la documentazione di progetto                              | Durata |
 |------------------------------------------------------------------------------|--------|
@@ -143,8 +141,7 @@ Questo sprint è stato quasi interamente dedicato alla stesura della relazione, 
 Parallelamente a questo, si è proceduto con la revisione e il miglioramento del codice, con l’aggiunta di alcuni test e l’introduzione di due plugin per la quality assurance.
 
 ## Sprint 9
-# DATE DA VERIFICARE (29/04 - 04/05)
-#### 23-04-2024 - 28-04-2024
+#### 29-04-2024 - 04-05-2024
 
 | Attività inerenti la documentazione di progetto         | Durata |
 |---------------------------------------------------------|--------|
@@ -167,16 +164,30 @@ Anche questo sprint, come il precedente, è stato dedicato quasi interamente al 
 Sulla base delle modifiche fatte al codice nello sprint precedente, si è proceduto con un refactoring generale per risolvere i problemi sollevati da wartremover. Inoltre, si è messo mano al file di Github Actions per la CI, con lo scopo di migliorarlo. A tal proposito sono stati fatti alcuni esperimenti per cercare di incrementare la qualità e l'efficacia dello script ma sfortunatamente non hanno dato esito positivo e per questo non sono stati inclusi nella versione finale. 
 
 ## Sprint 10
-# DATE DA VERIFICARE (05/05 - 10/05)
-#### 29-04-2024 - 04-05-2024
+#### 05-05-2024 - 10-05-2024
 
 | Attività inerenti la documentazione di progetto             | Durata |
 |-------------------------------------------------------------|--------|
-| Scrittura capitolo sui dettagli implementativi del progetto | 3d     |
-| Revisione completa del capitolo sul design architetturale   | 2d     |
+| Scrittura capitolo sui dettagli implementativi del progetto | 2d     |
+| Scrittura capitolo conclusivo                               | 1d     |
+| Aggiunto stile alla pagina della relazione                  | 2h     |
+| Revisione completa della relazione                          | 6h     |
 
-| Attività inerenti il codice sorgente             | Durata |
-|--------------------------------------------------|--------|
-| Piccolo refactoring di alcune entità del modello | 2h     |
+| Attività inerenti il codice sorgente                                                   | Durata |
+|----------------------------------------------------------------------------------------|--------|
+| Piccolo refactoring di alcune entità del modello                                       | 2h     |
+| Miglioramento della logica di estrazione della prossima domanda da mostrare all'utente | 4h     |
+| Revisione della _Scaladoc_                                                             | 4h     |
+| Creazione del _fat JAR_ con SBT                                                        | 2h     |
+| Aggiornamento del file `README.md`                                                     | 2h     |
 
 ### Retrospettiva
+In questo sprint conclusivo si è proceduto con la stesura dei capitoli mancanti della relazione e con la revisione completa di essa. 
+Inoltre, è stato aggiunto uno stile alla pagina della documentazione per renderla più accattivante.
+Per quanto riguarda il codice sorgente, sono stati fatti alcuni piccoli interventi di refactoring e miglioramento generali, per poi procedere alla creazione del _fat JAR_ con il plugin `sbt-assembly`.
+
+Prima di consegnare il progetto, è stato caricato l'eseguibile nella sezione _release_ del repository su GitHub ed è stato aggiornato il file `README.md` con le istruzioni l'esecuzione del programma.
+
+Grazie ad un costante impegno ed una buona organizzazione delle iterazioni passate, si è riusciti a completare il progetto nei tempi previsti e senza particolari problemi.
+
+[Torna alla home](../index.md)
