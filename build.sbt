@@ -34,9 +34,11 @@ lazy val root = project
   .in(file("."))
   .settings(
     name := "PPS-23-LambdaQuiz",
-    version := "0.1",
+    version := "1.0",
     scalaVersion := scala3Version,
     Compile / run / mainClass := Some("it.unibo.pps.start"),
+    assembly / mainClass := Some("it.unibo.pps.start"),
+    assembly / assemblyJarName := s"lambdaquiz-${version}.jar",
     wartremoverErrors ++= Warts.unsafe,
     libraryDependencies ++= Seq(
       "org.scalafx" %% "scalafx" % "21.0.0-R32",
