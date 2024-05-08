@@ -1,5 +1,4 @@
-# Implementazione
-
+# Marco Chiavaroli
 Entrando nel dettaglio del lavoro svolto dal singolo membro del team, si riporta di seguito un resoconto delle parti svolte prevalentemente da Marco.
 
 ## Logica di business
@@ -147,4 +146,4 @@ playBtn.onAction = _ => {
 In conclusione, sfruttando le sintassi del linguaggio funzionale di Scala, è stato possibile creare un progetto scalabile che risponde alle esigenze dei requisiti iniziali in modo efficiente e affidabile.
 L'uso di una corretta logica funzionale ha contribuito alla realizzazione di un codice conciso, modulare e facilmente testabile.
 
-| [Torna all'implementazione](../5-implementazione.md) |
+[Torna all'implementazione](../5-implementazione.md)

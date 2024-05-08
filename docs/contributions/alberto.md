@@ -1,4 +1,5 @@
-# Implementazione
+# Alberto Spadoni
+Entrando nel dettaglio del lavoro svolto dal singolo membro del team, si riporta di seguito un resoconto delle parti svolte prevalentemente da Alberto.
 
 ## Model
 Il modello dei dati dell'applicazione è stato progettato e implementato in Pair programming con il mio compagno di progetto. Abbiamo deciso di implementare ogni entità mediante una `case class`, ad eccezione delle categorie, per le quali si prestava meglio un `enum` di Scala 3.
@@ -111,4 +112,4 @@ Abbiamo entrambi contribuito a documentare il progetto, in particolare mediante 
 
 Per quanto riguarda la suddivisione del lavoro, il membro del team Marco ha scritto la documentazione relativa ai package `controllers` e `model`, mentre il membro Alberto si è occupato di documentare tutto il testo, ovvero `view`, `business`,  e tutto ciò che riguarda i test.
 
-| [Torna all'implementazione](../5-implementazione.md) |
+[Torna all'implementazione](../5-implementazione.md)

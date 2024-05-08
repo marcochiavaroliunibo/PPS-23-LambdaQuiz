@@ -1,6 +1,5 @@
-# PPS-23: LambdaQuiz
+# Indice
 
-## Indice:
 1. [Introduzione](0-introduzione.md)
 2. [Processo di sviluppo](1-processo_di_sviluppo.md)
 3. [Requisiti](2-requisiti.md)
