@@ -1,0 +1,4 @@
+title: LambdaQuiz
+description: Implementazione in Scala di un gioco di quiz multigiocatore in modalità hot seat.
+remote_theme: pages-themes/slate@v0.2.0
+show_downloads: true
