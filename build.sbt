@@ -1,5 +1,3 @@
-import wartremover.WartRemover.autoImport.wartremoverErrors
-
 val scala3Version = "3.4.0"
 
 // Rilevamento del sistema operativo
@@ -36,9 +34,17 @@ lazy val root = project
     name := "PPS-23-LambdaQuiz",
     version := "1.0",
     scalaVersion := scala3Version,
-    Compile / run / mainClass := Some("it.unibo.pps.start"),
     assembly / mainClass := Some("it.unibo.pps.start"),
-    assembly / assemblyJarName := s"lambdaquiz-${version}.jar",
+    assembly / assemblyJarName := s"lambdaquiz-1.0.jar",
+    assembly / assemblyMergeStrategy := {
+      case PathList("META-INF", "substrate", "config", xs @ _*) => MergeStrategy.discard
+      case PathList("module-info.class") => MergeStrategy.discard
+      case PathList("reactivemongo", "io", "netty", "channel", "unix", xs @ _*) => MergeStrategy.first
+      case x =>
+        val oldStrategy = (assembly / assemblyMergeStrategy).value
+        oldStrategy(x)
+    },
+    Compile / run / mainClass := Some("it.unibo.pps.start"),
     wartremoverErrors ++= Warts.unsafe,
     libraryDependencies ++= Seq(
       "org.scalafx" %% "scalafx" % "21.0.0-R32",
