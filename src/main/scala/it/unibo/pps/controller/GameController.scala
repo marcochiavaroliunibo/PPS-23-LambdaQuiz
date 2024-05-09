@@ -25,7 +25,7 @@ object GameController:
   def gameOfLoggedUsers: Option[Game] = _gameOfLoggedUsers
 
   /** Numero di round per partita. */
-  private val ROUND_FOR_GAME: Int = 3
+  private val ROUND_FOR_GAME: Int = 6
 
   /** Numero di partite da restituire. */
   private val NUMBER_LAST_GAME: Int = 5
