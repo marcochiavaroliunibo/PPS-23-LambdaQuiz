@@ -1,23 +1,26 @@
 package it.unibo.pps.controller
 
 import it.unibo.pps.TestDataInitializer.{games, rounds}
+import org.scalatest.DoNotDiscover
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.*
-import org.scalatest.DoNotDiscover
 
 @DoNotDiscover
+@SuppressWarnings(Array("org.wartremover.warts.IterableOps"))
+/** Classe di test per [[RoundController]] */
 class RoundControllerTests extends AnyFlatSpec with should.Matchers:
 
   private val randomGame = games.last
   private val allRoundOfAGame = rounds.filter(_.gameId == randomGame.id)
+  private val statsOfUser = randomGame.players.last
 
-  "RoundController" should "be able to compute the points correctly" in {
+  "RoundController" should "be able to compute points correctly" in {
     val computedScore = allRoundOfAGame
       .flatMap(_.scores)
-      .filter(_.user == randomGame.players.last)
+      .filter(_.user == statsOfUser)
       .map(_.score)
       .sum
-    RoundController.computePartialPointsOfUser(randomGame.players.last, randomGame) should be(computedScore)
+    RoundController.computePartialPointsOfUser(statsOfUser, Some(randomGame)) should be(computedScore)
   }
 
 end RoundControllerTests

@@ -4,20 +4,21 @@ import it.unibo.pps.model.User
 import reactivemongo.api.bson.BSONDocument
 import reactivemongo.api.bson.collection.BSONCollection
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import java.util.concurrent.Executors.newSingleThreadExecutor
+import scala.concurrent.{ExecutionContext, Future}
 
 /** Classe che rappresenta il repository per l'entità [[User]].
   *
   * Fornisce metodi per l'interazione con il database.
   */
 class UserRepository extends Repository[User]:
+
   override val collection: Future[BSONCollection] = ConnectionMongoDB.getDatabase().map(_.collection("users"))
 
   /** Metodo che permette di ottenere un utente dal database in base al suo username e password.
-   *
-   * Viene utilizzato per effettuare il login.
-   *
+    *
+    * Viene utilizzato per effettuare il login.
+    *
     * @param user
     *   utente da cercare di tipo [[User]]
     * @return

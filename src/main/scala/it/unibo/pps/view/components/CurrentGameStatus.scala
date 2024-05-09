@@ -15,7 +15,7 @@ import scalafx.scene.text.Text
   * Visualizza i due giocatori che hanno effettuato l'accesso e i loro punteggi parziali. Inoltre, per ogni round
   * giocato, mostra i risultati ottenuti per ogni utente.
   *
-  * Infone, è presente un footer che contiene i pulsanti per creare una nuova partita o accedere ad una partita in
+  * Infine, è presente un footer che contiene i pulsanti per creare una nuova partita o accedere ad una partita in
   * corso.
   *
   * @param currentGame
@@ -76,7 +76,7 @@ private class CurrentGameStatus(currentGame: Option[Game]) extends HBox(10):
       )
     )
     .getOrElse(List(new Text("Non c'è alcuna partita in corso al momento!") {
-      style = "-fx-font: normal bold 22px sans-serif"
+      style = "-fx-font: normal normal 22px sans-serif"
       margin = Insets(10)
     }))
 end CurrentGameStatus

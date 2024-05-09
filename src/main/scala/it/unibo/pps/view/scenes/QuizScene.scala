@@ -49,7 +49,9 @@ class QuizScene extends Scene:
       alignment = Pos.Center
       children = List(
         getInfoText("Sta giocando: " + RoundController.player.map(_.username).getOrElse("")),
-        getInfoText("Domanda " + (QuestionController.counterQuestionRound + 1) + " di " + QuestionController.QUESTION_FOR_ROUND)
+        getInfoText(
+          "Domanda " + (QuestionController.counterQuestionRound + 1) + " di " + QuestionController.QUESTION_FOR_ROUND
+        )
       )
       padding = Insets(5)
     }

@@ -5,7 +5,7 @@ import it.unibo.pps.view.components.{GameTitle, MainMenu}
 import scalafx.scene.Scene
 import scalafx.scene.layout.BorderPane
 
-/** Componente grafico che funge da schermata principale dell'aplicazione. Ospita il titolo del gioco ed il menu
+/** Componente grafico che funge da schermata principale dell'applicazione. Ospita il titolo del gioco ed il menu
   * principale.
   */
 class MenuScene extends Scene:

@@ -4,7 +4,6 @@ import it.unibo.pps.model.{Game, User}
 import reactivemongo.api.bson.BSONDocument
 import reactivemongo.api.bson.collection.BSONCollection
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /** Classe che rappresenta il repository per l'entità [[Game]].
@@ -30,7 +29,7 @@ class GameRepository extends Repository[Game]:
     val sort = BSONDocument("lastUpdate" -> -1)
     readMany(query, sort)
 
-  /** Metodo che permette di ottenere l'ultima partita completata da un utente.
+  /** Metodo che permette di ottenere le ultime partite completata da un utente.
     * @param user
     *   utente
     * @param maxDocs
@@ -38,7 +37,7 @@ class GameRepository extends Repository[Game]:
     * @return
     *   una lista di partite completate
     */
-  def getLastGameCompletedByUser(user: User, maxDocs: Int): Future[Option[List[Game]]] =
+  def getLastCompletedGamesByUser(user: User, maxDocs: Int): Future[Option[List[Game]]] =
     val query = BSONDocument(
       "completed" -> true,
       "players" -> BSONDocument("$eq" -> user)

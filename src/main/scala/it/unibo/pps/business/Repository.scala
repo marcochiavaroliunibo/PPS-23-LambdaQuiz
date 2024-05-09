@@ -1,16 +1,19 @@
 package it.unibo.pps.business
 
+import it.unibo.pps.ECHandler
 import reactivemongo.api.bson.collection.BSONCollection
 import reactivemongo.api.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import java.util.concurrent.Executors.newFixedThreadPool
+import scala.concurrent.{ExecutionContext, Future}
 
 /** Trait che rappresenta un repository generico che definisce le operazioni CRUD di base su un database MongoDB.
   * @tparam T
   *   tipo dell'oggetto da salvare nel database
   */
 trait Repository[T]:
+  given ExecutionContext = ECHandler.createExecutor
+
   /** Metodo che restituisce la collezione su cui effettuare le operazioni CRUD.
     * @return
     *   collezione su cui effettuare le operazioni CRUD come [[Future]] di [[BSONCollection]]
@@ -27,7 +30,9 @@ trait Repository[T]:
     */
   def create(t: T)(implicit writer: BSONDocumentWriter[T]): Future[Unit] =
     this.collection
-      .map(_.insert.one(t))
+      .flatMap(_.insert.one(t))
+      .recover { case f: Throwable => f.printStackTrace() }
+      .map(_ => ())
 
   /** Metodo che permette di aggiornare un oggetto di tipo [[T]] nel database.
     * @param t
@@ -41,7 +46,7 @@ trait Repository[T]:
     */
   def update(t: T, id: String)(implicit writer: BSONDocumentWriter[T]): Future[Unit] =
     this.collection
-      .map(
+      .flatMap(
         _.findAndUpdate(
           BSONDocument(
             "_id" -> id
@@ -49,6 +54,8 @@ trait Repository[T]:
           t
         )
       )
+      .recover { case f: Throwable => f.printStackTrace() }
+      .map(_ => ())
 
   /** Metodo che permette di leggere un singolo oggetto di tipo [[T]] dal database.
     * @param query
@@ -94,6 +101,7 @@ trait Repository[T]:
     *   la lista formata dai [[nDocsToRead]] oggetti letti dal database come [[Future]] di [[Option]] di [[List]] di
     *   [[T]]
     */
+  @SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))
   def readMany(query: BSONDocument, sort: BSONDocument = BSONDocument(), nDocsToRead: Int = -1)(implicit
     reader: BSONDocumentReader[T]
   ): Future[Option[List[T]]] =
@@ -114,8 +122,11 @@ trait Repository[T]:
     * @return
     *   l'esito dell'operazione di eliminazione come [[Future]] di Unit
     */
+  @SuppressWarnings(Array("org.wartremover.warts.Any"))
   def delete(selector: BSONDocument): Future[Unit] =
     this.collection
-      .map(_.delete.one(selector))
+      .flatMap(_.delete.one(selector))
+      .recover { case f: Throwable => f.printStackTrace() }
+      .map(_ => ())
 
 end Repository

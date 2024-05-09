@@ -1,5 +1,6 @@
 package it.unibo.pps.view.scenes
 
+import it.unibo.pps.ECHandler
 import it.unibo.pps.controller.{ReportController, UserController}
 import it.unibo.pps.model.Report
 import it.unibo.pps.view.UIUtils.*
@@ -15,7 +16,7 @@ import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
 import scalafx.scene.text.{Text, TextAlignment}
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
 /** Componente grafico che rappresenta la schermata relativa alle statistiche di un particolare giocatore.
@@ -52,13 +53,14 @@ class ReportScene extends Scene:
     val cellStyle = "-fx-font: normal normal 18px sans-serif"
     val playerNameColumn: TableColumn[Report, String] = new TableColumn[Report, String] {
       text = "Nome avversario"
+      @SuppressWarnings(Array("org.wartremover.warts.Var"))
       var ranking: Option[Report] = None
       cellValueFactory = d =>
         ranking = Some(d.value)
-        ObjectProperty(d.value.playerName)
+        ObjectProperty(d.value.adversaryName)
       sortable = false
       cellFactory = (cell, value) => {
-        cell.text = ranking.map(_.playerName).getOrElse("")
+        cell.text = ranking.map(_.adversaryName).getOrElse("")
         cell.style = cellStyle
         cell.graphic = ranking
           .map(r =>
@@ -70,7 +72,7 @@ class ReportScene extends Scene:
               radius = 10
             }
           )
-          .orNull
+          .getOrElse(new Circle)
       }
     }
 
@@ -102,7 +104,7 @@ class ReportScene extends Scene:
   /** Higher-order function che restituisce un [[Text]] a partire da una [[String]], che rappresenta il testo, e da un
     * [[Int]], il quale corrisponde alla grandezza dei caratteri.
     *
-    * Per specificare entrambi i paarmetri, bisogna usare il currying. Esempi di utilizzo:
+    * Per specificare entrambi i parametri, bisogna usare il currying. Esempi di utilizzo:
     * {{{
     *   // Utilizzo completo con il currying
     *   val bigText: Text = getTextWithSize("Hello world")(64)
@@ -123,6 +125,7 @@ class ReportScene extends Scene:
 
   private val rankingScreen = getLoadingScreen
 
+  given ExecutionContext = ECHandler.createExecutor
   ReportController.getUserReport
     .onComplete {
       case Success(result) =>

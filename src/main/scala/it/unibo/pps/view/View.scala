@@ -1,11 +1,15 @@
 package it.unibo.pps.view
 
+import it.unibo.pps.ECHandler
 import it.unibo.pps.business.ConnectionMongoDB
 import it.unibo.pps.view.scenes.MenuScene
 import scalafx.application.JFXApp3
 import scalafx.application.JFXApp3.PrimaryStage
 
-/** Componente grafico che rappresenta il punto di ingresso dell'aplicazione.
+import scala.concurrent.Await
+import scala.concurrent.duration.DurationInt
+
+/** Componente grafico che rappresenta il punto di ingresso dell'applicazione.
   *
   * Crea la finestra principale e visualizza la schermata del menu.
   */
@@ -24,5 +28,7 @@ object View extends JFXApp3:
     *
     * Esegue la disconnessione con il database prima di uscire dal programma.
     */
-  override def stopApp(): Unit = ConnectionMongoDB.closeConnection()
+  override def stopApp(): Unit =
+    Await.result(ConnectionMongoDB.closeConnection(), 5.seconds)
+    ECHandler.closeAll()
 end View

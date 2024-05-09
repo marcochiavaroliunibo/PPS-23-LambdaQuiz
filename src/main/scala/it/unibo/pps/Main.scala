@@ -3,7 +3,7 @@ package it.unibo.pps
 import it.unibo.pps.business.ConnectionMongoDB
 import it.unibo.pps.view.View
 
-object Main extends App {
+/** Metodo di avvio dell'applicazione */
+@main def start(): Unit =
   ConnectionMongoDB.initiateDatabaseConnection()
   View.main(Array.empty)
-}

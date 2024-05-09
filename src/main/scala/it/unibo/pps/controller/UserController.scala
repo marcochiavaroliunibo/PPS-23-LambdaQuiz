@@ -11,7 +11,8 @@ object UserController:
 
   private val userRepository = new UserRepository
 
-  /** listra di utenti autenticati */
+  /** Lista di utenti autenticati */
+  @SuppressWarnings(Array("org.wartremover.warts.Var"))
   private var _loggedUsers: Option[List[User]] = None
 
   def loggedUsers: Option[List[User]] = _loggedUsers
@@ -37,7 +38,7 @@ object UserController:
   /** Metodo che trasforma una lista di Option in un'Option di lista.
     *
     * In particolare, se tutti gli elementi della lista di partenza sono definiti, restituisce [[Some]] della lista di
-    * questi elementi. Se, invece, almauno degli elementi è [[None]], restituisce [[None]].
+    * questi elementi. Se, invece, almeno uno degli elementi è [[None]], restituisce [[None]].
     *
     * @param l
     *   lista di Option da trasformare

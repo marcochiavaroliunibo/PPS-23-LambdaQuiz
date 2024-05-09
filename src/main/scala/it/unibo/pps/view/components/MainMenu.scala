@@ -11,7 +11,7 @@ import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.{Alert, Button, ButtonType}
 import scalafx.scene.layout.*
 
-/** Componente grafico che rappresenta il menu principale, il quale viene mostrato all'avvio dell'applicazipne. Contiene
+/** Componente grafico che rappresenta il menu principale, il quale viene mostrato all'avvio dell'applicazione. Contiene
   * il titolo del gioco ed i pulsanti per accedere alle funzionalità dell'applicazione.
   */
 private class MainMenu extends FlowPane(Orientation.Vertical, 0, 10):

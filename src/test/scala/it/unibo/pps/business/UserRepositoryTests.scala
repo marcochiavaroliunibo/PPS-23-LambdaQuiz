@@ -2,15 +2,17 @@ package it.unibo.pps.business
 
 import it.unibo.pps.TestDataInitializer.{players, userRepository}
 import it.unibo.pps.model.User
+import org.scalatest.DoNotDiscover
 import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.*
-import org.scalatest.DoNotDiscover
 
 import scala.language.postfixOps
 
 @DoNotDiscover
+/** Classe di test per [[UserRepository]] */
 class UserRepositoryTests extends AsyncFlatSpec with should.Matchers:
-  
+
+  @SuppressWarnings(Array("org.wartremover.warts.IterableOps"))
   private val user = players.head
 
   "A user" should "be read from the database by its id" in {

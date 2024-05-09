@@ -17,6 +17,7 @@ import scalafx.scene.layout.GridPane
   * @param singleUserSignIn
   *   booleano che indica se il componente verrà usato per autenticare un singolo utente, oppure no
   */
+@SuppressWarnings(Array("org.wartremover.warts.Null"))
 private class LoginComponent(singleUserSignIn: Boolean) extends Dialog[List[User]]:
   title = "Finestra di login"
   headerText = "Inserire il nome utente e la password dei due giocatori"
@@ -82,5 +83,6 @@ object LoginComponent:
     * @return
     *   una nuova istanza della classe [[LoginComponent]] sotto forma di un [[Dialog]]
     */
+  @SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))
   def apply(su: Boolean = false): Dialog[List[User]] = new LoginComponent(su)
 end LoginComponent

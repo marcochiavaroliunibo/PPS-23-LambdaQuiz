@@ -14,6 +14,7 @@ import scalafx.scene.text.{Font, Text}
 
 /** Contiene una serie di metodi statici che supportano ed organizzano le procedure della View.
   */
+@SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))
 object UIUtils:
 
   /** Restituisce uno sfondo a partire da un [[Paint]], come ad esempio un colore
@@ -33,6 +34,7 @@ object UIUtils:
     * @param newScene
     *   schermata che si vuole visualizzare
     */
+  @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
   def changeScene(currentScene: Scene, newScene: => Scene): Unit =
     currentScene.window.value.asInstanceOf[Stage].scene = newScene
 
@@ -66,7 +68,7 @@ object UIUtils:
     */
   def showSimpleAlert(at: AlertType, m: String): Unit = this.showAlertWithButtons(at, m, ButtonType.Close)
 
-  /** Crea e visualizza una finestra di avviso in sovraimpressione con caratteristiche personalizzabili.
+  /** Crea e visualizza una finestra di avviso in sovra impressione con caratteristiche personalizzabili.
     *
     * In particolare, è possibile scegliere la tipologia di avviso da mostrare, un testo descrittivo dello stesso e una
     * serie di pulsanti.
@@ -161,11 +163,11 @@ object UIUtils:
     )
   }
 
-  /** Funzione per determinare il colore deii pulsanti per le risposte, sulla base dell'indice di quest'ultima.
+  /** Funzione per determinare il colore dei pulsanti per le risposte, sulla base dell'indice di quest'ultima.
     * @param an
     *   indice della risposta dal quale si vuole ricavare il colore del rispettivo bottone
     * @return
-    *   una tupla formata da due elementi di tipo [[Color]], ch everranno utilizzati per dare al pulsante un colore di
+    *   una tupla formata da due elementi di tipo [[Color]], che verranno utilizzati per dare al pulsante un colore di
     *   sfondo a gradiente.
     */
   def getAnswerBtnColor(an: Int): (Color, Color) = an match
@@ -187,7 +189,7 @@ object UIUtils:
 
   /** verifica che i campi in input siano conformi. In particolare, verifica che non ci siano campi vuoti e che abbiano
     * una lunghezza maggiore o uguale di 6 caratteri .
- *
+    *
     * @param textFields
     *   i [[TextField]] contenenti i campi da verificare
     * @return
@@ -203,7 +205,7 @@ object UIUtils:
     *   [[true]] se i campi sono tutti diversi, [[false]] altrimenti
     */
   private def fieldsAreDistinct(textFields: Seq[TextField]): Boolean =
-    textFields.distinct.length == textFields.length
+    textFields.distinct.lengthIs == textFields.length
 
   /** Verifica che le password in input siano uguali.
     * @param passwordFields
