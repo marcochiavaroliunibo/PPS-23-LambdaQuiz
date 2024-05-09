@@ -35,11 +35,11 @@ lazy val root = project
     version := "1.0",
     scalaVersion := scala3Version,
     assembly / mainClass := Some("it.unibo.pps.start"),
-    assembly / assemblyJarName := s"lambdaquiz-1.0.jar",
+    assembly / assemblyJarName := "LambdaQuiz.jar",
     assembly / assemblyMergeStrategy := {
-      case PathList("META-INF", "substrate", "config", xs @ _*) => MergeStrategy.discard
+      case PathList("META-INF", "substrate", "config", _*) => MergeStrategy.discard
       case PathList("module-info.class") => MergeStrategy.discard
-      case PathList("reactivemongo", "io", "netty", "channel", "unix", xs @ _*) => MergeStrategy.first
+      case PathList("reactivemongo", "io", "netty", "channel", "unix", _*) => MergeStrategy.first
       case x =>
         val oldStrategy = (assembly / assemblyMergeStrategy).value
         oldStrategy(x)
