@@ -1,6 +1,6 @@
 # Conclusioni
 
-Al progetto terminato, i membri del team possono ritenersi ampiamente soddisfatti del lavoro svolto e dei risultati
+A progetto terminato, i membri del team possono ritenersi ampiamente soddisfatti del lavoro svolto e dei risultati
 ottenuti. Sono stati raggiunti tutti gli obiettivi prefissati durante la fase di analisi e progettazione, realizzando
 un'applicazione funzionante e rispettando i requisiti individuati. Si è riusciti a produrre una documentazione di
 progetto dettagliata e completa, la quale non solo ha permesso di mantenere una visione chiara sul lavoro svolto, ma
@@ -55,9 +55,9 @@ con successo.
 
 ### Considerazioni personali
 
-Di seguito, alcune considerazioni personali in merito allo strumento di gestione del progetto utilizzato, JIRA:
+Di seguito, alcune considerazioni personali dei membri del team riguardo al progetto e alla collaborazione:
 
-> #### Alberto Spadoni
+> #### Alberto Spadoni - JIRA come strumento di gestione del progetto
 >
 > Premetto che non conoscevo e quindi non avevo mai usato JIRA prima di questo progetto.
 > Proprio per questo, non appena Marco mi ha proposto di sfruttare quello come tool di gestione delle attività, ho
@@ -70,20 +70,25 @@ Di seguito, alcune considerazioni personali in merito allo strumento di gestione
 > Innanzitutto ho trovato l'interfaccia grafica poco intuitiva e non sempre reattiva.
 > Ma più di questo, ho trovato poco pertinenti le varie funzionalità per creare, modificare e gestire le attività.
 > Secondo me JIRA è uno strumento che si adatta meglio a contesti più strutturati e complessi e soprattutto che trattano
-> di argomenti quali richieste di assistenza da parte degli utenti, tracking di bug e problemi, e così via, piuttosto che
+> di argomenti quali richieste di assistenza da parte degli utenti, tracking di bug e problemi, e così via, piuttosto
+> che
 > per uno sviluppo software con metodologie SCRUM.
 >
 > In conclusione, nonostante queste criticità, sono comunque soddisfatto di aver avuto l'opportunità di utilizzare JIRA.
 > Tuttavia, se dovessi tornare indietro, probabilmente sceglierei un altro strumento per la gestione del progetto.
 
-Lavorare in team:
-
-> #### Marco Chiavaroli
-> 
-> Essendo uno studente lavoratore, è per me fondamentale lavorare in un team che possa comprendere le mie esigenze (quali turni, fasce orarie da dedicare al progetto e velocità di sviluppo).
-> Tutto ciò è stato per mia fortuna possibile con Alberto, in quanto fin da subito abbiamo trovato il modo per sentirci in orari di tardo pomeriggio e, quando serviva una videocall, nelle giornate in cui svolgevo l'attività lavorativa in smartworking (in modo da essere subito disponibile a fine turno).
-> Dal primo sprint c'è stata collaborazione nello schedulare gli incontri briefing e nel dividere adeguatamente il lavoro, in modo da poter sviluppare nei propri orari i task a ognuno assegnati.
-> Ho apprezzato tale metodologia di collaborazione e penso che ciò sia fondamentale per rendere più fruibile il lavoro a chi come me si trova nella situazione di studente e lavoratore full time.
+> #### Marco Chiavaroli - Collaborazione e flessibilità del team
+>
+> Essendo uno studente lavoratore, è per me fondamentale lavorare in un team che possa comprendere le mie esigenze (
+> quali turni, fasce orarie da dedicare al progetto e velocità di sviluppo).
+> Tutto ciò è stato per mia fortuna possibile con Alberto, in quanto fin da subito abbiamo trovato il modo per sentirci
+> in orari di tardo pomeriggio e, quando serviva una video chiamata, nelle giornate in cui svolgevo l'attività
+> lavorativa in smart working (in modo da essere subito disponibile a fine turno).
+>
+> Fin dal primo sprint c'è stata collaborazione nello schedulare gli incontri, briefing e nel dividere adeguatamente il
+> lavoro, in modo da poter sviluppare nei propri orari i task a ognuno assegnati.
+> Ho apprezzato tale metodologia di collaborazione e penso che ciò sia fondamentale per rendere più fruibile il lavoro a
+> chi come me si trova nella situazione di essere uno studente-lavoratore full-time.
 
 ## Sviluppi futuri
 
@@ -91,12 +96,12 @@ Sebbene il progetto sia giunto al termine, ci sono ancora molte possibilità di 
 LambdaQuiz. Alcune delle funzionalità che potrebbero essere implementate in futuro includono:
 
 - Aggiunta di una schermata che a fine partita indica il vincitore e il punteggio ottenuto da entrambi i giocatori;
-- Inserire la possibilità per gli utenti di modificare il proprio profilo, cambiando il nome utente o la password;
-- Implementare una modalità di pgioco in cui i giocatori devono rispondere alle domande entro un limite di tempo
+- Inserire la possibilità per gli utenti di modificare il proprio profilo, cambiando il nome utente e la password;
+- Implementare una modalità di gioco in cui i giocatori devono rispondere alle domande entro un limite di tempo
   prefissato;
 - Aggiungere delle statistiche globali, che comprendono, per ogni giocatore:
     - il numero di partite giocate e il punteggio medio ottenuto,
     - il numero di risposte corrette e sbagliate,
-    - una Top 3 delle categorie in cui il giocatore ha ottenuto il punteggio più alto.
+    - una top 3 delle categorie in cui il giocatore ha ottenuto il punteggio più alto.
 
 [Indietro](5-implementazione) | [Torna alla Home](index.md)

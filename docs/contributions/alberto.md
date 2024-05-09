@@ -21,46 +21,40 @@ e verso BSON totalmente trasparente allo sviluppatore. Più nel dettaglio, nel c
 entità `User`, `Score`, `Round`, `Question` e `Game` (ovvero quelle che necessitavano di essere salvate nel database),
 sono stati definiti due `implicit object`s: uno per la lettura e uno per la scrittura dei dati nella base di dati. Tali
 oggetti implementano due specifici metodi della libreria suddetta che si occupano di gestire il processo di
-serializzazione e deserializzazione specifico sul tipo di dato in questione. Il fatto di definire questi oggetti come
+serializzazione e deserializzazione sul tipo di dato in questione. Il fatto di definire questi oggetti come
 impliciti consente di avere un processo di conversione automatico e trasparente, sfruttando il meccanismo degli
 _implicits_ di Scala.
 
-```scala
-object Score {
-  implicit object ScoreReader extends BSONDocumentReader[Score] {
-    // serializzatore
-    def readDocument(doc: BSONDocument): Try[Score] =
-      for
-        user
-
-    <- doc.getAsTry[User]("user")
-    score
-    <- doc.getAsTry[Int]("score")
-    yield Score(user, score)
-  }
-
-  implicit object ScoreWriter extends BSONDocumentWriter[Score] {
-    // deserializzatore
-    override def writeTry(score: Score): Try[BSONDocument] =
-      for
-        user
-
-    <- Try(score.user)
-    score
-    <- Try(score.score)
-    yield BSONDocument(
-      "user" -> user,
-      "score" -> score
-    )
-  }
-}
-```
-
-Come esempio di quanto appena descritto, riporto il companion object della classe `Score`, in quanto si presta molto
+Come esempio di quanto appena descritto, riporto il companion-object della classe `Score`, in quanto si presta molto
 bene a mostrare le caratteristiche rilevanti di questa scelta implementativa. In particolare, è possibile notare come i
 due oggetti impliciti `ScoreReader` e `ScoreWriter`  definiscano al loro interno le procedure per effettuare la
 conversione, con tutte le specificità del tipo di dato in questione. Inoltre, è interessante notare come sia stato
 possibile sfruttare il potente _for comprehension_ di Scala per gestire il processo in maniera molto elegante e concisa.
+
+```scala
+object Score {
+  implicit object ScoreReader extends BSONDocumentReader[Score] {
+    // deserializzatore
+    override def readDocument(doc: BSONDocument): Try[Score] =
+      for
+        user <- doc.getAsTry[User]("user")
+        score <- doc.getAsTry[Int]("score")
+      yield Score(user, score)
+  }
+
+  implicit object ScoreWriter extends BSONDocumentWriter[Score] {
+    // serializzatore
+    override def writeTry(score: Score): Try[BSONDocument] =
+      for
+        user <- Try(score.user)
+        score <- Try(score.score)
+      yield BSONDocument(
+        "user" -> user,
+        "score" -> score
+      )
+  }
+}
+```
 
 Le caratteristiche di trasparenza ed eleganza di questo approccio possono essere chiaramente apprezzate guardando la
 prima linea della for comprehension, all'interno del metodo `readDocument`. Qui, è possibile vedere la facilità con la
@@ -114,7 +108,8 @@ Alcuni aspetti implementativi interessanti, la cui realizzazione è stata grazie
   di `getInfoText` che mostra molto bene l'uniformità dei tipi di Scala. Infatti, è stato possibile attribuire ad
   una `val` una funzione lambda in modo molto naturale. In secondo luogo, la definizione di una classe anonima che
   estende `Text` di ScalaFX. Qui è interessante come sia possibile passare un parametro al costruttore della classe
-  anonima, in modo molto conciso e leggibile.
+  anonima sfruttando la sintassi `_`. Questo ha l'effetto di rendere il codice più conciso e leggibile, in quanto non è
+  necessario esplicitare la funzione lambda.
 
 - **Operatori sulle collezioni**: in svariati punti del codice è stato necessario lavorare con delle collezioni di dati.
   Scala mette a disposizione una serie di operatori che permettono di manipolare le collezioni in maniera molto più
@@ -153,9 +148,9 @@ def areLoginInputsValid(usernameFields: TextField*)(passwordFields: TextField*):
 ```
 
 Il codice qui sopra mostra come è stato possibile separare concettualmente i parametri del metodo `areLoginInputsValid`
-in maniera molto elegante e concisa, grazie all'utilizzo del currying. In particolare, è possibile notare come i
-parametri relativi agli username e alle password siano stati separati in due gruppi distinti, in modo da poterli passare
-al metodo in maniera indipendente.
+in maniera molto elegante e concisa, grazie all'utilizzo del currying. Da notare come i parametri relativi agli username
+e alle password siano stati separati in due gruppi distinti, in modo da poterli passare al metodo in maniera
+indipendente.
 
 ## Testing
 
@@ -204,9 +199,9 @@ stesso rispetta i criteri di qualità definiti.
 
 Affinché i _jobs_ riuscissero a portare a termine il loro compito, è stato necessario prevedere una fase di setup di
 Java 17 e di SBT. Questo è stato possibile grazie all'uso di _actions_ predefinite di GitHub, che permettono di
-configurare l'ambiente di lavoro in modo molto semplice e veloce. Inoltre, è stato necessario installare il plugin SBT
-per `scalafmt`, in modo da poter eseguire i test di qualità del codice. Questo plugin è stato installato tramite il
-file `project/plugins.sbt`, che in generale contiene tutte le definizioni dei plugin necessari per il corretto
+configurare l'ambiente di lavoro in modo molto semplice e veloce. Inoltre, è stato necessario installare il plugin
+di `scalafmt` per SBT, in modo da poter eseguire i test di qualità del codice. Questo plugin è stato installato tramite
+il file `project/plugins.sbt`, che in generale contiene tutte le definizioni dei plugin necessari per il corretto
 funzionamento del progetto.
 
 ## Documentazione

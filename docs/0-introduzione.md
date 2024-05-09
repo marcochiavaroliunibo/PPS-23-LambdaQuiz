@@ -21,9 +21,12 @@ maggior numero possibile di punti, rispondendo correttamente alle domande propos
 
 Più in dettaglio, l'applicativo consente a due concorrenti di sfidarsi in una serie di round, ciascuno composto da tre
 domande, selezionate casualmente a partire da una gamma di categorie. Ogni round offre una varietà di categorie di
-domande, garantendo una sfida sempre stimolante e coinvolgente per i partecipanti. L'interfaccia utente intuitiva
-consente ai giocatori di interagire facilmente con il sistema, sia per rispondere alle domande che per navigare tra le
-varie funzionalità offerte. Oltre alla competizione diretta tra i giocatori, il sistema offre anche la possibilità di
+domande, garantendo una sfida sempre stimolante e coinvolgente per i partecipanti.
+
+L'interfaccia utente intuitiva consente ai giocatori di interagire facilmente con il sistema, sia per rispondere alle
+domande che per navigare tra le varie funzionalità offerte.
+
+Oltre alla competizione diretta tra i giocatori, il sistema offre anche la possibilità di
 visualizzare statistiche personali e comparative. Gli utenti possono monitorare il numero di partite vinte, perse e lo
 stato delle sfide ancora in corso. Inoltre, possono verificare la propria posizione all'interno della classifica
 globale, la quale comprende tutti gli utenti del sistema. Questa funzionalità aggiunge un elemento competitivo e

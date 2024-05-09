@@ -1,5 +1,10 @@
 # Processo di sviluppo
 
+Questo capitolo fornisce una panoramica sul processo di sviluppo utilizzato per il progetto. Si discute della
+metodologia di sviluppo, della pianificazione e gestione dei sprint, e dell'uso di strumenti per il tracciamento dei
+task. Si esplora anche l'uso di un Version Control System, l'approccio al testing, l'automazione della build, e
+le modalità di verifica della qualità del codice. Infine, si discute dell'implementazione della Continuous Integration.
+
 ## Metodologia di sviluppo
 
 Lo sviluppo del progetto è avvenuto seguendo i principi della metodologia *Agile*, adottando alcuni aspetti del
@@ -34,8 +39,8 @@ Per tenere traccia in maniera più dettagliata possibile di tutte le attività s
 impegnato a mantenere uno sprint backlog aggiornato costantemente. Più in dettaglio, i membri inserivano le attività da
 svolgere subito prima di iniziarci a lavorare, con un livello di astrazione più basso rispetto ai task definiti in Jira.
 Successivamente ne stimavano la durata e, una volta completate, segnavano il tempo effettivamente impiegato. Al termine
-di ogni iterazione, il backlog veniva arricchito con una breve retrospettiva che aveva l'obiettivo di riportare l'
-andamento dello sprint a posteriori, le difficoltà incontrate e le eventuali correzioni da apportare per il futuro.
+di ogni iterazione, il backlog veniva arricchito con una breve retrospettiva che aveva l'obiettivo di riportare
+l'andamento dello sprint a posteriori, le difficoltà incontrate e le eventuali correzioni da apportare per il futuro.
 
 Lo sprint backlog di questo progetto è visionabile [qui](process/sprint-backlog.md).
 
@@ -45,7 +50,7 @@ Il team ha adottato un approccio di sviluppo collaborativo, basato sull'utilizzo
 per tracciare le modifiche al codice sorgente e coordinare il lavoro tra i membri. In particolare, è stato scelto di
 utilizzare **Git** come sistema di controllo delle versioni, ospitando il repository su **GitHub**.
 
-Per quanto concerne il branching model, è stato scelto un approccio semplice, che vedeva l'utilizzo del branch `main`
+Per quanto concerne il branching model, è stato scelto un approccio semplice, che ha visto l'utilizzo del branch `main`
 per il codice sorgente e del branch `report` per i file della documentazione di progetto. La scelta di non utilizzare un
 branching model più complesso, come ad esempio GitFlow, è stata dettata dalla volontà di mantenere il processo di
 sviluppo il più semplice possibile. Inoltre, il team ha ritenuto che un modello di branching più complesso non fosse
@@ -55,7 +60,7 @@ aree di lavoro hanno permesso di mantenere il repository pulito e di evitare con
 ## Testing
 
 Il testing del progetto è stato effettuato mediante l'utilizzo di **ScalaTest**. In particolare, sono stati scritti test
-di unità e di integrazione per verificare il corretto funzionamento delle funzionalità implementate. Si è cercato di
+di unità per verificare il corretto funzionamento delle funzionalità implementate. Si è cercato di
 scrivere i test parallelamente allo sviluppo delle funzionalità previste, seguendo quanto più possibile il principio del
 *Test-Driven Development* (TDD).
 
@@ -72,7 +77,8 @@ utilizzare **SBT**. Tale strumento risulta essere perfettamente integrato con l'
 di funzionalità che hanno reso più agevole la gestione della build automation.
 
 In particolare, è stato possibile definire in maniera idiomatica e concisa tutte librerie di terze parti utilizzate nel
-progetto, gestendo anche le diverse versioni per i vari sistemi operativi.
+progetto, così come i parametri di configurazione per i plugins scelti, gestendo anche le diverse versioni per i vari
+sistemi operativi.
 
 ## Quality Assurance
 
@@ -97,16 +103,16 @@ in risposta a determinati eventi, come il push di nuovi commit o la creazione di
 Nel caso specifico del progetto, è stato definito un flusso di lavoro per eseguire automaticamente le seguenti
 operazioni ad ogni push sul branch `main`:
 
-- **Verifica della qualità del codice con ScalaFmt**: in questa prima fase, si sfrutta il plugin `sbt-scalafmt` per
+- **Verifica della qualità del codice**: in questa prima fase, si sfrutta il plugin `sbt-scalafmt` per
   controllare che tutti i file del progetto siano correttamente formattati. Nel caso in cui ci fosse anche solo un file
   non propriamente formattato, la build fallirebbe;
 - **Esecuzione dei test**: questo passaggio viene eseguito solo se l'attività di verifica della qualità va a buon fine e
-  consiste nell'esecuzione di tutti i test presenti nel progetto su diverse configurazioni di sistemi operativi (
-  Windows, Ubuntu, macOS). In caso di fallimento di uno o più test, la build viene interrotta e il processo restituisce
+  consiste nell'esecuzione di tutti i test presenti nel progetto su una macchina con a bordo Ubuntu. In caso di
+  fallimento di uno o più test, la build viene interrotta e il processo restituisce
   un errore;
 
 In entrambe le operazioni appena citate, Github Action esegue prima di tutto la compilazione del codice sorgente e la
 build dell'intero progetto. In questo frangente, il tool WartRemover verifica la presenza di eventuali warning o errori
-nel codice, facendo fallire il processo in caso di problemi;
+nel codice, facendo fallire il processo in caso di problemi.
 
 [Indietro](0-introduzione.md) | [Torna alla Home](index.md) | [Avanti](2-requisiti.md)

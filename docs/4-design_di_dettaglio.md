@@ -2,7 +2,7 @@
 
 Questo capitolo illustra nel dettaglio il design del sistema LambdaQuiz, approfondendo tutti i componenti
 dell'architettura citati in precedenza. Il sistema si compone di 4 package i quali vengono discussi nei paragrafi che
-seguono:
+seguono: `business`, `model`, `controller` e `view`.
 
 ## Business
 
@@ -20,7 +20,7 @@ optato per la definizione di un'interfaccia che fungesse da contratto per tutte 
 implementata mediante un trait e denominata `Repository`, definisce le operazioni di base per la gestione delle entità,
 come l'inserimento, la ricerca per ID, la ricerca per attributi e la cancellazione.
 
-Ogni collezione è gestita da una particolare classe, denominata posponendo il termine "*repository*" al nome dell'entità
+Ogni collezione è gestita da una particolare classe, denominata posponendo il termine "Repository" al nome dell'entità
 che viene gestita. Tali classi, si occupano di implementare le specifiche operazioni necessarie per la porzione di
 dominio relativa, riutilizzando le procedure base presenti in `Repository`.
 
@@ -40,7 +40,7 @@ Di seguito, la descrizione dettagliata delle classi presenti nel package `model`
 sottostante:
 
 - **User**: rappresenta il singolo utente registrato al gioco ed è caratterizzato da:
-    - _username_ - nome utente dell'utente
+    - _username_ - nome dell'utente
     - _password_ - password dell'utente
 - **Game**: rappresenta la partita creata a partire dai due utenti che decidono di sfidarsi. È composta da:
     - _players_ - lista dei due utenti che partecipano al gioco
@@ -49,7 +49,7 @@ sottostante:
     - _categories_ - lista delle categorie di domande scelte per il gioco
 - **Round**: rappresenta un singolo round di gioco, composto da:
     - _gameId_ - identificativo del gioco a cui il round fa riferimento
-    - _roundNumber_ - numero del round
+    - _roundNumber_ - numero del round nel contesto del gioco di appartenenza
     - _scores_ - lista di punteggi ottenuti dai giocatori in quel round
 - **Question**: rappresenta una domanda a risposta multipla, formata da:
     - _text_ - testo della domanda
@@ -61,11 +61,11 @@ sottostante:
     - _score_ - valore numerico del punteggio
 - **Report**: rappresenta le statistiche di un utente, in termini di punti che esso ha accumulato rispetto
   all'avversario per ogni partita giocata. Questa entità è composta da:
-    - _playerName_ - nome dell'utente a cui il report fa riferimento
+    - _playerName_ - nome dell'avversario in una determinata partita
     - _playerPoints_ - punteggio dell'utente che ha richiesto la statistica
     - _adversaryPoints_ - punteggio dell'avversario
-- **Category**: rappresenta le categorie di appartenenza delle domande. A differenza delle entità precedenti, la
-  presente è modellata usando un `enum` di Scala 3. Le possibili categorie previste dal gioco sono:
+- **Category**: rappresenta le categorie di appartenenza delle domande. A differenza delle entità precedenti, questa è
+  stata modellata usando un `enum` di Scala 3. Le possibili categorie previste dal gioco sono:
     - CulturaGenerale
     - Geografia
     - Politica
@@ -76,28 +76,29 @@ sottostante:
 
 Le classi `Game`, `Round`, `Question` e `User` possiedono un ulteriore attributo _id_ che funge da identificativo
 univoco per la rispettiva entità all'interno del database. Esso viene generato casualmente utilizzando la classe `UUID`
-di Java per poi andare a sostituire quello assegnato in automatico da mongoDB a tutti i documenti inseriti. Questa
-scelta è stata presa per avere l'id sempre a disposizione, evitando ulteriori query al database per recuperarlo.
+di Java per poi andare a sostituire quello assegnato in automatico da MongoDB a tutti i documenti inseriti. Questa
+scelta è stata presa in modo da avere l'id sempre a disposizione, evitando ulteriori query al database per recuperarlo.
 
 ![Diagramma delle classi del package model](assets/diagramma-classi-model.png)
 
 ## Controller
 
 In questo package sono presenti le classi che si occupano di gestire le interazioni tra l'utente e il sistema, in modo
-da garantire la corretta esecuzione delle operazioni richieste. Nel rispetto del pattern architetturale MVC, i
-controller sono stati progettati per reagire alle interazioni dell'utente con l'interfaccia grafica, per poi richiamare
-le opportune funzioni della logica di business.
+da garantire la corretta esecuzione delle operazioni richieste.
+
+Nel rispetto del pattern architetturale MVC, i controller sono stati progettati per reagire alle interazioni dell'utente
+con l'interfaccia grafica, per poi richiamare le opportune funzioni della logica di business.
 
 I controllers relativi agli utenti, alle partite, ai rounds e alle domande, presentano una struttura ben precisa.
 Innanzitutto sono rappresentati da `object`, il che consente di avere un'unica istanza per ciascun controller, evitando
 duplicazioni e garantendo la coerenza dei dati. Inoltre, ogni controller è dotato di un attributo che contiene l'oggetto
 corrente relativo all'entità che gestisce. Questo attributo è inizializzato a `None` e viene popolato solo quando il
-gioco giunge in una fase in cui è necessario accedere a tale entità. Ad esempio, il controller degli utenti, conterrà
-gli oggetti degli utenti attualmente autenticati solo quando essi effettuano il login. Una tale struttura, facilita la
-visualizzazione e la gestione del modello in quanto si ha sempre a disposizione l'entità corrente nell'apposito
-controller.
+gioco giunge in una fase in cui è necessario accedere a tale entità. Ad esempio, `RoundController` conterrà l'istanza
+del round corrente solo quando l'applicazione si troverà nella schermata di gioco con una partita avviata. Una tale
+struttura, facilita la visualizzazione e la gestione del modello in quanto si ha sempre a disposizione l'entità corrente
+nell'apposito object.
 
-Di seguito, vengono descritti i controller presenti in questo package:
+Di seguito, vengono descritti i controllers presenti in questo package:
 
 - **GameController**: si occupa di gestire tutte le azioni effettuate dall'utente che impattano sui dati del Game. In
   particolare, implementa la logica relativa alle partite, come la creazione, la verifica della loro terminazione e
@@ -105,8 +106,8 @@ Di seguito, vengono descritti i controller presenti in questo package:
 - **QuestionController**: si occupa di gestire la logica relativa alle domande. Più nel dettaglio, prepara la prossima
   domanda da mostrare all'utente in base all'attuale progresso della partita e verifica se ci sono ancora domande da
   mostrare per il round corrente;
-- **RoundController**: si occupa della gestione dei round di gioco, orchestrando i turni dei giocatori e l'aggiornamento
-  dei punteggi. Inoltre, si occupa di gestire il progresso della partita, verificando se è necessario passare al round
+- **RoundController**: si occupa della gestione dei round di gioco, orchestrando i turni dei giocatori e aggiornandone i
+  punteggi. Inoltre, si occupa di gestire il progresso della partita, verificando se è necessario passare al round
   successivo;
 - **UserController**: si occupa di implementare le procedure di registrazione e autenticazione degli utenti, dialogando
   con il database per verificare la correttezza delle credenziali inserite e se il nome utente da registrare è già in
@@ -145,7 +146,7 @@ Le schermate previste dal sistema sono le seguenti:
   funzionalità del gioco, ovvero registrazione di un utente, accesso alle statistiche, accesso alla dashboard di gioco e
   uscita dall'applicazione.
 - **DashboardScene**: rappresenta la schermata principale del gioco ed è accessibile solo previa autenticazione dei due
-  utenti che si sfideranno. Essa consente loro di visualizzare una panoramica dell'eventuale partita in corso, di
+  utenti che si vogliono sfidare. Essa consente loro di visualizzare una panoramica dell'eventuale partita in corso, di
   iniziarne una nuova o di accedere alla schermata di gioco vera e propria, dove verranno visualizzate le domande e le
   risposte.
 - **QuizScene**: è la pagina in cui vengono visualizzate le domande e le risposte possibili. Sono inoltre presenti

@@ -8,7 +8,7 @@ committente.
 I requisiti di business sono quelli che descrivono le funzionalità del sistema dal punto di vista del committente e
 vengono individuati durante le interviste con il committente. Essi sono:
 
-- Sviluppare un'applicazione per Desktop in Scala che implementi un gioco di quiz a risposta multipla.
+- sviluppare un'applicazione per Desktop in Scala che implementi un gioco di quiz a risposta multipla.
 - Il sistema deve supportare la creazione di partite interattive tra due giocatori, da svolgersi in modalità "hot
   seat" (i due giocatori si alternano sullo stesso dispositivo).
 - Il gioco deve prevedere un numero fisso e immutabile di domande (21) e risposte (4 per ogni domanda). Stesse
@@ -31,14 +31,15 @@ Nel contesto del gioco LambdaQuiz, è possibile individuare le seguenti entità 
 - **Score**: rappresenta il punteggio di un utente ed è composto dal riferimento al giocatore e dal valore numerico del
   punteggio ottenuto in quel round;
 - **Question**: rappresenta una domanda a cui rispondere durante una partita. Esse seguono il modello di domande a
-  risposta multipla e possiedono quattro opzioni di risposta, di cui una sola è corretta Inoltre, ogni domanda è
+  risposta multipla e possiedono quattro opzioni di risposta, di cui una sola è corretta. Inoltre, ogni domanda è
   caratterizzata da una specifica categoria di appartenenza;
 - **Category**: rappresenta le varie categorie a cui le domande possono appartenere. Vi è un numero prefissato di sette
   categorie, ognuna delle quali è caratterizzata dal suo nome;
 - **Report**: rappresenta una statistica calcolata sulla base di uno specifico utente che mostra, per ogni partita
   effettuata, il punteggio dell'utente in questione e quello del relativo avversario.
-  Di seguito, il diagramma ad alto livello del modello di dominio del gioco LambdaQuiz:
-  ![Modello di dominio](assets/diagramma-modello-dominio.png)
+
+Di seguito, il diagramma ad alto livello del modello di dominio del gioco LambdaQuiz:
+![Modello di dominio](assets/diagramma-modello-dominio.png)
 
 ## Requisiti funzionali
 
@@ -101,10 +102,11 @@ individuati durante l'analisi del dominio.
   delle partite giocate;
 - **Gestione delle dipendenze**: Il sistema deve utilizzare SBT come strumento di build automation e gestione delle
   dipendenze;
-- **Testing**: Il sistema deve essere testato mediante l'utilizzo di test di unità e di integrazione con ScalaTest;
+- **Testing**: Il sistema deve essere testato mediante il supporto di ScalaTest;
 - **Versioning**: Il codice sorgente deve essere tracciato utilizzando Git e ospitato su un repository remoto su GitHub;
 - **Documentazione**: Il codice sorgente deve essere adeguatamente documentato, seguendo le linee guida di Scaladoc;
 - **Continuous Integration**: Il sistema deve essere integrato con un servizio di Continuous Integration (CI) per
-  garantire l'esecuzione della build e dei test a ogni modifica caricata sul repository.
+  garantire la verifica della qualità del codice e l'esecuzione della build e dei test a ogni modifica caricata sul
+  repository.
 
 [Indietro](1-processo_di_sviluppo.md) | [Torna alla Home](index.md) | [Avanti](3-design_architetturale.md)

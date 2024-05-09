@@ -1,8 +1,10 @@
 # Design architetturale
 
-Terminata la fase di analisi dei requisiti, si è proceduto con la progettazione dell'architettura del sistema. Sulla
-base della natura di applicazione da realizzare, si è scelto di adottare un'architettura che implementasse il pattern
-Model-View-Controller (MVC). Questo pattern è stato scelto per garantire una separazione netta tra la logica di business
+Terminata la fase di analisi dei requisiti, si è proceduto con la progettazione dell'architettura del sistema.
+
+Sulla base della natura di applicazione da realizzare, si è scelto di adottare un'architettura che implementasse il
+pattern **Model-View-Controller (MVC)**. Questo pattern è stato scelto per garantire una separazione netta tra la logica
+di business
 e la presentazione dei dati, in modo da rendere il sistema più modulare e manutenibile.
 
 ## Architettura del sistema

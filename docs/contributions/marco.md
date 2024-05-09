@@ -6,7 +6,7 @@ svolte prevalentemente da Marco.
 ## Logica di business
 
 Nella prima fase del progetto è stato fondamentale definire una logica dati su cui gettare le fondamenta della struttura
-del sistema. Questa parte, è stata svolta con sinergia da entrambi i membri del gruppo con Marco che ha avuto un maggior
+del sistema. Questa parte è stata svolta con sinergia da entrambi i membri del gruppo con Marco che ha avuto un maggior
 numero di task focalizzati sulla logica di business e repository dell'applicativo.
 Di conseguenza, si è occupato di definire le funzioni che implementano le query per la scrittura, modifica ed estrazione
 dei dati, gestendo così la comunicazione con la base di dati MongoDB.
@@ -30,8 +30,8 @@ Nel codice che segue si riporta invece la funzione usata per l'estrazione dati d
 logica parametrica appena spiegata) con la possibilità di filtrare, ordinare o limitare i documenti.
 
 ```scala
-def readMany(query: BSONDocument, sort: BSONDocument = BSONDocument(), nDocsToRead: Int = -1)(implicit
-                                                                                              reader: BSONDocumentReader[T]
+def readMany(query: BSONDocument, sort: BSONDocument = BSONDocument(), nDocsToRead: Int = -1)(implicit 
+  reader: BSONDocumentReader[T]
 ): Future[Option[List[T]]] =
   this.collection
     .flatMap(_.find(query).sort(sort).cursor[T]().collect[List](nDocsToRead))
