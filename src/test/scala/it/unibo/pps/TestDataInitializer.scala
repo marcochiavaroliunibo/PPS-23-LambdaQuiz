@@ -64,10 +64,10 @@ object TestDataInitializer:
       }
     }
 
-  /**
-   * Genera una data e un'ora casuali, tra il 2020 e il 2024.
-   * @return l'oggetto [[LocalDateTime]] contenente la data e l'ora casuali generate
-   */
+  /** Genera una data e un'ora casuali, tra il 2020 e il 2024.
+    * @return
+    *   l'oggetto [[LocalDateTime]] contenente la data e l'ora casuali generate
+    */
   private def generateRandomDateTime: LocalDateTime =
     val year = Random.between(2020, 2024)
     val month = Random.between(1, 12)
@@ -76,10 +76,11 @@ object TestDataInitializer:
     val minute = Random.between(0, 59)
     LocalDateTime.of(year, month, day, hour, minute)
 
-  /**
-   * Genera una lista di 6 domande, composte da un testo, 4 risposte e l'indice della risposta corretta. Tutti i dati hanno un valore fittizio.
-   * @return la lista delle domande appena generate
-   */
+  /** Genera una lista di 6 domande, composte da un testo, 4 risposte e l'indice della risposta corretta. Tutti i dati
+    * hanno un valore fittizio.
+    * @return
+    *   la lista delle domande appena generate
+    */
   private def generateQuestions: List[Question] =
     (1 to 6)
       .map(i => Question("text", (1 to 4).map(i => s"answer $i").toList, 1, if i % 2 == 0 then Storia else Geografia))
@@ -88,10 +89,10 @@ object TestDataInitializer:
   // ExecutionContext implicito per le operazioni asincrone e per il metodo Future.sequence
   given ExecutionContext = ExecutionContext.fromExecutor(newSingleThreadExecutor())
 
-  /**
-   * Metodo che inizializza i dati di test nel database.
-   * @return un [[Future]] che rappresenta l'esito dell'inizializzazione
-   */
+  /** Metodo che inizializza i dati di test nel database.
+    * @return
+    *   un [[Future]] che rappresenta l'esito dell'inizializzazione
+    */
   def initData: Future[Unit] =
     Future
       .sequence(players.map(userRepository.create))
@@ -100,10 +101,10 @@ object TestDataInitializer:
       .flatMap(_ => Future.sequence(questions.map(questionRepository.create)))
       .map(_ => {})
 
-  /**
-   * Metodo che pulisce i dati di test dal database.
-   * @return un [[Future]] che rappresenta l'esito della pulizia
-   */
+  /** Metodo che pulisce i dati di test dal database.
+    * @return
+    *   un [[Future]] che rappresenta l'esito della pulizia
+    */
   def cleanData: Future[Unit] =
     val selectAll = BSONDocument()
     userRepository
