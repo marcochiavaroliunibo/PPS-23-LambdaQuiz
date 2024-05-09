@@ -46,7 +46,7 @@ object Score:
       * @return
       *   il documento BSON corrispondente all'oggetto di tipo [[Score]]
       */
-    override def writeTry(score: Score): Try[BSONDocument] =
+    def writeTry(score: Score): Try[BSONDocument] =
       for
         user <- Try(score.user)
         score <- Try(score.score)

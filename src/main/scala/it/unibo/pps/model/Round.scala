@@ -72,7 +72,7 @@ object Round {
       * @return
       *   il documento BSON corrispondente all'oggetto di tipo [[Score]]
       */
-    override def writeTry(round: Round): Try[BSONDocument] =
+    def writeTry(round: Round): Try[BSONDocument] =
       for
         id <- Try(round.id)
         gameID <- Try(round.gameId)

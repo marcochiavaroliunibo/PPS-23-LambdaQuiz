@@ -45,7 +45,7 @@ object User {
       * @return
       *   il documento BSON corrispondente all'oggetto di tipo [[User]]
       */
-    override def writeTry(user: User): Try[BSONDocument] =
+    def writeTry(user: User): Try[BSONDocument] =
       for
         id <- Try(user.id)
         username <- Try(user.username)
