@@ -12,11 +12,39 @@ link: [Relazione](https://marcochiavaroliunibo.github.io/PPS-23-LambdaQuiz/).
 
 ## Esecuzione dell'applicazione 🚀
 
-Per poter avviare il gioco, è necessario avere installato sul proprio sistema Java, in particolare lo **JDK 17**.
+Per poter avviare il gioco, è necessario avere installato sul proprio sistema il **JDK 17**.
+In più, se si vuole compilare ed eseguire la build in locale, sono necessari anche i software **Scala** ed **SBT**.
 
-I passi da seguire per lanciare l'applicazione sono i seguenti:
+### Avvio tramite eseguibile
 
-1. Scaricare il file `LambdaQuiz.jar` presente nella sezione `Releases` del repository;
+I passi da seguire per lanciare l'applicazione tramite il file JAR sono i seguenti:
+
+1. Scaricare il file `.jar` relativo al proprio sistema operativo presente nella sezione `Releases` del repository;
 2. Aprire un terminale nella cartella in cui si trova il file scaricato;
-3. Eseguire il comando `java -jar LambdaQuiz.jar`.
+3. Eseguire il comando `java -jar LambdaQuiz-${os}-x86.jar`.
+
+### Avvio tramite SBT
+
+Per avviare LambdaQuiz con SBT, seguire i seguenti passi:
+
+1. Clonare questa repository sulla propria macchina;
+2. Aprire un terminale nella cartella appena creata;
+3. Eseguire i comandi
+    ```bash
+    sbt compile
+    sbt run
+    ```
+
+### Creazione dell'eseguibile in locale
+
+Se si vuole lanciare l'applicazione tramite un eseguibile generato direttamente dalla propria macchina, fare quanto
+segue:
+
+1. Eseguire i punti 1 e 2 della sezione precedente;
+2. Eseguire i comandi
+   ```bash
+     sbt compile
+     sbt assembly
+     java -jar target/scala-3.4.0/LambdaQuiz.jar
+   ```
 
