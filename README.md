@@ -29,7 +29,7 @@ Per avviare LambdaQuiz con SBT, seguire i seguenti passi:
 
 1. Clonare questa repository sulla propria macchina;
 2. Aprire un terminale nella cartella appena creata;
-3. Eseguire i comandi
+3. Eseguire i comandi:
 
 ```bash
   sbt compile
@@ -42,11 +42,10 @@ Se si vuole lanciare l'applicazione tramite un eseguibile generato direttamente 
 segue:
 
 1. Eseguire i punti 1 e 2 della sezione precedente;
-2. Eseguire i comandi
+2. Eseguire i comandi:
 
 ```bash
   sbt compile
   sbt assembly
   java -jar target/scala-3.4.0/LambdaQuiz.jar
 ```
-
